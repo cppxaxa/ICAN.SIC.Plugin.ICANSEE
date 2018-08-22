@@ -1,0 +1,11 @@
+Start(Start)
+LoadCamera(0)(LoadCamera(0))
+tiny-yolo-voc(0)(tiny-yolo-voc(0))
+Every_1_sec(Every_1_sec)
+count(person)_>_5(count(person)_>_5)
+Message(_Population_>_5_alert_)(Message(_Population_>_5_alert_))
+Start,LoadCamera(0)
+LoadCamera(0),Every 1 sec
+Every 1 sec,tiny-yolo-voc(0)
+tiny-yolo-voc(0),count(person) > 5
+count(person) > 5,Message( Population > 5 alert )

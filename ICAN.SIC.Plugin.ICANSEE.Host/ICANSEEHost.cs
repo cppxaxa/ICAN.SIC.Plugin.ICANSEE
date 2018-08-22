@@ -13,6 +13,8 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 {
     public partial class ICANSEEHost : Form
     {
+        ICANSEE controller = new ICANSEE();
+
         public ICANSEEHost()
         {
             InitializeComponent();
@@ -21,6 +23,11 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void ICANSEEHost_Load(object sender, EventArgs e)
         {
             TxtFbpPath.Text = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleFBP", "Population5.fbp");
+        }
+
+        private void BtnReadFBP_Click(object sender, EventArgs e)
+        {
+            controller.ReadFBPConfiguration(TxtFbpPath.Text);
         }
     }
 }

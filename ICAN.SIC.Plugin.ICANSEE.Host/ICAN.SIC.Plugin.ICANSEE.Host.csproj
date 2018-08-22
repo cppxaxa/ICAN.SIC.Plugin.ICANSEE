@@ -77,5 +77,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.csproj">
+      <Project>{a39eb2da-f9f3-4a5d-abc8-bb9f55f092fe}</Project>
+      <Name>ICAN.SIC.Plugin.ICANSEE</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

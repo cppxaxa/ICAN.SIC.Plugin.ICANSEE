@@ -8,3 +8,5 @@ D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.exe
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.pdb
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.ICANSEEHost.resources
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\drawfbp-2.13.23.jar
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\SampleFBP\Population5.fbp

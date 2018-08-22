@@ -40,13 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTypes\FBPGraph.cs" />
     <Compile Include="ICANSEE.cs" />
+    <Compile Include="DataTypes\ICANSEEAPICall.cs" />
+    <Compile Include="DataTypes\ICANSEEApiCallDescription.cs" />
     <Compile Include="ICANSEEHelper.cs" />
     <Compile Include="ICANSEEUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DataTypes\" />
     <Folder Include="FBPParser\" />
     <Folder Include="ImageClient\" />
   </ItemGroup>

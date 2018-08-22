@@ -42,6 +42,7 @@
             this.BtnReadFBP.TabIndex = 0;
             this.BtnReadFBP.Text = "Read FBP";
             this.BtnReadFBP.UseVisualStyleBackColor = true;
+            this.BtnReadFBP.Click += new System.EventHandler(this.BtnReadFBP_Click);
             // 
             // BtnShowParsedFBP
             // 
