@@ -1,0 +1,22 @@
+<?xml version="1.0"?> 
+ <drawfbp_file xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:noNamespaceSchemaLocation="https://github.com/jpaulm/drawfbp/blob/master/lib/drawfbp_file.xsd"><complang>C#</complang> <clicktogrid>true</clicktogrid> 
+<blocks><block> <x> 241 </x> <y> 318 </y> <id> 2 </id> <type>B</type> <width>92</width> <height>64</height> <description>Start</description> <multiplex>false</multiplex><invisible>false</invisible><issubnet>false</issubnet> 
+</block> 
+<block> <x> 396 </x> <y> 442 </y> <id> 3 </id> <type>B</type> <width>92</width> <height>64</height> <description>LoadCamera(0)</description> <multiplex>false</multiplex><invisible>false</invisible><issubnet>false</issubnet> 
+</block> 
+<block> <x> 845 </x> <y> 340 </y> <id> 6 </id> <type>B</type> <width>92</width> <height>64</height> <description>tiny-yolo-voc(0)</description> <multiplex>false</multiplex><invisible>false</invisible><issubnet>false</issubnet> 
+</block> 
+<block> <x> 662 </x> <y> 357 </y> <id> 8 </id> <type>B</type> <width>92</width> <height>64</height> <description>Every 1 sec</description> <multiplex>false</multiplex><invisible>false</invisible><issubnet>false</issubnet> 
+</block> 
+<block> <x> 1026 </x> <y> 341 </y> <id> 13 </id> <type>B</type> <width>92</width> <height>64</height> <description>count(person) \> 5</description> <multiplex>false</multiplex><invisible>false</invisible><issubnet>false</issubnet> 
+</block> 
+<block> <x> 1242 </x> <y> 340 </y> <id> 14 </id> <type>B</type> <width>92</width> <height>64</height> <description>Message("Population \> 5 alert")</description> <multiplex>false</multiplex><invisible>false</invisible><issubnet>false</issubnet> 
+</block> 
+</blocks> <connections>
+<connection> <fromx>287</fromx> <fromy>319</fromy> <tox>348</tox> <toy>458</toy> <fromid>2</fromid> <toid>3</toid> <id>8</id> <endsatline>false</endsatline><upstreamport>OUT</upstreamport><downstreamport>IN</downstreamport></connection> 
+<connection> <fromx>442</fromx> <fromy>459</fromy> <tox>614</tox> <toy>361</toy> <fromid>3</fromid> <toid>8</toid> <id>9</id> <endsatline>false</endsatline><upstreamport>OUT</upstreamport><downstreamport>IN</downstreamport></connection> 
+<connection> <fromx>708</fromx> <fromy>358</fromy> <tox>796</tox> <toy>358</toy> <fromid>8</fromid> <toid>6</toid> <id>12</id> <endsatline>false</endsatline><upstreamport>OUT</upstreamport><downstreamport>IN</downstreamport></connection> 
+<connection> <fromx>891</fromx> <fromy>356</fromy> <tox>980</tox> <toy>356</toy> <fromid>6</fromid> <toid>13</toid> <id>14</id> <endsatline>false</endsatline><upstreamport>OUT</upstreamport><downstreamport>IN</downstreamport></connection> 
+<connection> <fromx>1072</fromx> <fromy>357</fromy> <tox>1196</tox> <toy>357</toy> <fromid>13</fromid> <toid>14</toid> <id>15</id> <endsatline>false</endsatline><upstreamport>OUT</upstreamport><downstreamport>IN</downstreamport></connection> 
+</connections> </net> </drawfbp_file>

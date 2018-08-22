@@ -1,0 +1,8 @@
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\drawfbp-2.13.23.jar
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\SampleFBP\Population5.fbp
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICAN.SIC.Plugin.ICANSEE.dll
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICAN.SIC.Plugin.ICANSEE.pdb
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.csprojResolveAssemblyReference.cache
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.csproj.CoreCompileInputs.cache
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.dll
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.pdb
