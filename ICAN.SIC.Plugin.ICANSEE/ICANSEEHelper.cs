@@ -1,9 +1,12 @@
-﻿using System;
+﻿using ICAN.SIC.Plugin.ICANSEE.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace ICAN.SIC.Plugin.ICANSEE
 {
@@ -11,19 +14,41 @@ namespace ICAN.SIC.Plugin.ICANSEE
     {
         ICANSEEUtility utility = new ICANSEEUtility();
 
-        public FBPGraph GenerateFBPGraph(string[] fbpLines)
+
+        public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)
         {
-            FBPGraph graph = new FBPGraph();
+            XPathDocument xmlPathDoc = new XPathDocument(drwFileStream);
+            XPathNavigator navigator = xmlPathDoc.CreateNavigator();
 
-            string wholeText = string.Empty;
+            XPathNodeIterator blockIterator = navigator.SelectDescendants("block", "", false);
+            XPathNodeIterator connectionIterator = navigator.SelectDescendants("connection", "", false);
 
-            foreach (var line in fbpLines)
+            int count = connectionIterator.Count;
+
+            List<DrwBlock> blocks = new List<DrwBlock>();
+            List<DrwConnection> connections = new List<DrwConnection>();
+
+            while (blockIterator.MoveNext())
             {
-                wholeText += utility.NormalizeFbpText(line) + "\n";
+                XPathNavigator nav = blockIterator.Current.Clone();
+
+                DrwBlock block = utility.ExtractDrwBlockFromNav(nav, configuration);
+
+                if (block != null)
+                    blocks.Add(block);
             }
 
-            // Debug
-            // File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleFBP", "Processed.txt"), wholeText);
+            while (connectionIterator.MoveNext())
+            {
+                XPathNavigator nav = connectionIterator.Current.Clone();
+
+                DrwConnection connection = utility.ExtractDrwConnectionFromNav(nav);
+
+                if (connection != null)
+                    connections.Add(connection);
+            }
+
+            FBPGraph graph = new FBPGraph(blocks, connections);
 
             return graph;
         }
@@ -32,10 +57,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
         {
             List<ICANSEEAPICall> result = new List<ICANSEEAPICall>();
 
-            foreach(var callDescription in graph)
-            {
-                result.Add(utility.ConvertDescriptionToAPICall(callDescription));
-            }
+            throw new NotImplementedException();
 
             return result;
         }

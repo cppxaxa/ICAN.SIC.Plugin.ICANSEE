@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,13 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTypes\DrwBlock.cs" />
+    <Compile Include="DataTypes\DrwConnection.cs" />
     <Compile Include="DataTypes\FBPGraph.cs" />
+    <Compile Include="DrwReplacementConfigurationUnit.cs" />
     <Compile Include="ICANSEE.cs" />
     <Compile Include="DataTypes\ICANSEEAPICall.cs" />
     <Compile Include="DataTypes\ICANSEEApiCallDescription.cs" />
     <Compile Include="ICANSEEHelper.cs" />
     <Compile Include="ICANSEEUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReplacementConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FBPParser\" />
@@ -58,7 +65,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SampleFBP\Population5.fbp">
+    <None Include="ICANSEEDrwReplacementConfiguration.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="SampleFBP\Population5.drw">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

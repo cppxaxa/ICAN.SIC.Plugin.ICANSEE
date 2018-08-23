@@ -19,10 +19,21 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
         public List<ICANSEEAPICall> ReadFBPConfiguration(string filepath)
         {
-            List<ICANSEEAPICall> result = new List<ICANSEEAPICall>();
+            ReplacementConfiguration config = utility.ReadConfigurationFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ICANSEEDrwReplacementConfiguration.json"));
 
-            FBPGraph graph = helper.GenerateFBPGraph(File.ReadAllLines(filepath));
-            result = helper.GetApiCalls(graph);
+            FBPGraph graph = helper.GenerateFBPGraphFromDrwFile(File.OpenRead(filepath), config);
+
+            // Debug Replacers
+            string dumpOfConvertedValue = string.Empty;
+            foreach (var pair in graph.GetBlockFromId)
+            {
+                dumpOfConvertedValue += pair.Value.description + "\r\n\r\n\r\n";
+            }
+            File.WriteAllText("Debug Replacers Result.txt", dumpOfConvertedValue);
+
+
+
+            List<ICANSEEAPICall> result = helper.GetApiCalls(graph);
 
             return result;
         }

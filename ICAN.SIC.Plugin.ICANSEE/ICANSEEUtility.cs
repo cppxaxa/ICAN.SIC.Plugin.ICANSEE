@@ -1,19 +1,118 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.XPath;
+using ICAN.SIC.Plugin.ICANSEE.DataTypes;
+using Newtonsoft.Json;
 
 namespace ICAN.SIC.Plugin.ICANSEE
 {
     public class ICANSEEUtility
     {
+        public ReplacementConfiguration ReadConfigurationFromFile(string path)
+        {
+            Dictionary<string, string> replacementStrings = new Dictionary<string, string>();
+
+            List<DrwReplacementConfigurationUnit> replacers = JsonConvert.DeserializeObject<List<DrwReplacementConfigurationUnit>>(File.ReadAllText(path));
+
+            foreach (var item in replacers)
+            {
+                replacementStrings[item.ToReplace] = item.ReplaceWith;
+            }
+
+            ReplacementConfiguration configuration = new ReplacementConfiguration(replacementStrings);
+            return configuration;
+        }
+
         public ICANSEEAPICall ConvertDescriptionToAPICall(ICANSEEApiCallDescription callDescription)
         {
             ICANSEEAPICall call = new ICANSEEAPICall(callDescription.Uri, callDescription.UriSuffix, callDescription.PostData, callDescription.Header);
             return call;
         }
 
+        public DrwConnection ExtractDrwConnectionFromNav(XPathNavigator nav)
+        {
+            if (!nav.HasChildren)
+                return null;
+
+            int id = -1;
+            int fromId = -1;
+            int toId = -1;
+
+            nav.MoveToFirstChild();
+
+            do
+            {
+                if (nav.Name.ToLower() == "id")
+                    try
+                    {
+                        id = int.Parse(nav.Value.Trim());
+                    }
+                    catch (Exception e) { throw new Exception("Id not an integer in DrwFile", e); }
+                else if (nav.Name.ToLower() == "fromid")
+                    try
+                    {
+                        fromId = int.Parse(nav.Value.Trim());
+                    }
+                    catch (Exception e) { throw new Exception("FromId not an integer in DrwFile", e); }
+                else if (nav.Name.ToLower() == "toid")
+                    try
+                    {
+                        toId = int.Parse(nav.Value.Trim());
+                    }
+                    catch (Exception e) { throw new Exception("ToId not an integer in DrwFile", e); }
+            } while (nav.MoveToNext());
+
+            DrwConnection connection = new DrwConnection(id, fromId, toId);
+
+            return connection;
+        }
+
+        public DrwBlock ExtractDrwBlockFromNav(XPathNavigator nav, ReplacementConfiguration config)
+        {
+            if (!nav.HasChildren)
+                return null;
+
+            int id = -1;
+            string description = null;
+
+            nav.MoveToFirstChild();
+
+            do
+            {
+                if (nav.Name.ToLower() == "id")
+                    try
+                    {
+                        id = int.Parse(nav.Value.Trim());
+                    }
+                    catch (Exception e) { throw new Exception("Id not an integer in DrwFile", e); }
+                else if (nav.Name.ToLower() == "description")
+                    description = ReplacementConfigurationSanitizer(nav.Value, config);
+            } while (nav.MoveToNext());
+
+            DrwBlock block = new DrwBlock(id, description);
+
+            return block;
+        }
+
+        private string ReplacementConfigurationSanitizer(string value, ReplacementConfiguration config)
+        {
+            foreach (var pair in config.ReplacementStrings)
+            {
+                value = value.Replace(pair.Key, pair.Value);
+            }
+            return value;
+        }
+
+        private string RemoveSlashes(string str)
+        {
+            return str.Replace("\\", "");
+        }
+
+        /*
         public string NormalizeFbpText(string line)
         {
             line = line.Trim();
@@ -60,10 +159,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             else
                 return left.Replace('_', ' ') + "," + right.Replace('_', ' ');
         }
+        */
 
-        private string RemoveSlashes(string str)
-        {
-            return str.Replace("\\", "");
-        }
     }
 }
