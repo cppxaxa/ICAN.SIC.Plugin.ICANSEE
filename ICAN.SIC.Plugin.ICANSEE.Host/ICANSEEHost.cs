@@ -28,6 +28,18 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnReadFBP_Click(object sender, EventArgs e)
         {
             controller.ReadFBPConfiguration(TxtFbpPath.Text);
+
+            
+        }
+
+        private void BtnDfs_Click(object sender, EventArgs e)
+        {
+            var result = controller.GenerateFBPGraph(TxtFbpPath.Text);
+
+            foreach (var node in result.GetDFSEnumerator())
+            {
+                Console.WriteLine("{0} {1}", node.id, node.description.Replace("\n", " "));
+            }
         }
     }
 }

@@ -14,6 +14,8 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public Dictionary<int, List<DrwBlock>> GetFromBlocks = new Dictionary<int, List<DrwBlock>>();
         public Dictionary<int, List<DrwBlock>> GetToBlocks = new Dictionary<int, List<DrwBlock>>();
 
+        public DrwBlock StartNode;
+
         public FBPGraph(List<DrwBlock> blocks, List<DrwConnection> connections)
         {
             this.blocks = blocks;
@@ -23,6 +25,11 @@ namespace ICAN.SIC.Plugin.ICANSEE
             foreach (var block in blocks)
             {
                 GetBlockFromId[block.id] = block;
+
+                if (block.description.Trim().ToLower() == "start")
+                {
+                    StartNode = block;
+                }
             }
 
             // Build GetFromBlock and GetToBlock
@@ -37,6 +44,38 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     GetToBlocks[connection.fromId] = new List<DrwBlock>();
 
                 GetToBlocks[connection.fromId].Add(GetBlockFromId[connection.toId]);
+            }
+        }
+
+        public List<DrwBlock> GetDFSEnumerator()
+        {
+            List<DrwBlock> dfsList = new List<DrwBlock>();
+            Dictionary<int, bool> nodeVisited = new Dictionary<int, bool>();
+
+            if (StartNode != null)
+            {                
+                DfsTraversal(StartNode, ref nodeVisited, ref dfsList);
+            }
+
+            return dfsList;
+        }
+
+        private void DfsTraversal(DrwBlock currentNode, ref Dictionary<int, bool> nodeVisited, ref List<DrwBlock> result)
+        {
+            if (result == null)
+                result = new List<DrwBlock>();
+
+            if (nodeVisited.ContainsKey(currentNode.id) && nodeVisited[currentNode.id] == true)
+                return;
+
+            result.Add(currentNode);
+
+            if (GetToBlocks.ContainsKey(currentNode.id))
+            {
+                foreach (var node in GetToBlocks[currentNode.id])
+                {
+                    DfsTraversal(node, ref nodeVisited, ref result);
+                }
             }
         }
     }

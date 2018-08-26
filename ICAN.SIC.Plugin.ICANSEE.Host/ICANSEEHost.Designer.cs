@@ -32,6 +32,7 @@
             this.BtnShowParsedFBP = new System.Windows.Forms.Button();
             this.BtnExecute = new System.Windows.Forms.Button();
             this.TxtFbpPath = new System.Windows.Forms.TextBox();
+            this.BtnDfs = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnReadFBP
@@ -69,11 +70,22 @@
             this.TxtFbpPath.Size = new System.Drawing.Size(1283, 31);
             this.TxtFbpPath.TabIndex = 3;
             // 
+            // BtnDfs
+            // 
+            this.BtnDfs.Location = new System.Drawing.Point(326, 60);
+            this.BtnDfs.Name = "BtnDfs";
+            this.BtnDfs.Size = new System.Drawing.Size(308, 57);
+            this.BtnDfs.TabIndex = 4;
+            this.BtnDfs.Text = "Get DFS";
+            this.BtnDfs.UseVisualStyleBackColor = true;
+            this.BtnDfs.Click += new System.EventHandler(this.BtnDfs_Click);
+            // 
             // ICANSEEHost
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1307, 255);
+            this.Controls.Add(this.BtnDfs);
             this.Controls.Add(this.TxtFbpPath);
             this.Controls.Add(this.BtnExecute);
             this.Controls.Add(this.BtnShowParsedFBP);
@@ -94,6 +106,7 @@
         private System.Windows.Forms.Button BtnShowParsedFBP;
         private System.Windows.Forms.Button BtnExecute;
         private System.Windows.Forms.TextBox TxtFbpPath;
+        private System.Windows.Forms.Button BtnDfs;
     }
 }
 

@@ -14,7 +14,6 @@ namespace ICAN.SIC.Plugin.ICANSEE
     {
         ICANSEEUtility utility = new ICANSEEUtility();
 
-
         public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)
         {
             XPathDocument xmlPathDoc = new XPathDocument(drwFileStream);
