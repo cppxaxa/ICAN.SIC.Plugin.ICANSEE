@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.XPath;
+using ICAN.SIC.Plugin.ICANSEE.Client;
 using ICAN.SIC.Plugin.ICANSEE.DataTypes;
 using Newtonsoft.Json;
 
@@ -12,6 +13,13 @@ namespace ICAN.SIC.Plugin.ICANSEE
 {
     public class ICANSEEUtility
     {
+        ImageClient imageClient;
+
+        public ICANSEEUtility(ImageClient imageClient)
+        {
+            this.imageClient = imageClient;
+        }
+
         public ReplacementConfiguration ReadConfigurationFromFile(string path)
         {
             Dictionary<string, string> replacementStrings = new Dictionary<string, string>();

@@ -41,5 +41,14 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
                 Console.WriteLine("{0} {1}", node.id, node.description.Replace("\n", " "));
             }
         }
+
+        private void BtnDummyCall_Click(object sender, EventArgs e)
+        {
+            //controller.MakeDummyGetCall();
+            //controller.MakeDummyPostCall();
+
+            //Console.WriteLine(controller.ExecuteScalar(new List<string> { "Start", "", "result = tfnet.return_predict(imageSrc)\noutput = str(result)" }));
+            //controller.Execute(new List<string> { "Start", "", "result = tfnet.return_predict(imageSrc)\noutput = str(result)" });
+        }
     }
 }

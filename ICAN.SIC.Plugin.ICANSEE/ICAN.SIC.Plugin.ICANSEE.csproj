@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\CommandType.cs" />
     <Compile Include="DataTypes\DrwBlock.cs" />
     <Compile Include="DataTypes\DrwConnection.cs" />
     <Compile Include="DataTypes\FBPGraph.cs" />
@@ -52,12 +53,12 @@
     <Compile Include="DataTypes\ICANSEEApiCallDescription.cs" />
     <Compile Include="ICANSEEHelper.cs" />
     <Compile Include="ICANSEEUtility.cs" />
+    <Compile Include="Client\ImageClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplacementConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FBPParser\" />
-    <Folder Include="ImageClient\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="drawfbp-2.13.23.jar">

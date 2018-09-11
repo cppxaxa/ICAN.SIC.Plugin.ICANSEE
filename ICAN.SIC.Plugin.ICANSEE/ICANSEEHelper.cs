@@ -1,4 +1,5 @@
-﻿using ICAN.SIC.Plugin.ICANSEE.DataTypes;
+﻿using ICAN.SIC.Plugin.ICANSEE.Client;
+using ICAN.SIC.Plugin.ICANSEE.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,14 @@ namespace ICAN.SIC.Plugin.ICANSEE
 {
     public class ICANSEEHelper
     {
-        ICANSEEUtility utility = new ICANSEEUtility();
+        ICANSEEUtility utility;
+        ImageClient imageClient;
+
+        public ICANSEEHelper(ICANSEEUtility utility, ImageClient imageClient)
+        {
+            this.utility = utility;
+            this.imageClient = imageClient;
+        }
 
         public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)
         {
