@@ -1,0 +1,10 @@
+<?xml version="1.0"?> 
+ <drawfbp_file xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:noNamespaceSchemaLocation="https://github.com/jpaulm/drawfbp/blob/master/lib/drawfbp_file.xsd"><net> <desc> </desc> <complang>C#</complang> <clicktogrid>true</clicktogrid> 
+<blocks><block> <x> 241 </x> <y> 318 </y> <id> 2 </id> <type>B</type> <width>92</width> <height>64</height> <description>Start</description> <multiplex>false</multiplex><invisible>false</invisible><issubnet>false</issubnet> 
+</block> 
+<block> <x> 505 </x> <y> 302 </y> <id> 3 </id> <type>B</type> <width>92</width> <height>64</height> <description>globals()["imageSrc"] = cv2.imread("./sample_img/sample_dog.jpg")</description> <multiplex>false</multiplex><invisible>false</invisible><issubnet>false</issubnet> 
+</block> 
+</blocks> <connections>
+<connection> <fromx>287</fromx> <fromy>319</fromy> <tox>457</tox> <toy>318</toy> <fromid>2</fromid> <toid>3</toid> <id>8</id> <endsatline>false</endsatline><upstreamport>OUT</upstreamport><downstreamport>IN</downstreamport></connection> 
+</connections> </net> </drawfbp_file>
