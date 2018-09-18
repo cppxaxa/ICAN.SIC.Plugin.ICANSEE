@@ -1,4 +1,5 @@
-﻿using ICAN.SIC.Plugin.ICANSEE.Client;
+﻿using ICAN.SIC.Abstractions;
+using ICAN.SIC.Plugin.ICANSEE.Client;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace ICAN.SIC.Plugin.ICANSEE
 {
-    public class ICANSEE
+    public class ICANSEE : AbstractPlugin
     {
         ImageClient imageClient;
         ICANSEEHelper helper;
         ICANSEEUtility utility;
 
-        public ICANSEE()
+        public ICANSEE() : base("ICANSEEv1")
         {
             imageClient = new ImageClient("localhost", 5000);
 
