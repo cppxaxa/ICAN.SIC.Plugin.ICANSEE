@@ -13,11 +13,165 @@ namespace ICAN.SIC.Plugin.ICANSEE
 {
     public class ICANSEEUtility
     {
+        public Dictionary<int, CameraConfiguration> cameraConfigurationsMap = new Dictionary<int, CameraConfiguration>();
+        public Dictionary<string, AlgorithmDescription> algorithmsDescriptionMap = new Dictionary<string, AlgorithmDescription>();
         ImageClient imageClient;
 
-        public ICANSEEUtility(ImageClient imageClient)
+        public ICANSEEUtility(ImageClient imageClient, string algoDescriptionFileName = "AlgorithmsDescriptionList.json")
         {
             this.imageClient = imageClient;
+
+            if (!File.Exists(algoDescriptionFileName))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Algo descriptions file not found: " + algoDescriptionFileName);
+                Console.ResetColor();
+            }
+            else
+                try
+                {
+                    LoadAlgorithmDescriptionsFromFile(algoDescriptionFileName);
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Error while reading algoDescriptionFile : " + algoDescriptionFileName);
+                    Console.WriteLine(ex.Message);
+                    Console.ResetColor();
+                }
+        }
+
+        private void LoadAlgorithmDescriptionsFromFile(string filePath)
+        {
+            string fileContent = File.ReadAllText(filePath);
+            List<AlgorithmDescription> algoList = JsonConvert.DeserializeObject<List<AlgorithmDescription>>(fileContent);
+            this.algorithmsDescriptionMap = algoList.ToDictionary(e => e.Id);
+        }
+
+        public List<AlgorithmDescription> GetAlgorithmsList()
+        {
+            List<AlgorithmDescription> result = new List<AlgorithmDescription>();
+            foreach (var item in algorithmsDescriptionMap)
+            {
+                result.Add(item.Value);
+            }
+            return result;
+        }
+
+        public bool AddCameraConfig(int newCustomId, CameraConfiguration cameraConfig)
+        {
+            if (cameraConfigurationsMap.ContainsKey(newCustomId))
+                return false;
+
+            cameraConfigurationsMap[newCustomId] = cameraConfig;
+
+            return true;
+        }
+
+        public void AddReplaceCameraConfiguration(int newCustomId, CameraConfiguration cameraConfig)
+        {
+            cameraConfigurationsMap[newCustomId] = cameraConfig;
+        }
+
+        public string LoadCamera(int cameraConfigId)
+        {
+            try
+            {
+                if (cameraConfigurationsMap.ContainsKey(cameraConfigId))
+                {
+                    CameraConfiguration cameraConfig = cameraConfigurationsMap[cameraConfigId];
+
+                    string apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'] = cv2.VideoCapture({{index}})\\nret, frame = globals()['cap'].read()\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                    if (cameraConfig.Url == null)
+                    {
+                        apiCallBody = apiCallBody.Replace("{{index}}", cameraConfig.Index.ToString());
+                    }
+                    else
+                    {
+                        apiCallBody = apiCallBody.Replace("{{index}}", "\"" + cameraConfig.Url + "\"");
+                    }
+
+                    string result = imageClient.MakePostCall("http://localhost:5000/task", apiCallBody);
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.LoadCamera(val=" + cameraConfigId + ")" + ex.Message);
+                Console.ResetColor();
+            }
+            return null;
+        }
+
+        public bool LoadAlgorithm()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ExecuteAlgorithm(bool RunOnce, bool InfiniteLoop, int LoopLimit, bool ReturnResult)
+        {
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"result = tfnet.return_predict(imageSrc)\\noutput = str(result)\"],\"RunOnce\": {{RunOnce}},\"InfiniteLoop\": {{InfiniteLoop}},\"LoopLimit\": {{LoopLimit}},\"ReturnResult\": {{ReturnResult}}}";
+            try
+            {
+                if (RunOnce)
+                    apiCallBody = apiCallBody.Replace("{{RunOnce}}", "true");
+                else
+                    apiCallBody = apiCallBody.Replace("{{RunOnce}}", "false");
+
+                if (InfiniteLoop)
+                    apiCallBody = apiCallBody.Replace("{{InfiniteLoop}}", "true");
+                else
+                    apiCallBody = apiCallBody.Replace("{{InfiniteLoop}}", "false");
+
+                apiCallBody = apiCallBody.Replace("{{LoopLimit}}", LoopLimit.ToString());
+
+                if (ReturnResult)
+                    apiCallBody = apiCallBody.Replace("{{ReturnResult}}", "true");
+                else
+                    apiCallBody = apiCallBody.Replace("{{ReturnResult}}", "false");
+
+
+
+                string result = imageClient.MakePostCall("http://localhost:5000/task", apiCallBody);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithmScalar()\n" + apiCallBody + "\n" + ex.Message);
+                Console.ResetColor();
+            }
+            return null;
+        }
+
+        public string ExecuteAlgorithmScalar()
+        {
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"result = tfnet.return_predict(imageSrc)\\noutput = str(result)\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+            try
+            {
+                string result = imageClient.MakePostCall("http://localhost:5000/task", apiCallBody);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithmScalar()\n" + apiCallBody + "\n" + ex.Message);
+                Console.ResetColor();
+            }
+            return null;
+        }
+
+        public List<CameraConfiguration> GetAllCameraConfigurations()
+        {
+            List<CameraConfiguration> result = new List<CameraConfiguration>();
+            foreach (var item in cameraConfigurationsMap)
+            {
+                result.Add(item.Value);
+            }
+
+            return result;
         }
 
         public ReplacementConfiguration ReadConfigurationFromFile(string path)
@@ -33,12 +187,6 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             ReplacementConfiguration configuration = new ReplacementConfiguration(replacementStrings);
             return configuration;
-        }
-
-        public ICANSEEAPICall ConvertDescriptionToAPICall(ICANSEEApiCallDescription callDescription)
-        {
-            ICANSEEAPICall call = new ICANSEEAPICall(callDescription.Uri, callDescription.UriSuffix, callDescription.PostData, callDescription.Header);
-            return call;
         }
 
         public DrwConnection ExtractDrwConnectionFromNav(XPathNavigator nav)
@@ -119,55 +267,5 @@ namespace ICAN.SIC.Plugin.ICANSEE
         {
             return str.Replace("\\", "");
         }
-
-        /*
-        public string NormalizeFbpText(string line)
-        {
-            line = line.Trim();
-
-            string left = string.Empty, right = string.Empty;
-
-            // Remove suffix comma at last if present
-            while (line[line.Length - 1] == ',')
-                line = line.Substring(0, line.Length - 1);
-
-            // Break at -> if present
-            string[] splitAtArrow = line.Split(new string[] { "->" }, 2, StringSplitOptions.RemoveEmptyEntries);
-
-            bool noArrow = true;
-            left = splitAtArrow[0];
-            if (splitAtArrow.Length > 1)
-            {
-                right = splitAtArrow[1];
-                noArrow = false;
-            }
-
-            left = RemoveSlashes(left);
-            right = RemoveSlashes(right);
-
-            string completeText = left.Trim() + "," + right.Trim();
-
-            string[] spaceSplit = completeText.Split(' ');
-
-            left = spaceSplit[0];
-            while (left[left.Length - 1] == ',')
-                left = left.Substring(0, left.Length - 1);
-
-            if (noArrow)
-            {
-                right = string.Empty;
-            }
-            else
-            {
-                right = spaceSplit[spaceSplit.Length - 1];
-            }
-
-            if (right == string.Empty)
-                return left;
-            else
-                return left.Replace('_', ' ') + "," + right.Replace('_', ' ');
-        }
-        */
-
     }
 }

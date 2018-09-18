@@ -61,9 +61,19 @@ namespace ICAN.SIC.Plugin.ICANSEE.Client
             return webClient.DownloadString(urlSource.GETUri);
         }
 
+        public string MakeGetCall(string Url)
+        {
+            return webClient.DownloadString(Url);
+        }
+
         public string MakePostCall(string body)
         {
-            return webClient.UploadString("http://localhost:5000/echo", body);
+            return webClient.UploadString("http://" + host + ":" + port + "/task", body);
+        }
+
+        public string MakePostCall(string Url, string body)
+        {
+            return webClient.UploadString(Url, body);
         }
     }
 }

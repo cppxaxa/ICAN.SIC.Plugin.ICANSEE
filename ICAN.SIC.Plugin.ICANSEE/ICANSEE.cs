@@ -23,7 +23,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             helper = new ICANSEEHelper(utility, imageClient);
         }
 
-        public List<ICANSEEAPICall> ReadFBPConfiguration(string filepath)
+        public FBPGraph ReadFBPConfiguration(string filepath)
         {
             ReplacementConfiguration config = utility.ReadConfigurationFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ICANSEEDrwReplacementConfiguration.json"));
 
@@ -37,11 +37,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             }
             File.WriteAllText("Debug Replacers Result.txt", dumpOfConvertedValue);
 
-
-
-            List<ICANSEEAPICall> result = helper.GetApiCalls(graph);
-
-            return result;
+            return graph;
         }
 
         public void MakeDummyPostCall()

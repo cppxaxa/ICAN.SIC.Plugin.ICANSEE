@@ -17,3 +17,11 @@ F:\Projects\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.P
 F:\Projects\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.csproj.CopyComplete
 F:\Projects\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.dll
 F:\Projects\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.pdb
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\drawfbp-2.13.23.jar
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICANSEEDrwReplacementConfiguration.json
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\SampleFBP\Population5.drw
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICAN.SIC.Plugin.ICANSEE.dll
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICAN.SIC.Plugin.ICANSEE.pdb
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.csprojResolveAssemblyReference.cache
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.dll
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.pdb

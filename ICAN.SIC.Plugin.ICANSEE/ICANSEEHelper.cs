@@ -59,14 +59,5 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             return graph;
         }
-
-        public List<ICANSEEAPICall> GetApiCalls(FBPGraph graph)
-        {
-            List<ICANSEEAPICall> result = new List<ICANSEEAPICall>();
-
-            throw new NotImplementedException();
-
-            return result;
-        }
     }
 }
