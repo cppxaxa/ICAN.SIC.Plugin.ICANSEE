@@ -66,9 +66,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public FBPGraph GenerateFBPGraph(string filepath)
         {
             ReplacementConfiguration config = utility.ReadConfigurationFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ICANSEEDrwReplacementConfiguration.json"));
-
             FBPGraph graph = helper.GenerateFBPGraphFromDrwFile(File.OpenRead(filepath), config);
-            
             return graph;
         }
 

@@ -38,3 +38,16 @@ J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\I
 J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.exe
 J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.pdb
 J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\AlgorithmsDescriptionList.json
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\bin\Debug\drawfbp-2.13.23.jar
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICANSEEDrwReplacementConfiguration.json
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\bin\Debug\SampleFBP\Population5.drw
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\bin\Debug\AlgorithmsDescriptionList.json
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICAN.SIC.Plugin.ICANSEE.Host.exe.config
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICAN.SIC.Plugin.ICANSEE.Host.exe
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICAN.SIC.Plugin.ICANSEE.Host.pdb
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.csprojResolveAssemblyReference.cache
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.ICANSEEHost.resources
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.Properties.Resources.resources
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.csproj.GenerateResource.Cache
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.exe
+D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.pdb

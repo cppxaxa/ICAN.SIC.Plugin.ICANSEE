@@ -105,14 +105,46 @@ namespace ICAN.SIC.Plugin.ICANSEE
             return null;
         }
 
-        public bool LoadAlgorithm()
+        public bool LoadAlgorithm(string Id)
         {
-            throw new NotImplementedException();
+            if (!algorithmsDescriptionMap.ContainsKey(Id))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + Id + ")\n - Algorithm Id not found");
+                Console.ResetColor();
+
+                return false;
+            }
+
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"" + algorithmsDescriptionMap[Id].InitCommand + "\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+            try
+            {
+                string result = imageClient.MakePostCall(algorithmsDescriptionMap[Id].Uri, apiCallBody);
+                Console.WriteLine("[INFO] ICANSEEUtility.LoadAlgorithm(" + Id + ")\n" + apiCallBody + "\n\n" + "Result: " + result);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + Id + ")\n" + apiCallBody + "\n" + ex.Message);
+                Console.ResetColor();
+
+                return false;
+            }
         }
 
-        public string ExecuteAlgorithm(bool RunOnce, bool InfiniteLoop, int LoopLimit, bool ReturnResult)
+        public string ExecuteAlgorithm(bool RunOnce, bool InfiniteLoop, int LoopLimit, bool ReturnResult, string resultProcessingStatement, string algorithmId)
         {
-            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"result = tfnet.return_predict(imageSrc)\\noutput = str(result)\"],\"RunOnce\": {{RunOnce}},\"InfiniteLoop\": {{InfiniteLoop}},\"LoopLimit\": {{LoopLimit}},\"ReturnResult\": {{ReturnResult}}}";
+            if (!algorithmsDescriptionMap.ContainsKey(algorithmId))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + algorithmId + ")\n - Algorithm Id not found");
+                Console.ResetColor();
+
+                return null;
+            }
+
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + resultProcessingStatement + "\"],\"RunOnce\": {{RunOnce}},\"InfiniteLoop\": {{InfiniteLoop}},\"LoopLimit\": {{LoopLimit}},\"ReturnResult\": {{ReturnResult}}}";
             try
             {
                 if (RunOnce)
@@ -134,7 +166,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
 
 
-                string result = imageClient.MakePostCall("http://localhost:5000/task", apiCallBody);
+                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algorithmId].Uri, apiCallBody);
                 return result;
             }
             catch (Exception ex)
@@ -146,12 +178,12 @@ namespace ICAN.SIC.Plugin.ICANSEE
             return null;
         }
 
-        public string ExecuteAlgorithmScalar()
+        public string ExecuteAlgorithmScalar(string algorithmId)
         {
-            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"result = tfnet.return_predict(imageSrc)\\noutput = str(result)\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + algorithmsDescriptionMap[algorithmId].ScalarExecuteCommand + "\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
             try
             {
-                string result = imageClient.MakePostCall("http://localhost:5000/task", apiCallBody);
+                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algorithmId].Uri, apiCallBody);
                 return result;
             }
             catch (Exception ex)

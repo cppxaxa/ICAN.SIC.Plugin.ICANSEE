@@ -100,13 +100,24 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnRunGPUAlgo_Click(object sender, EventArgs e)
         {
-            //string result = utility.ExecuteAlgorithm(true, false, 1, true);
-            string result = utility.ExecuteAlgorithmScalar();
+            string result = utility.ExecuteAlgorithmScalar("1");
+
+            Console.WriteLine("[INFO] RunAlgo: " + result);
 
             if (result != null)
                 Console.WriteLine(result);
             else
                 Console.WriteLine("Failure");
+        }
+
+        private void BtnLoadAlgorithm_Click(object sender, EventArgs e)
+        {
+            bool result = utility.LoadAlgorithm("1");
+
+            if (result)
+                Console.WriteLine("Success");
+            else
+                Console.WriteLine("LoadAlgorithm problem");
         }
     }
 }

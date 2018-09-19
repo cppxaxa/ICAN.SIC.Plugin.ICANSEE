@@ -10,5 +10,8 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public string Id;
         public string Name;
         public string Uri;
+        public string InitCommand;
+        public string ScalarExecuteCommand;
+        public string Description;
     }
 }
