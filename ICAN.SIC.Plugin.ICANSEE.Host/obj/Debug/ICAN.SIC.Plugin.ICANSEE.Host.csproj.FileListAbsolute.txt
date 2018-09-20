@@ -51,3 +51,6 @@ D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.S
 D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.csproj.GenerateResource.Cache
 D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.exe
 D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.pdb
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\AlgorithmsDescriptionList_Orig.json
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\AlgorithmsDescriptionList_Problem.json
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\AlgorithmsDescriptionList_Remote.json
