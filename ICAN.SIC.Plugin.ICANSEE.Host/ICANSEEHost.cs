@@ -17,12 +17,14 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         ICANSEE controller = new ICANSEE();
         ImageClient imageClient = new ImageClient();
         ICANSEEUtility utility;
+        ICANSEEHelper helper;
 
         public ICANSEEHost()
         {
             InitializeComponent();
 
             utility = new ICANSEEUtility(imageClient);
+            helper = new ICANSEEHelper(utility, imageClient);
         }
 
         private void ICANSEEHost_Load(object sender, EventArgs e)
@@ -58,7 +60,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnAddCameraConfig_Click(object sender, EventArgs e)
         {
-            utility.AddReplaceCameraConfiguration(1, new CameraConfiguration(0, null, "Default Webcam"));
+            helper.AddReplaceCameraConfiguration(1, new CameraConfiguration(0, null, "Default Webcam"));
 
             foreach (var item in utility.cameraConfigurationsMap)
             {
@@ -70,7 +72,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnListAllCameraConfigs_Click(object sender, EventArgs e)
         {
-            var list = utility.GetAllCameraConfigurations();
+            var list = helper.GetAllCameraConfigurations();
 
             foreach (var item in list)
             {
@@ -80,11 +82,16 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnListAllGPUAlgos_Click(object sender, EventArgs e)
         {
-            var list = utility.GetAlgorithmsList();
+            var list = helper.GetAlgorithmsList();
 
             foreach (var item in list)
             {
-                Console.WriteLine(item.Name);
+                Console.WriteLine(string.Join("\t", item.Id, item.Name, item.Uri, "AlgoId-" + item.AlgorithmTypeId));
+                foreach (var supportDeviceId in item.SupportedDeviceTypeIdList)
+                {
+                    Console.WriteLine("\t" + supportDeviceId);
+                }
+                Console.WriteLine();
             }
         }
 
@@ -100,7 +107,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnRunGPUAlgo_Click(object sender, EventArgs e)
         {
-            string result = utility.ExecuteAlgorithmScalar("1");
+            string result = utility.ExecuteAlgorithmScalar("Algo1");
 
             Console.WriteLine("[INFO] RunAlgo: " + result);
 
@@ -112,12 +119,35 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnLoadAlgorithm_Click(object sender, EventArgs e)
         {
-            bool result = utility.LoadAlgorithm("1");
+            string algoType = utility.LoadAlgorithm("Algo1");
 
-            if (result)
-                Console.WriteLine("Success");
+            if (algoType != null)
+                Console.WriteLine("Success with AlgoType-" + algoType);
             else
                 Console.WriteLine("LoadAlgorithm problem");
+        }
+
+        private void BtnListAllComputeDevices_Click(object sender, EventArgs e)
+        {
+            var result = helper.GetComputeDevicesList();
+
+            if (result != null)
+                foreach (var item in result)
+                {
+                    Console.WriteLine(string.Join("\t", item.Label, item.IpAddress, item.Description, item.DeviceTypeId));
+                }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string result = helper.Dummy("1");
+
+            Console.WriteLine("[INFO] RunAlgo: " + result);
+
+            if (result != null)
+                Console.WriteLine(result);
+            else
+                Console.WriteLine("Failure");
         }
     }
 }

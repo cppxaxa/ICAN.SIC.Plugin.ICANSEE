@@ -16,10 +16,75 @@ namespace ICAN.SIC.Plugin.ICANSEE
         ICANSEEUtility utility;
         ImageClient imageClient;
 
+        List<ComputeDeviceInfo> computeDeviceList;
+        Dictionary<ComputeDeviceInfo, bool> computeDeviceLocked = new Dictionary<ComputeDeviceInfo,bool>();
+
         public ICANSEEHelper(ICANSEEUtility utility, ImageClient imageClient)
         {
             this.utility = utility;
             this.imageClient = imageClient;
+
+            computeDeviceList = utility.GetComputeDevicesList();
+
+            if (computeDeviceList.Count <= 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("No compute devices available (Check ComputeDeviceConfig file for extensive list)");
+                Console.ResetColor();
+            }
+        }
+
+        public bool AddCameraConfig(int newCustomId, CameraConfiguration cameraConfig)
+        {
+            return this.utility.AddCameraConfig(newCustomId, cameraConfig);
+        }
+
+        public void AddReplaceCameraConfiguration(int newCustomId, CameraConfiguration cameraConfig)
+        {
+            this.utility.AddReplaceCameraConfiguration(newCustomId, cameraConfig);
+        }
+
+        public List<AlgorithmDescription> GetAlgorithmsList()
+        {
+            return this.utility.GetAlgorithmsList();
+        }
+
+        public List<CameraConfiguration> GetAllCameraConfigurations()
+        {
+            return this.utility.GetAllCameraConfigurations();
+        }
+
+        public List<ComputeDeviceInfo> GetComputeDevicesList()
+        {
+            return this.utility.GetComputeDevicesList();
+        }
+
+        public string Dummy(string algoId)
+        {
+            string result = "";
+
+            // Input - AlgoId
+
+            // Find AlgoTypeId
+            // Find all SupportedDeviceTypeIds
+
+            // Check which device already have the algo loaded
+                // If found, ExecuteScalar for that device
+                // Else, list all devices with supportedDeviceTypeId
+                    // Load the algo in that device and ExecteScalar
+
+            var algoDecription = utility.QueryAlgoTypeId(algoId);
+            string algoTypeId = algoDecription.AlgorithmTypeId;
+            List<string> supportedDeviceTypeIdList = algoDecription.SupportedDeviceTypeIdList;
+
+            // List<ComputeDeviceInfo> availableComputeDevices = QueryFreeDevices(supportedDeviceTypeIdList, algoTypeId);
+            // Lock the available device
+            // LoadAlgo to device
+            // Set Device AlgoSet status
+            // ExecuteScalar with device
+            // Unlock device
+
+            return result;
         }
 
         public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)

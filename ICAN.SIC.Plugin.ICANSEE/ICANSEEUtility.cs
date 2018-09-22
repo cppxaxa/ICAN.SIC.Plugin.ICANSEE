@@ -15,9 +15,10 @@ namespace ICAN.SIC.Plugin.ICANSEE
     {
         public Dictionary<int, CameraConfiguration> cameraConfigurationsMap = new Dictionary<int, CameraConfiguration>();
         public Dictionary<string, AlgorithmDescription> algorithmsDescriptionMap = new Dictionary<string, AlgorithmDescription>();
+        public List<ComputeDeviceInfo> computeDeviceInfoList = new List<ComputeDeviceInfo>();
         ImageClient imageClient;
 
-        public ICANSEEUtility(ImageClient imageClient, string algoDescriptionFileName = "AlgorithmsDescriptionList.json")
+        public ICANSEEUtility(ImageClient imageClient, string algoDescriptionFileName = "AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ComputeDeviceList.json")
         {
             this.imageClient = imageClient;
 
@@ -39,6 +40,28 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     Console.WriteLine(ex.Message);
                     Console.ResetColor();
                 }
+
+
+
+
+            if (!File.Exists(computeDeviceListFileName))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Compute Device List file not found: " + computeDeviceListFileName);
+                Console.ResetColor();
+            }
+            else
+                try
+                {
+                    LoadComputeDeviceListFromFile(computeDeviceListFileName);
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Error while reading Compute Device List : " + computeDeviceListFileName);
+                    Console.WriteLine(ex.Message);
+                    Console.ResetColor();
+                }
         }
 
         private void LoadAlgorithmDescriptionsFromFile(string filePath)
@@ -46,6 +69,12 @@ namespace ICAN.SIC.Plugin.ICANSEE
             string fileContent = File.ReadAllText(filePath);
             List<AlgorithmDescription> algoList = JsonConvert.DeserializeObject<List<AlgorithmDescription>>(fileContent);
             this.algorithmsDescriptionMap = algoList.ToDictionary(e => e.Id);
+        }
+
+        private void LoadComputeDeviceListFromFile(string filePath)
+        {
+            string fileContent = File.ReadAllText(filePath);
+            computeDeviceInfoList = JsonConvert.DeserializeObject<List<ComputeDeviceInfo>>(fileContent);
         }
 
         public List<AlgorithmDescription> GetAlgorithmsList()
@@ -105,31 +134,31 @@ namespace ICAN.SIC.Plugin.ICANSEE
             return null;
         }
 
-        public bool LoadAlgorithm(string Id)
+        public string LoadAlgorithm(string algoId)
         {
-            if (!algorithmsDescriptionMap.ContainsKey(Id))
+            if (!algorithmsDescriptionMap.ContainsKey(algoId))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + Id + ")\n - Algorithm Id not found");
+                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + algoId + ")\n - Algorithm Id not found");
                 Console.ResetColor();
 
-                return false;
+                return null;
             }
 
-            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"" + algorithmsDescriptionMap[Id].InitCommand + "\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"" + algorithmsDescriptionMap[algoId].GetInitCommand() + "\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
             try
             {
-                string result = imageClient.MakePostCall(algorithmsDescriptionMap[Id].Uri, apiCallBody);
-                Console.WriteLine("[INFO] ICANSEEUtility.LoadAlgorithm(" + Id + ")\n" + apiCallBody + "\n\n" + "Result: " + result);
-                return true;
+                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algoId].Uri, apiCallBody);
+                Console.WriteLine("[INFO] ICANSEEUtility.LoadAlgorithm(" + algoId + ")\n" + apiCallBody + "\n\n" + "Result: " + result);
+                return algorithmsDescriptionMap[algoId].AlgorithmTypeId;
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + Id + ")\n" + apiCallBody + "\n" + ex.Message);
+                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + algoId + ")\n" + apiCallBody + "\n" + ex.Message);
                 Console.ResetColor();
 
-                return false;
+                return null;
             }
         }
 
@@ -180,7 +209,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
         public string ExecuteAlgorithmScalar(string algorithmId)
         {
-            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + algorithmsDescriptionMap[algorithmId].ScalarExecuteCommand + "\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + algorithmsDescriptionMap[algorithmId].GetScalarExecuteCommand() + "\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
             try
             {
                 string result = imageClient.MakePostCall(algorithmsDescriptionMap[algorithmId].Uri, apiCallBody);
@@ -298,6 +327,16 @@ namespace ICAN.SIC.Plugin.ICANSEE
         private string RemoveSlashes(string str)
         {
             return str.Replace("\\", "");
+        }
+
+        public List<ComputeDeviceInfo> GetComputeDevicesList()
+        {
+            return computeDeviceInfoList;
+        }
+
+        public AlgorithmDescription QueryAlgoTypeId(string algoId)
+        {
+            return algorithmsDescriptionMap[algoId];
         }
     }
 }

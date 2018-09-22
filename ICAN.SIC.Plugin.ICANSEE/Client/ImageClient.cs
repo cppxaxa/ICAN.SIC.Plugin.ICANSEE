@@ -46,7 +46,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Client
             host = "";
             port = 0;
 
-            InitWebClient();
+            configWebClient();
         }
 
         public ImageClient(string host, int port)
@@ -55,10 +55,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Client
             this.port = port;
             urlSource = new ImageClientUrlHelper(host, port);
 
-            InitWebClient();
+            configWebClient();
         }
 
-        private void InitWebClient()
+        private void configWebClient()
         {
             webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
         }
@@ -83,13 +83,13 @@ namespace ICAN.SIC.Plugin.ICANSEE.Client
             if (host == "")
                 throw new NotImplementedException();
 
-            InitWebClient();
+            configWebClient();
             return webClient.UploadString("http://" + host + ":" + port + "/task", "POST", body);
         }
 
         public string MakePostCall(string Url, string body)
         {
-            InitWebClient();
+            configWebClient();
             return webClient.UploadString(Url, "POST", body);
         }
     }

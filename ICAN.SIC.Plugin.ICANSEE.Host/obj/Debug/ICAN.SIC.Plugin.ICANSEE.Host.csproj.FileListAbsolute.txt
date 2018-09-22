@@ -54,3 +54,4 @@ D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.S
 J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\AlgorithmsDescriptionList_Orig.json
 J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\AlgorithmsDescriptionList_Problem.json
 J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\AlgorithmsDescriptionList_Remote.json
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ComputeDeviceList.json
