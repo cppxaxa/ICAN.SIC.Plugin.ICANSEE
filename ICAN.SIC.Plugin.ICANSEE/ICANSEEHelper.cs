@@ -116,7 +116,8 @@ namespace ICAN.SIC.Plugin.ICANSEE
                         IsDeviceFree(currentDeviceInfo))
                 {
                     // Execute Scalar and return
-                    // NOT COMPLETE
+                    result = utility.ExecuteAlgorithmScalar(algoId, currentDeviceInfo);
+                    return result;
                 }
                 else
                 {
