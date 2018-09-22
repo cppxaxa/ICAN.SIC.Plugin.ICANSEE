@@ -112,6 +112,27 @@ namespace ICAN.SIC.Plugin.ICANSEE
             cameraConfigurationsMap[newCustomId] = cameraConfig;
         }
 
+        public string LoadDeviceLocalImage(string deviceLocalImagePath, ComputeDeviceInfo computeDeviceInfo)
+        {
+            try
+            {
+                string apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['imageSrc'] = cv2.imread('{{deviceLocalImagePath}}')\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+
+                apiCallBody = apiCallBody.Replace("{{deviceLocalImagePath}}", "\"" + deviceLocalImagePath + "\"");
+
+                string result = imageClient.MakePostCall("http://{{host}}:5000/task".Replace("{{host}}", computeDeviceInfo.IpAddress), apiCallBody);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.LoadCamera(val=" + deviceLocalImagePath + ")" + ex.Message);
+                Console.ResetColor();
+            }
+            return null;
+        }
+
         public string LoadCamera(int cameraConfigId, ComputeDeviceInfo computeDeviceInfo)
         {
             try
@@ -139,6 +160,25 @@ namespace ICAN.SIC.Plugin.ICANSEE
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ERROR] ICANSEEUtility.LoadCamera(val=" + cameraConfigId + ")" + ex.Message);
+                Console.ResetColor();
+            }
+            return null;
+        }
+
+        public string UnloadAllCameras(ComputeDeviceInfo computeDeviceInfo)
+        {
+            try
+            {
+                string apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'] = None\\nglobals()['imageSrc'] = None\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+
+                string result = imageClient.MakePostCall("http://{{host}}:5000/task".Replace("{{host}}", computeDeviceInfo.IpAddress), apiCallBody);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.UnloadCameras(" + computeDeviceInfo.IpAddress + ") " + ex.Message);
                 Console.ResetColor();
             }
             return null;
@@ -347,6 +387,13 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public AlgorithmDescription QueryAlgoTypeId(string algoId)
         {
             return algorithmsDescriptionMap[algoId];
+        }
+
+        public CameraConfiguration QueryCameraDescription(int cameraId)
+        {
+            if (cameraConfigurationsMap.ContainsKey(cameraId))
+                return cameraConfigurationsMap[cameraId];
+            return null;
         }
     }
 }

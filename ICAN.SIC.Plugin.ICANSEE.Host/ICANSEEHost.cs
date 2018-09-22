@@ -144,7 +144,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string result = helper.Dummy("Algo1");
+            string result = helper.Dummy(1, "Algo1");
 
             Console.WriteLine("[INFO] RunAlgo: " + result);
 
@@ -152,6 +152,21 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
                 Console.WriteLine(result);
             else
                 Console.WriteLine("Failure");
+        }
+
+        private void BtnRunAlgoOnImage_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnUnloadAllCameras_Click(object sender, EventArgs e)
+        {
+            var deviceInfo = helper.GetComputeDevicesList().First();
+
+            if (deviceInfo != null)
+                utility.UnloadAllCameras(deviceInfo);
+            else
+                Console.WriteLine("No device found to unload");
         }
     }
 }

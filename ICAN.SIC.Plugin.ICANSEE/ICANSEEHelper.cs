@@ -17,7 +17,9 @@ namespace ICAN.SIC.Plugin.ICANSEE
         ImageClient imageClient;
 
         List<ComputeDeviceInfo> computeDeviceList;
-        Dictionary<ComputeDeviceInfo, bool> computeDeviceLocked = new Dictionary<ComputeDeviceInfo,bool>();
+        Dictionary<ComputeDeviceInfo, bool> computeDeviceLocked = new Dictionary<ComputeDeviceInfo, bool>();
+        Dictionary<int, ComputeDeviceInfo> assignedDeviceForCameraMap = new Dictionary<int, ComputeDeviceInfo>();
+        Dictionary<string, ComputeDeviceInfo> assignedDeviceForAlgoTypeMap = new Dictionary<string, ComputeDeviceInfo>();
 
         public ICANSEEHelper(ICANSEEUtility utility, ImageClient imageClient)
         {
@@ -59,7 +61,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             return this.utility.GetComputeDevicesList();
         }
 
-        public string Dummy(string algoId)
+        public string Dummy(int cameraId, string algoId)
         {
             string result = "";
 
@@ -69,29 +71,127 @@ namespace ICAN.SIC.Plugin.ICANSEE
             // Find all SupportedDeviceTypeIds
 
             // Check if camera already loaded in any device
-                // If the device.DeviceTypeId in any SupportedDeviceTypeIds
-                    // RETURN - Execute scalar
-                // Else 
-                    // Unload camera
-            
+            // If the device.DeviceTypeId in any SupportedDeviceTypeIds
+            // RETURN - Execute scalar
+            // Else 
+            // Unload camera
+
             // Check which device already have the algo loaded
-                // If found, ExecuteScalar for that device
-                // Else, list all devices with supportedDeviceTypeId
-                    // Load the algo in that device and ExecteScalar
-                    // RETURN result
+            // If found, ExecuteScalar for that device
+            // Else, list all devices with supportedDeviceTypeId
+            // Load the algo in that device and ExecteScalar
+            // RETURN result
 
             var algoDecription = utility.QueryAlgoTypeId(algoId);
+
             string algoTypeId = algoDecription.AlgorithmTypeId;
             List<string> supportedDeviceTypeIdList = algoDecription.SupportedDeviceTypeIdList;
 
-            // List<ComputeDeviceInfo> availableComputeDevices = QueryFreeDevices(supportedDeviceTypeIdList, algoTypeId);
-            // Lock the available device
-            // LoadAlgo to device
-            // Set Device AlgoSet status
-            // ExecuteScalar with device
-            // Unlock device
+            var cameraDesc = utility.QueryCameraDescription(cameraId);
+            if (cameraDesc == null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] Helper.ExecuteAlgo : CameraId=" + cameraId + " not available");
+                Console.ResetColor();
+                return "";
+            }
+
+            if (assignedDeviceForCameraMap.ContainsKey(cameraId) && assignedDeviceForCameraMap[cameraId] != null)
+            {
+                // Camera is already loaded
+                // Check if device already have the algoType loaded
+                var currentDeviceInfo = assignedDeviceForCameraMap[cameraId];
+
+
+                bool isCompatibleDeviceForAlgo = false;
+                foreach (var deviceTypeId in algoDecription.SupportedDeviceTypeIdList)
+                {
+                    if (currentDeviceInfo.DeviceTypeId == deviceTypeId)
+                        isCompatibleDeviceForAlgo = true;
+                }
+
+                if (isCompatibleDeviceForAlgo &&
+                        assignedDeviceForAlgoTypeMap.ContainsKey(algoDecription.AlgorithmTypeId) &&
+                        currentDeviceInfo == assignedDeviceForAlgoTypeMap[algoDecription.AlgorithmTypeId] &&
+                        IsDeviceFree(currentDeviceInfo))
+                {
+                    // Execute Scalar and return
+                    // NOT COMPLETE
+                }
+                else
+                {
+                    // Unload the camera
+                    utility.UnloadAllCameras(currentDeviceInfo);
+                }
+            }
+            else
+            {
+                // Get a compatible device, load the camera and execute scalar
+                List<ComputeDeviceInfo> availableComputeDevices = QueryFreeDevices(supportedDeviceTypeIdList);
+
+                if (availableComputeDevices.Count <= 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("[ERROR] SupportedComputeDevices matching for algo type not found: ");
+                    foreach (var item in supportedDeviceTypeIdList)
+                    {
+                        Console.WriteLine("\t" + item);
+                    }
+                    Console.ResetColor();
+                    return "";
+                }
+
+
+                // Device selection algo : FCFS
+                ComputeDeviceInfo deviceInfo = availableComputeDevices.First();
+
+                utility.LoadCamera(cameraId, deviceInfo);
+
+                computeDeviceLocked[deviceInfo] = true;
+                {
+                    // Set new status
+                    assignedDeviceForCameraMap[cameraId] = deviceInfo;
+                    assignedDeviceForAlgoTypeMap[algoTypeId] = deviceInfo;
+
+                    utility.LoadAlgorithm(algoId, deviceInfo);
+                    result = utility.ExecuteAlgorithmScalar(algoId, deviceInfo);
+                }
+                computeDeviceLocked[deviceInfo] = false;
+
+
+                return result;
+            }
 
             return result;
+        }
+
+        private List<ComputeDeviceInfo> QueryFreeDevices(List<string> supportedDeviceTypeIdList)
+        {
+            List<ComputeDeviceInfo> result = new List<ComputeDeviceInfo>();
+
+            HashSet<string> supportedDeviceTypeIdSet = new HashSet<string>();
+            foreach (var item in supportedDeviceTypeIdList)
+            {
+                supportedDeviceTypeIdSet.Add(item);
+            }
+
+            var availableDevices = GetComputeDevicesList();
+            foreach (var deviceInfo in availableDevices)
+            {
+                if (supportedDeviceTypeIdSet.Contains(deviceInfo.DeviceTypeId))
+                {
+                    result.Add(deviceInfo);
+                }
+            }
+
+            return result;
+        }
+
+        private bool IsDeviceFree(ComputeDeviceInfo currentDeviceInfo)
+        {
+            if (!computeDeviceLocked.ContainsKey(currentDeviceInfo))
+                return true;
+            return !computeDeviceLocked[currentDeviceInfo];
         }
 
         public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)

@@ -42,14 +42,16 @@
             this.BtnLoadAlgorithm = new System.Windows.Forms.Button();
             this.BtnListAllComputeDevices = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.BtnRunAlgoOnImage = new System.Windows.Forms.Button();
+            this.BtnUnloadAllCameras = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnReadFBP
             // 
-            this.BtnReadFBP.Location = new System.Drawing.Point(6, 31);
+            this.BtnReadFBP.Location = new System.Drawing.Point(6, 30);
             this.BtnReadFBP.Margin = new System.Windows.Forms.Padding(2);
             this.BtnReadFBP.Name = "BtnReadFBP";
-            this.BtnReadFBP.Size = new System.Drawing.Size(154, 29);
+            this.BtnReadFBP.Size = new System.Drawing.Size(142, 22);
             this.BtnReadFBP.TabIndex = 0;
             this.BtnReadFBP.Text = "Read FBP";
             this.BtnReadFBP.UseVisualStyleBackColor = true;
@@ -57,20 +59,20 @@
             // 
             // BtnShowParsedFBP
             // 
-            this.BtnShowParsedFBP.Location = new System.Drawing.Point(6, 64);
+            this.BtnShowParsedFBP.Location = new System.Drawing.Point(6, 56);
             this.BtnShowParsedFBP.Margin = new System.Windows.Forms.Padding(2);
             this.BtnShowParsedFBP.Name = "BtnShowParsedFBP";
-            this.BtnShowParsedFBP.Size = new System.Drawing.Size(154, 29);
+            this.BtnShowParsedFBP.Size = new System.Drawing.Size(142, 21);
             this.BtnShowParsedFBP.TabIndex = 1;
             this.BtnShowParsedFBP.Text = "Show parsed FBP";
             this.BtnShowParsedFBP.UseVisualStyleBackColor = true;
             // 
             // BtnExecute
             // 
-            this.BtnExecute.Location = new System.Drawing.Point(6, 97);
+            this.BtnExecute.Location = new System.Drawing.Point(6, 81);
             this.BtnExecute.Margin = new System.Windows.Forms.Padding(2);
             this.BtnExecute.Name = "BtnExecute";
-            this.BtnExecute.Size = new System.Drawing.Size(154, 29);
+            this.BtnExecute.Size = new System.Drawing.Size(142, 21);
             this.BtnExecute.TabIndex = 2;
             this.BtnExecute.Text = "Execute";
             this.BtnExecute.UseVisualStyleBackColor = true;
@@ -85,10 +87,10 @@
             // 
             // BtnDfs
             // 
-            this.BtnDfs.Location = new System.Drawing.Point(163, 31);
+            this.BtnDfs.Location = new System.Drawing.Point(152, 30);
             this.BtnDfs.Margin = new System.Windows.Forms.Padding(2);
             this.BtnDfs.Name = "BtnDfs";
-            this.BtnDfs.Size = new System.Drawing.Size(154, 29);
+            this.BtnDfs.Size = new System.Drawing.Size(142, 22);
             this.BtnDfs.TabIndex = 4;
             this.BtnDfs.Text = "Get DFS";
             this.BtnDfs.UseVisualStyleBackColor = true;
@@ -96,10 +98,10 @@
             // 
             // BtnDummyCall
             // 
-            this.BtnDummyCall.Location = new System.Drawing.Point(320, 31);
+            this.BtnDummyCall.Location = new System.Drawing.Point(298, 30);
             this.BtnDummyCall.Margin = new System.Windows.Forms.Padding(2);
             this.BtnDummyCall.Name = "BtnDummyCall";
-            this.BtnDummyCall.Size = new System.Drawing.Size(153, 29);
+            this.BtnDummyCall.Size = new System.Drawing.Size(142, 22);
             this.BtnDummyCall.TabIndex = 5;
             this.BtnDummyCall.Text = "Make a Call";
             this.BtnDummyCall.UseVisualStyleBackColor = true;
@@ -185,11 +187,34 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // BtnRunAlgoOnImage
+            // 
+            this.BtnRunAlgoOnImage.Location = new System.Drawing.Point(175, 184);
+            this.BtnRunAlgoOnImage.Name = "BtnRunAlgoOnImage";
+            this.BtnRunAlgoOnImage.Size = new System.Drawing.Size(290, 23);
+            this.BtnRunAlgoOnImage.TabIndex = 14;
+            this.BtnRunAlgoOnImage.Text = "Run algo image on image";
+            this.BtnRunAlgoOnImage.UseVisualStyleBackColor = true;
+            this.BtnRunAlgoOnImage.Click += new System.EventHandler(this.BtnRunAlgoOnImage_Click);
+            // 
+            // BtnUnloadAllCameras
+            // 
+            this.BtnUnloadAllCameras.Location = new System.Drawing.Point(323, 126);
+            this.BtnUnloadAllCameras.Name = "BtnUnloadAllCameras";
+            this.BtnUnloadAllCameras.Size = new System.Drawing.Size(142, 23);
+            this.BtnUnloadAllCameras.TabIndex = 15;
+            this.BtnUnloadAllCameras.Text = "Unload All Cameras";
+            this.BtnUnloadAllCameras.UseVisualStyleBackColor = true;
+            this.BtnUnloadAllCameras.Click += new System.EventHandler(this.BtnUnloadAllCameras_Click);
+            // 
             // ICANSEEHost
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(653, 185);
+            this.ClientSize = new System.Drawing.Size(653, 213);
+            this.Controls.Add(this.BtnUnloadAllCameras);
+            this.Controls.Add(this.BtnReadFBP);
+            this.Controls.Add(this.BtnRunAlgoOnImage);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.BtnListAllComputeDevices);
             this.Controls.Add(this.BtnLoadAlgorithm);
@@ -203,7 +228,6 @@
             this.Controls.Add(this.TxtFbpPath);
             this.Controls.Add(this.BtnExecute);
             this.Controls.Add(this.BtnShowParsedFBP);
-            this.Controls.Add(this.BtnReadFBP);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
@@ -231,6 +255,8 @@
         private System.Windows.Forms.Button BtnLoadAlgorithm;
         private System.Windows.Forms.Button BtnListAllComputeDevices;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button BtnRunAlgoOnImage;
+        private System.Windows.Forms.Button BtnUnloadAllCameras;
     }
 }
 
