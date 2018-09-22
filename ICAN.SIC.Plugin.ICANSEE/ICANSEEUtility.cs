@@ -16,6 +16,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public Dictionary<int, CameraConfiguration> cameraConfigurationsMap = new Dictionary<int, CameraConfiguration>();
         public Dictionary<string, AlgorithmDescription> algorithmsDescriptionMap = new Dictionary<string, AlgorithmDescription>();
         public List<ComputeDeviceInfo> computeDeviceInfoList = new List<ComputeDeviceInfo>();
+        public Dictionary<string, List<ComputeDeviceInfo>> computeDeviceInfoListMap = new Dictionary<string, List<ComputeDeviceInfo>>();
         ImageClient imageClient;
 
         public ICANSEEUtility(ImageClient imageClient, string algoDescriptionFileName = "AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ComputeDeviceList.json")
@@ -75,6 +76,15 @@ namespace ICAN.SIC.Plugin.ICANSEE
         {
             string fileContent = File.ReadAllText(filePath);
             computeDeviceInfoList = JsonConvert.DeserializeObject<List<ComputeDeviceInfo>>(fileContent);
+
+            foreach (var item in computeDeviceInfoList)
+            {
+                if (!computeDeviceInfoListMap.ContainsKey(item.DeviceTypeId))
+                {
+                    computeDeviceInfoListMap[item.DeviceTypeId] = new List<ComputeDeviceInfo>();
+                }
+                computeDeviceInfoListMap[item.DeviceTypeId].Add(item);
+            }
         }
 
         public List<AlgorithmDescription> GetAlgorithmsList()
@@ -102,7 +112,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             cameraConfigurationsMap[newCustomId] = cameraConfig;
         }
 
-        public string LoadCamera(int cameraConfigId)
+        public string LoadCamera(int cameraConfigId, ComputeDeviceInfo computeDeviceInfo)
         {
             try
             {
@@ -120,7 +130,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                         apiCallBody = apiCallBody.Replace("{{index}}", "\"" + cameraConfig.Url + "\"");
                     }
 
-                    string result = imageClient.MakePostCall("http://localhost:5000/task", apiCallBody);
+                    string result = imageClient.MakePostCall("http://{{host}}:5000/task".Replace("{{host}}", computeDeviceInfo.IpAddress), apiCallBody);
 
                     return result;
                 }
@@ -134,7 +144,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             return null;
         }
 
-        public string LoadAlgorithm(string algoId)
+        public string LoadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo)
         {
             if (!algorithmsDescriptionMap.ContainsKey(algoId))
             {
@@ -145,10 +155,10 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 return null;
             }
 
-            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"" + algorithmsDescriptionMap[algoId].GetInitCommand() + "\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"" + algorithmsDescriptionMap[algoId].GetInitCommand(computeDeviceInfo.IpAddress) + "\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
             try
             {
-                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algoId].Uri, apiCallBody);
+                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algoId].GetUri(computeDeviceInfo.IpAddress), apiCallBody);
                 Console.WriteLine("[INFO] ICANSEEUtility.LoadAlgorithm(" + algoId + ")\n" + apiCallBody + "\n\n" + "Result: " + result);
                 return algorithmsDescriptionMap[algoId].AlgorithmTypeId;
             }
@@ -162,7 +172,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             }
         }
 
-        public string ExecuteAlgorithm(bool RunOnce, bool InfiniteLoop, int LoopLimit, bool ReturnResult, string resultProcessingStatement, string algorithmId)
+        public string ExecuteAlgorithm(string ipAddress, bool RunOnce, bool InfiniteLoop, int LoopLimit, bool ReturnResult, string resultProcessingStatement, string algorithmId)
         {
             if (!algorithmsDescriptionMap.ContainsKey(algorithmId))
             {
@@ -195,7 +205,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
 
 
-                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algorithmId].Uri, apiCallBody);
+                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algorithmId].GetUri(ipAddress), apiCallBody);
                 return result;
             }
             catch (Exception ex)
@@ -207,12 +217,12 @@ namespace ICAN.SIC.Plugin.ICANSEE
             return null;
         }
 
-        public string ExecuteAlgorithmScalar(string algorithmId)
+        public string ExecuteAlgorithmScalar(string algorithmId, ComputeDeviceInfo computeDeviceInfo)
         {
-            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + algorithmsDescriptionMap[algorithmId].GetScalarExecuteCommand() + "\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + algorithmsDescriptionMap[algorithmId].GetScalarExecuteCommand(computeDeviceInfo.IpAddress) + "\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
             try
             {
-                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algorithmId].Uri, apiCallBody);
+                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algorithmId].GetUri(computeDeviceInfo.IpAddress), apiCallBody);
                 return result;
             }
             catch (Exception ex)

@@ -1,4 +1,5 @@
 ﻿using ICAN.SIC.Plugin.ICANSEE.Client;
+using ICAN.SIC.Plugin.ICANSEE.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -97,7 +98,8 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnLoadCameraConfig_Click(object sender, EventArgs e)
         {
-            string result = utility.LoadCamera(1);
+            ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
+            string result = utility.LoadCamera(1, firstDevice);
 
             if (result != null)
                 Console.WriteLine(result);
@@ -107,7 +109,8 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnRunGPUAlgo_Click(object sender, EventArgs e)
         {
-            string result = utility.ExecuteAlgorithmScalar("Algo1");
+            ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
+            string result = utility.ExecuteAlgorithmScalar("Algo1", firstDevice);
 
             Console.WriteLine("[INFO] RunAlgo: " + result);
 
@@ -119,7 +122,8 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnLoadAlgorithm_Click(object sender, EventArgs e)
         {
-            string algoType = utility.LoadAlgorithm("Algo1");
+            ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
+            string algoType = utility.LoadAlgorithm("Algo1", firstDevice);
 
             if (algoType != null)
                 Console.WriteLine("Success with AlgoType-" + algoType);
@@ -140,7 +144,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string result = helper.Dummy("1");
+            string result = helper.Dummy("Algo1");
 
             Console.WriteLine("[INFO] RunAlgo: " + result);
 

@@ -68,10 +68,17 @@ namespace ICAN.SIC.Plugin.ICANSEE
             // Find AlgoTypeId
             // Find all SupportedDeviceTypeIds
 
+            // Check if camera already loaded in any device
+                // If the device.DeviceTypeId in any SupportedDeviceTypeIds
+                    // RETURN - Execute scalar
+                // Else 
+                    // Unload camera
+            
             // Check which device already have the algo loaded
                 // If found, ExecuteScalar for that device
                 // Else, list all devices with supportedDeviceTypeId
                     // Load the algo in that device and ExecteScalar
+                    // RETURN result
 
             var algoDecription = utility.QueryAlgoTypeId(algoId);
             string algoTypeId = algoDecription.AlgorithmTypeId;

@@ -16,14 +16,19 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public string ScalarExecuteCommand;
         public string Description;
 
-        public string GetScalarExecuteCommand()
+        public string GetScalarExecuteCommand(string ipAddress)
         {
-            return ScalarExecuteCommand.Replace("\"", "\\\"").Replace("\n", "\\n");
+            return ScalarExecuteCommand.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("{{host}}", ipAddress);
         }
 
-        public string GetInitCommand()
+        public string GetInitCommand(string ipAddress)
         {
-            return ScalarExecuteCommand.Replace("\"", "\\\"").Replace("\n", "\\n");
+            return InitCommand.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("{{host}}", ipAddress);
+        }
+
+        public string GetUri(string ipAddress)
+        {
+            return Uri.Replace("{{host}}", ipAddress);
         }
     }
 }
