@@ -1,5 +1,6 @@
 ﻿using ICAN.SIC.Abstractions;
 using ICAN.SIC.Plugin.ICANSEE.Client;
+using ICAN.SIC.Plugin.ICANSEE.DataTypes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,40 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
         public ICANSEE() : base("ICANSEEv1")
         {
-            imageClient = new ImageClient("localhost", 5000);
+            imageClient = new ImageClient();
 
             utility = new ICANSEEUtility(imageClient);
             helper = new ICANSEEHelper(utility, imageClient);
+        }
+
+        public string ExecuteScalar(int cameraId, string algoId)
+        {
+            return helper.ExecuteScalar(cameraId, algoId);
+        }
+
+        public void AddReplaceCameraConfiguration(int newCustomId, CameraConfiguration cameraConfig)
+        {
+            helper.AddReplaceCameraConfiguration(newCustomId, cameraConfig);
+        }
+
+        public bool AddCameraConfiguration(int newCustomId, CameraConfiguration cameraConfig)
+        {
+            return helper.AddCameraConfiguration(newCustomId, cameraConfig);
+        }
+
+        public List<ComputeDeviceInfo> GetComputeDevicesList()
+        {
+            return helper.GetComputeDevicesList();
+        }
+
+        public List<CameraConfiguration> GetAllCameraConfigurations()
+        {
+            return helper.GetAllCameraConfigurations();
+        }
+
+        public List<AlgorithmDescription> GetAlgorithmsList()
+        {
+            return helper.GetAlgorithmsList();
         }
 
         public FBPGraph ReadFBPConfiguration(string filepath)
@@ -39,12 +70,6 @@ namespace ICAN.SIC.Plugin.ICANSEE
             File.WriteAllText("Debug Replacers Result.txt", dumpOfConvertedValue);
 
             return graph;
-        }
-
-        public void MakeDummyPostCall()
-        {
-            string result = imageClient.MakePostCall("{	\"Fbp\":[		\"Start\",		\"\",		\"result = tfnet.return_predict(imageSrc)\\noutput = str(result)\"		],	\"RunOnce\": true,	\"InfiniteLoop\": false,	\"LoopLimit\": 1,	\"ReturnResult\": true }");
-            Console.WriteLine(result);
         }
 
         public void Execute(List<string> FbpCommands, bool RunOnce = true, bool InfiniteLoop = false, int LoopLimit = 1)
@@ -68,12 +93,6 @@ namespace ICAN.SIC.Plugin.ICANSEE
             ReplacementConfiguration config = utility.ReadConfigurationFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ICANSEEDrwReplacementConfiguration.json"));
             FBPGraph graph = helper.GenerateFBPGraphFromDrwFile(File.OpenRead(filepath), config);
             return graph;
-        }
-
-        public void MakeDummyGetCall()
-        {
-            string result = imageClient.MakeGetCall();
-            Console.WriteLine(result);
         }
     }
 }

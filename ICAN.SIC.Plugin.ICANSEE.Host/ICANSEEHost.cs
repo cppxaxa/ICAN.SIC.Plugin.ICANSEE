@@ -144,7 +144,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string result = helper.Dummy(1, "Algo1");
+            string result = helper.ExecuteScalar(1, "Algo1");
 
             Console.WriteLine("[INFO] RunAlgo: " + result);
 

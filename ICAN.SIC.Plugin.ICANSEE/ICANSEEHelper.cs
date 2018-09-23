@@ -36,7 +36,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             }
         }
 
-        public bool AddCameraConfig(int newCustomId, CameraConfiguration cameraConfig)
+        public bool AddCameraConfiguration(int newCustomId, CameraConfiguration cameraConfig)
         {
             return this.utility.AddCameraConfig(newCustomId, cameraConfig);
         }
@@ -62,6 +62,11 @@ namespace ICAN.SIC.Plugin.ICANSEE
         }
 
         public string Dummy(int cameraId, string algoId)
+        {
+            return ExecuteScalar(cameraId, algoId);
+        }
+
+        public string ExecuteScalar(int cameraId, string algoId)
         {
             string result = "";
 
