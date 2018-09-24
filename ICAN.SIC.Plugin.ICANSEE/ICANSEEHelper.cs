@@ -63,7 +63,9 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
         public string Dummy(int cameraId, string algoId)
         {
-            return ExecuteScalar(cameraId, algoId);
+            //return ExecuteScalar(cameraId, algoId);
+            UnloadAllAlgorithms();
+            return "Done";
         }
 
         public string ExecuteScalar(int cameraId, string algoId)
@@ -198,6 +200,16 @@ namespace ICAN.SIC.Plugin.ICANSEE
             if (!computeDeviceLocked.ContainsKey(currentDeviceInfo))
                 return true;
             return !computeDeviceLocked[currentDeviceInfo];
+        }
+
+        public void UnloadAllAlgorithms()
+        {
+            utility.UnloadAllAlgorithms();
+        }
+
+        public void UnloadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo)
+        {
+            utility.UnloadAlgorithm(algoId, computeDeviceInfo);
         }
 
         public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)

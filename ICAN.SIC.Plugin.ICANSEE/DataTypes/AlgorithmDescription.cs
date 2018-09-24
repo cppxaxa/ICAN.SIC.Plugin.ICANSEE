@@ -15,10 +15,16 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public string InitCommand;
         public string ScalarExecuteCommand;
         public string Description;
+        public string UnloadCommand;
 
         public string GetScalarExecuteCommand(string ipAddress)
         {
             return ScalarExecuteCommand.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("{{host}}", ipAddress);
+        }
+
+        public string GetUnloadCommand(string ipAddress)
+        {
+            return UnloadCommand.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("{{host}}", ipAddress);
         }
 
         public string GetInitCommand(string ipAddress)

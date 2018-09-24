@@ -44,6 +44,8 @@
             this.button1 = new System.Windows.Forms.Button();
             this.BtnRunAlgoOnImage = new System.Windows.Forms.Button();
             this.BtnUnloadAllCameras = new System.Windows.Forms.Button();
+            this.BtnUnloadAlgorithm = new System.Windows.Forms.Button();
+            this.BtnUnloadAllAlgorithms = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnReadFBP
@@ -207,11 +209,32 @@
             this.BtnUnloadAllCameras.UseVisualStyleBackColor = true;
             this.BtnUnloadAllCameras.Click += new System.EventHandler(this.BtnUnloadAllCameras_Click);
             // 
+            // BtnUnloadAlgorithm
+            // 
+            this.BtnUnloadAlgorithm.Location = new System.Drawing.Point(471, 155);
+            this.BtnUnloadAlgorithm.Name = "BtnUnloadAlgorithm";
+            this.BtnUnloadAlgorithm.Size = new System.Drawing.Size(142, 23);
+            this.BtnUnloadAlgorithm.TabIndex = 16;
+            this.BtnUnloadAlgorithm.Text = "Unload Algorithm";
+            this.BtnUnloadAlgorithm.UseVisualStyleBackColor = true;
+            // 
+            // BtnUnloadAllAlgorithms
+            // 
+            this.BtnUnloadAllAlgorithms.Location = new System.Drawing.Point(471, 184);
+            this.BtnUnloadAllAlgorithms.Name = "BtnUnloadAllAlgorithms";
+            this.BtnUnloadAllAlgorithms.Size = new System.Drawing.Size(142, 23);
+            this.BtnUnloadAllAlgorithms.TabIndex = 17;
+            this.BtnUnloadAllAlgorithms.Text = "Unload All Algorithms";
+            this.BtnUnloadAllAlgorithms.UseVisualStyleBackColor = true;
+            this.BtnUnloadAllAlgorithms.Click += new System.EventHandler(this.BtnUnloadAllAlgorithms_Click);
+            // 
             // ICANSEEHost
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(653, 213);
+            this.Controls.Add(this.BtnUnloadAllAlgorithms);
+            this.Controls.Add(this.BtnUnloadAlgorithm);
             this.Controls.Add(this.BtnUnloadAllCameras);
             this.Controls.Add(this.BtnReadFBP);
             this.Controls.Add(this.BtnRunAlgoOnImage);
@@ -257,6 +280,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button BtnRunAlgoOnImage;
         private System.Windows.Forms.Button BtnUnloadAllCameras;
+        private System.Windows.Forms.Button BtnUnloadAlgorithm;
+        private System.Windows.Forms.Button BtnUnloadAllAlgorithms;
     }
 }
 

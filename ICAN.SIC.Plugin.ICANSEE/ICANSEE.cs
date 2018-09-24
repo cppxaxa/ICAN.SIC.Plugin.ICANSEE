@@ -94,5 +94,15 @@ namespace ICAN.SIC.Plugin.ICANSEE
             FBPGraph graph = helper.GenerateFBPGraphFromDrwFile(File.OpenRead(filepath), config);
             return graph;
         }
+
+        public void UnloadAllAlgorithms()
+        {
+            helper.UnloadAllAlgorithms();
+        }
+
+        public void UnloadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo)
+        {
+            helper.UnloadAlgorithm(algoId, computeDeviceInfo);
+        }
     }
 }

@@ -168,5 +168,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             else
                 Console.WriteLine("No device found to unload");
         }
+
+        private void BtnUnloadAllAlgorithms_Click(object sender, EventArgs e)
+        {
+            helper.UnloadAllAlgorithms();
+        }
     }
 }

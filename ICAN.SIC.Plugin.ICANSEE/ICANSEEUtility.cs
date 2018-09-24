@@ -15,6 +15,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
     {
         public Dictionary<int, CameraConfiguration> cameraConfigurationsMap = new Dictionary<int, CameraConfiguration>();
         public Dictionary<string, AlgorithmDescription> algorithmsDescriptionMap = new Dictionary<string, AlgorithmDescription>();
+        public Dictionary<string, string> unloadCommandDeviceTypeToCommadMap = new Dictionary<string, string>();
         public List<ComputeDeviceInfo> computeDeviceInfoList = new List<ComputeDeviceInfo>();
         public Dictionary<string, List<ComputeDeviceInfo>> computeDeviceInfoListMap = new Dictionary<string, List<ComputeDeviceInfo>>();
         ImageClient imageClient;
@@ -70,6 +71,18 @@ namespace ICAN.SIC.Plugin.ICANSEE
             string fileContent = File.ReadAllText(filePath);
             List<AlgorithmDescription> algoList = JsonConvert.DeserializeObject<List<AlgorithmDescription>>(fileContent);
             this.algorithmsDescriptionMap = algoList.ToDictionary(e => e.Id);
+
+            foreach (var algoDesc in algoList)
+            {
+                foreach (var deviceTypeId in algoDesc.SupportedDeviceTypeIdList)
+                {
+                    if (!unloadCommandDeviceTypeToCommadMap.ContainsKey(deviceTypeId))
+                    {
+                        unloadCommandDeviceTypeToCommadMap[deviceTypeId] = "";
+                    }
+                    unloadCommandDeviceTypeToCommadMap[deviceTypeId] += "\\n" + algoDesc.GetUnloadCommand("{{host}}");
+                }
+            }
         }
 
         private void LoadComputeDeviceListFromFile(string filePath)
@@ -394,6 +407,58 @@ namespace ICAN.SIC.Plugin.ICANSEE
             if (cameraConfigurationsMap.ContainsKey(cameraId))
                 return cameraConfigurationsMap[cameraId];
             return null;
+        }
+
+        public void UnloadAllAlgorithms()
+        {
+            foreach (var deviceInfo in computeDeviceInfoList)
+            {
+                if (unloadCommandDeviceTypeToCommadMap.ContainsKey(deviceInfo.DeviceTypeId))
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.WriteLine("[INFO] UnloadAllAlgorithm(" + deviceInfo.DeviceTypeId + " " + deviceInfo.IpAddress + "): Request to unload algorithm started");
+                    Console.ResetColor();
+                    
+                    imageClient.MakePostCall(deviceInfo.IpAddress, unloadCommandDeviceTypeToCommadMap[deviceInfo.DeviceTypeId]);
+                    
+                    Console.Write("[INFO] UnloadAllAlgorithm(" + deviceInfo.DeviceTypeId + " " + deviceInfo.IpAddress + "): ");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("SUCCESS");
+                    Console.ResetColor();
+                }
+            }
+        }
+
+        public void UnloadAlgorithm(string algorithmId, ComputeDeviceInfo computeDeviceInfo)
+        {
+            if (algorithmsDescriptionMap.ContainsKey(algorithmId))
+            {
+                bool IsDeviceSupported = false;
+                foreach (var deviceId in algorithmsDescriptionMap[algorithmId].SupportedDeviceTypeIdList)
+                {
+                    if (deviceId == computeDeviceInfo.DeviceTypeId)
+                    {
+                        IsDeviceSupported = true;
+                        break;
+                    }
+                }
+
+                if (!IsDeviceSupported)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("[ERROR] UnloadAlgorithm(" + algorithmId + ", " + computeDeviceInfo.IpAddress + "): The device doesn't support the algorithm");
+                    Console.ResetColor();
+                    return;
+                }
+
+                imageClient.MakePostCall(computeDeviceInfo.IpAddress, algorithmsDescriptionMap[algorithmId].GetUnloadCommand(computeDeviceInfo.IpAddress));
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] UnloadAlgorithm(" + algorithmId + ", " + computeDeviceInfo.IpAddress + "): We cannot find the algorithmId");
+                Console.ResetColor();
+            }
         }
     }
 }
