@@ -74,6 +74,9 @@
     <None Include="AlgorithmsDescriptionList.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="CameraConfigurationList.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="ComputeDeviceList.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

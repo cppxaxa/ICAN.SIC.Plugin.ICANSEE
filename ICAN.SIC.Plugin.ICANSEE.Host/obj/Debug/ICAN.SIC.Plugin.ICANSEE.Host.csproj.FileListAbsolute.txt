@@ -52,3 +52,4 @@ D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.S
 D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.exe
 D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.pdb
 J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ComputeDeviceList.json
+J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\CameraConfigurationList.json

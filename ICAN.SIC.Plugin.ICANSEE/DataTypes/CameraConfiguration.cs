@@ -7,9 +7,10 @@ namespace ICAN.SIC.Plugin.ICANSEE
 {
     public class CameraConfiguration
     {
-        public int Index { get; private set; }
-        public string Url { get; private set; }
-        public string Label { get; private set; }
+        public int Id { get; set; }
+        public int Index { get; set; }
+        public string Url { get; set; }
+        public string Label { get; set; }
 
         public CameraConfiguration()
         {

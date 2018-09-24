@@ -20,7 +20,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public Dictionary<string, List<ComputeDeviceInfo>> computeDeviceInfoListMap = new Dictionary<string, List<ComputeDeviceInfo>>();
         ImageClient imageClient;
 
-        public ICANSEEUtility(ImageClient imageClient, string algoDescriptionFileName = "AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ComputeDeviceList.json")
+        public ICANSEEUtility(ImageClient imageClient, string algoDescriptionFileName = "AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ComputeDeviceList.json", string cameraListFileName = "CameraConfigurationList.json")
         {
             this.imageClient = imageClient;
 
@@ -64,6 +64,26 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     Console.WriteLine(ex.Message);
                     Console.ResetColor();
                 }
+
+
+            if (!File.Exists(cameraListFileName))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Camera description list file not found: " + cameraListFileName);
+                Console.ResetColor();
+            }
+            else
+                try
+                {
+                    LoadCameraDescriptionsFromFile(cameraListFileName);
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Error while reading Camera description list : " + cameraListFileName);
+                    Console.WriteLine(ex.Message);
+                    Console.ResetColor();
+                }
         }
 
         private void LoadAlgorithmDescriptionsFromFile(string filePath)
@@ -83,6 +103,13 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     unloadCommandDeviceTypeToCommadMap[deviceTypeId] += "\\n" + algoDesc.GetUnloadCommand("{{host}}");
                 }
             }
+        }
+        
+        private void LoadCameraDescriptionsFromFile(string filePath)
+        {
+            string fileContent = File.ReadAllText(filePath);
+            List<CameraConfiguration> cameraList = JsonConvert.DeserializeObject<List<CameraConfiguration>>(fileContent);
+            this.cameraConfigurationsMap = cameraList.ToDictionary(e => e.Id);
         }
 
         private void LoadComputeDeviceListFromFile(string filePath)
