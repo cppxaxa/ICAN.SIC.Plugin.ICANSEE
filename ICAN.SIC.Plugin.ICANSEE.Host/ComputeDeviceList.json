@@ -1,0 +1,8 @@
+﻿[
+    {
+        "Label": "Acer Nitro 5-YTD Linux",
+        "IpAddress": "localhost",
+        "DeviceTypeId": "NVIDIA_GPU",
+        "Description": "NVIDIA GTX 1050 Ti"
+    }
+]

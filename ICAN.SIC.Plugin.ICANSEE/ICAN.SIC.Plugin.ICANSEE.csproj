@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICAN.SIC.Abstractions">
+      <HintPath>..\..\ICAN.SIC\bin\Debug\ICAN.SIC.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -43,21 +46,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTypes\AlgorithmDescription.cs" />
+    <Compile Include="DataTypes\CameraConfiguration.cs" />
+    <Compile Include="Client\CommandType.cs" />
+    <Compile Include="DataTypes\ComputeDeviceInfo.cs" />
     <Compile Include="DataTypes\DrwBlock.cs" />
     <Compile Include="DataTypes\DrwConnection.cs" />
     <Compile Include="DataTypes\FBPGraph.cs" />
     <Compile Include="DrwReplacementConfigurationUnit.cs" />
     <Compile Include="ICANSEE.cs" />
-    <Compile Include="DataTypes\ICANSEEAPICall.cs" />
-    <Compile Include="DataTypes\ICANSEEApiCallDescription.cs" />
     <Compile Include="ICANSEEHelper.cs" />
     <Compile Include="ICANSEEUtility.cs" />
+    <Compile Include="Client\ImageClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplacementConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FBPParser\" />
-    <Folder Include="ImageClient\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="drawfbp-2.13.23.jar">
