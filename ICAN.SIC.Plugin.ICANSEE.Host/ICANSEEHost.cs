@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -59,7 +58,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         }
     }
 }
-=======
+
 ﻿using ICAN.SIC.Plugin.ICANSEE.Client;
 using ICAN.SIC.Plugin.ICANSEE.DataTypes;
 using System;
@@ -237,4 +236,3 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         }
     }
 }
->>>>>>> 53025324d2dd94abfcdd0b8ec7cbafa029a746fd

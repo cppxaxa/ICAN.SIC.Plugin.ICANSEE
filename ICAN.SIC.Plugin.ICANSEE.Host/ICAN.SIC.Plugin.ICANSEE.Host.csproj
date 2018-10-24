@@ -51,9 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ICANSEEHost.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="ICANSEEHost.cs" />
     <Compile Include="ICANSEEHost.Designer.cs">
       <DependentUpon>ICANSEEHost.cs</DependentUpon>
     </Compile>
