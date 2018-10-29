@@ -1,8 +1,14 @@
 ﻿[
-    {
-        "Label": "Acer Nitro 5-YTD Linux",
-        "IpAddress": "localhost",
-        "DeviceTypeId": "NVIDIA_GPU",
-        "Description": "NVIDIA GTX 1050 Ti"
-    }
+  {
+    "Label": "Dell Precision M3800-YTD Win10",
+    "IpAddress": "localhost",
+    "DeviceTypeId": "WIN_TIER2",
+    "Description": "Windows 10 Quadcore 12 GB RAM"
+  },
+  {
+    "Label": "Acer Nitro 5-YTD Linux",
+    "IpAddress": "localhost",
+    "DeviceTypeId": "NVIDIA_GPU",
+    "Description": "NVIDIA GTX 1050 Ti"
+  }
 ]

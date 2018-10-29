@@ -104,7 +104,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 }
             }
         }
-        
+
         private void LoadCameraDescriptionsFromFile(string filePath)
         {
             string fileContent = File.ReadAllText(filePath);
@@ -152,7 +152,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             cameraConfigurationsMap[newCustomId] = cameraConfig;
         }
 
-        public string LoadDeviceLocalImage(string deviceLocalImagePath, ComputeDeviceInfo computeDeviceInfo)
+        public string LoadTargetDeviceLocalImage(string deviceLocalImagePath, ComputeDeviceInfo computeDeviceInfo)
         {
             try
             {
@@ -181,16 +181,33 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 {
                     CameraConfiguration cameraConfig = cameraConfigurationsMap[cameraConfigId];
 
-                    string apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'] = cv2.VideoCapture({{index}})\\nret, frame = globals()['cap'].read()\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
-                    if (cameraConfig.Url == null)
+                    string apiCallBody = "BlankValue";
+
+                    // identify the type
+                    switch (cameraConfig.Type)
                     {
-                        apiCallBody = apiCallBody.Replace("{{index}}", cameraConfig.Index.ToString());
-                    }
-                    else
-                    {
-                        apiCallBody = apiCallBody.Replace("{{index}}", "\"" + cameraConfig.Url + "\"");
+                        case "camera":
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'] = cv2.VideoCapture({{index}})\\nret, frame = globals()['cap'].read()\\nglobals()['imageSrc'] = frame\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            apiCallBody = apiCallBody.Replace("{{index}}", cameraConfig.Index.ToString());
+                            break;
+
+                        case "mjpgStream":
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'] = cv2.VideoCapture({{url}})\\nret, frame = globals()['cap'].read()\\nglobals()['imageSrc'] = frame\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            apiCallBody = apiCallBody.Replace("{{url}}", "'" + cameraConfig.Url + "'");
+                            break;
+
+                        case "image":
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['imageSrc'] = cv2.imread({{imageLocalPath}})\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            apiCallBody = apiCallBody.Replace("{{imageLocalPath}}", "'" + cameraConfig.Url + "'");
+                            break;
+
+                        case "imageShot":
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['imageSrc'] = getImageFromShotUri({{shotUri}})\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            apiCallBody = apiCallBody.Replace("{{shotUri}}", "'" + cameraConfig.Url + "'");
+                            break;
                     }
 
+                    Console.WriteLine("[DEBUG] apiCallBody: " + apiCallBody);
                     string result = imageClient.MakePostCall("http://{{host}}:5000/task".Replace("{{host}}", computeDeviceInfo.IpAddress), apiCallBody);
 
                     return result;
@@ -200,6 +217,25 @@ namespace ICAN.SIC.Plugin.ICANSEE
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ERROR] ICANSEEUtility.LoadCamera(val=" + cameraConfigId + ")" + ex.Message);
+                Console.ResetColor();
+            }
+            return null;
+        }
+
+        public string DisplayImageWindow(ComputeDeviceInfo computeDeviceInfo)
+        {
+            try
+            {
+                string apiCallBody = "{\n\"Fbp\":[\"Start\",\"ImShow('DEBUG', globals()['imageSrc'], 6000)\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+
+                string result = imageClient.MakePostCall("http://{{host}}:5000/task".Replace("{{host}}", computeDeviceInfo.IpAddress), apiCallBody);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.DisplayImageWindow(" + computeDeviceInfo.IpAddress + ") " + ex.Message);
                 Console.ResetColor();
             }
             return null;
@@ -445,9 +481,9 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     Console.ForegroundColor = ConsoleColor.Magenta;
                     Console.WriteLine("[INFO] UnloadAllAlgorithm(" + deviceInfo.DeviceTypeId + " " + deviceInfo.IpAddress + "): Request to unload algorithm started");
                     Console.ResetColor();
-                    
+
                     imageClient.MakePostCall(deviceInfo.IpAddress, unloadCommandDeviceTypeToCommadMap[deviceInfo.DeviceTypeId]);
-                    
+
                     Console.Write("[INFO] UnloadAllAlgorithm(" + deviceInfo.DeviceTypeId + " " + deviceInfo.IpAddress + "): ");
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("SUCCESS");

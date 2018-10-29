@@ -61,7 +61,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnAddCameraConfig_Click(object sender, EventArgs e)
         {
-            helper.AddReplaceCameraConfiguration(1, new CameraConfiguration(0, null, "Default Webcam"));
+            helper.AddReplaceCameraConfiguration(1, new CameraConfiguration(0, null, "Default Webcam", 1, "camera"));
 
             foreach (var item in utility.cameraConfigurationsMap)
             {
@@ -172,6 +172,60 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnUnloadAllAlgorithms_Click(object sender, EventArgs e)
         {
             helper.UnloadAllAlgorithms();
+        }
+
+        private void BtnInitTFSSD_Click(object sender, EventArgs e)
+        {
+            ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
+            string algoType = utility.LoadAlgorithm("Algo3", firstDevice);
+
+            if (algoType != null)
+                Console.WriteLine("Success with AlgoType-" + algoType);
+            else
+                Console.WriteLine("LoadAlgorithm problem");
+        }
+
+        private void BtnRunTFSSD_Click(object sender, EventArgs e)
+        {
+            string result = helper.ExecuteScalar(2, "Algo3");
+
+            if (result != null)
+                Console.WriteLine("[INFO] RunAlgo: " + result);
+            else
+                Console.WriteLine("Failure");
+        }
+
+        private void BtnInitSampleImage_Click(object sender, EventArgs e)
+        {
+            ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
+            string result = utility.LoadCamera(2, firstDevice);
+
+            if (result != null)
+                Console.WriteLine(result);
+            else
+                Console.WriteLine("Failure");
+        }
+
+        private void BtnReadAShotUri_Click(object sender, EventArgs e)
+        {
+            ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
+            string result = utility.LoadCamera(4, firstDevice);
+
+            if (result != null)
+                Console.WriteLine(result);
+            else
+                Console.WriteLine("Failure");
+        }
+
+        private void BtnDisplayImage_Click(object sender, EventArgs e)
+        {
+            ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
+            string result = utility.DisplayImageWindow(firstDevice);
+
+            if (result != null)
+                Console.WriteLine(result);
+            else
+                Console.WriteLine("Failure");
         }
     }
 }

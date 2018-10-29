@@ -46,14 +46,20 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.BtnUnloadAllCameras = new System.Windows.Forms.Button();
             this.BtnUnloadAlgorithm = new System.Windows.Forms.Button();
             this.BtnUnloadAllAlgorithms = new System.Windows.Forms.Button();
+            this.BtnInitTFSSD = new System.Windows.Forms.Button();
+            this.BtnRunTFSSD = new System.Windows.Forms.Button();
+            this.BtnUnloadTFSSD = new System.Windows.Forms.Button();
+            this.BtnInitSampleImage = new System.Windows.Forms.Button();
+            this.BtnReadAShotUri = new System.Windows.Forms.Button();
+            this.BtnDisplayImage = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnReadFBP
             // 
-            this.BtnReadFBP.Location = new System.Drawing.Point(6, 30);
-            this.BtnReadFBP.Margin = new System.Windows.Forms.Padding(2);
+            this.BtnReadFBP.Location = new System.Drawing.Point(12, 58);
+            this.BtnReadFBP.Margin = new System.Windows.Forms.Padding(4);
             this.BtnReadFBP.Name = "BtnReadFBP";
-            this.BtnReadFBP.Size = new System.Drawing.Size(142, 22);
+            this.BtnReadFBP.Size = new System.Drawing.Size(284, 42);
             this.BtnReadFBP.TabIndex = 0;
             this.BtnReadFBP.Text = "Read FBP";
             this.BtnReadFBP.UseVisualStyleBackColor = true;
@@ -61,38 +67,38 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnShowParsedFBP
             // 
-            this.BtnShowParsedFBP.Location = new System.Drawing.Point(6, 56);
-            this.BtnShowParsedFBP.Margin = new System.Windows.Forms.Padding(2);
+            this.BtnShowParsedFBP.Location = new System.Drawing.Point(12, 108);
+            this.BtnShowParsedFBP.Margin = new System.Windows.Forms.Padding(4);
             this.BtnShowParsedFBP.Name = "BtnShowParsedFBP";
-            this.BtnShowParsedFBP.Size = new System.Drawing.Size(142, 21);
+            this.BtnShowParsedFBP.Size = new System.Drawing.Size(284, 40);
             this.BtnShowParsedFBP.TabIndex = 1;
             this.BtnShowParsedFBP.Text = "Show parsed FBP";
             this.BtnShowParsedFBP.UseVisualStyleBackColor = true;
             // 
             // BtnExecute
             // 
-            this.BtnExecute.Location = new System.Drawing.Point(6, 81);
-            this.BtnExecute.Margin = new System.Windows.Forms.Padding(2);
+            this.BtnExecute.Location = new System.Drawing.Point(12, 156);
+            this.BtnExecute.Margin = new System.Windows.Forms.Padding(4);
             this.BtnExecute.Name = "BtnExecute";
-            this.BtnExecute.Size = new System.Drawing.Size(142, 21);
+            this.BtnExecute.Size = new System.Drawing.Size(284, 40);
             this.BtnExecute.TabIndex = 2;
             this.BtnExecute.Text = "Execute";
             this.BtnExecute.UseVisualStyleBackColor = true;
             // 
             // TxtFbpPath
             // 
-            this.TxtFbpPath.Location = new System.Drawing.Point(6, 6);
-            this.TxtFbpPath.Margin = new System.Windows.Forms.Padding(2);
+            this.TxtFbpPath.Location = new System.Drawing.Point(12, 12);
+            this.TxtFbpPath.Margin = new System.Windows.Forms.Padding(4);
             this.TxtFbpPath.Name = "TxtFbpPath";
-            this.TxtFbpPath.Size = new System.Drawing.Size(644, 20);
+            this.TxtFbpPath.Size = new System.Drawing.Size(1284, 31);
             this.TxtFbpPath.TabIndex = 3;
             // 
             // BtnDfs
             // 
-            this.BtnDfs.Location = new System.Drawing.Point(152, 30);
-            this.BtnDfs.Margin = new System.Windows.Forms.Padding(2);
+            this.BtnDfs.Location = new System.Drawing.Point(304, 58);
+            this.BtnDfs.Margin = new System.Windows.Forms.Padding(4);
             this.BtnDfs.Name = "BtnDfs";
-            this.BtnDfs.Size = new System.Drawing.Size(142, 22);
+            this.BtnDfs.Size = new System.Drawing.Size(284, 42);
             this.BtnDfs.TabIndex = 4;
             this.BtnDfs.Text = "Get DFS";
             this.BtnDfs.UseVisualStyleBackColor = true;
@@ -100,10 +106,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnDummyCall
             // 
-            this.BtnDummyCall.Location = new System.Drawing.Point(298, 30);
-            this.BtnDummyCall.Margin = new System.Windows.Forms.Padding(2);
+            this.BtnDummyCall.Location = new System.Drawing.Point(596, 58);
+            this.BtnDummyCall.Margin = new System.Windows.Forms.Padding(4);
             this.BtnDummyCall.Name = "BtnDummyCall";
-            this.BtnDummyCall.Size = new System.Drawing.Size(142, 22);
+            this.BtnDummyCall.Size = new System.Drawing.Size(284, 42);
             this.BtnDummyCall.TabIndex = 5;
             this.BtnDummyCall.Text = "Make a Call";
             this.BtnDummyCall.UseVisualStyleBackColor = true;
@@ -111,9 +117,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnAddCameraConfig
             // 
-            this.BtnAddCameraConfig.Location = new System.Drawing.Point(175, 70);
+            this.BtnAddCameraConfig.Location = new System.Drawing.Point(350, 135);
+            this.BtnAddCameraConfig.Margin = new System.Windows.Forms.Padding(6);
             this.BtnAddCameraConfig.Name = "BtnAddCameraConfig";
-            this.BtnAddCameraConfig.Size = new System.Drawing.Size(142, 23);
+            this.BtnAddCameraConfig.Size = new System.Drawing.Size(284, 44);
             this.BtnAddCameraConfig.TabIndex = 6;
             this.BtnAddCameraConfig.Text = "AddCameraConfig";
             this.BtnAddCameraConfig.UseVisualStyleBackColor = true;
@@ -121,9 +128,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnLoadCameraConfig
             // 
-            this.BtnLoadCameraConfig.Location = new System.Drawing.Point(175, 97);
+            this.BtnLoadCameraConfig.Location = new System.Drawing.Point(350, 187);
+            this.BtnLoadCameraConfig.Margin = new System.Windows.Forms.Padding(6);
             this.BtnLoadCameraConfig.Name = "BtnLoadCameraConfig";
-            this.BtnLoadCameraConfig.Size = new System.Drawing.Size(142, 23);
+            this.BtnLoadCameraConfig.Size = new System.Drawing.Size(284, 44);
             this.BtnLoadCameraConfig.TabIndex = 7;
             this.BtnLoadCameraConfig.Text = "LoadCameraConfig";
             this.BtnLoadCameraConfig.UseVisualStyleBackColor = true;
@@ -131,9 +139,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnListAllCameraConfigs
             // 
-            this.BtnListAllCameraConfigs.Location = new System.Drawing.Point(323, 70);
+            this.BtnListAllCameraConfigs.Location = new System.Drawing.Point(646, 135);
+            this.BtnListAllCameraConfigs.Margin = new System.Windows.Forms.Padding(6);
             this.BtnListAllCameraConfigs.Name = "BtnListAllCameraConfigs";
-            this.BtnListAllCameraConfigs.Size = new System.Drawing.Size(142, 23);
+            this.BtnListAllCameraConfigs.Size = new System.Drawing.Size(284, 44);
             this.BtnListAllCameraConfigs.TabIndex = 8;
             this.BtnListAllCameraConfigs.Text = "ListAllCameraConfigs";
             this.BtnListAllCameraConfigs.UseVisualStyleBackColor = true;
@@ -141,9 +150,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnListAllGPUAlgos
             // 
-            this.BtnListAllGPUAlgos.Location = new System.Drawing.Point(323, 97);
+            this.BtnListAllGPUAlgos.Location = new System.Drawing.Point(646, 187);
+            this.BtnListAllGPUAlgos.Margin = new System.Windows.Forms.Padding(6);
             this.BtnListAllGPUAlgos.Name = "BtnListAllGPUAlgos";
-            this.BtnListAllGPUAlgos.Size = new System.Drawing.Size(142, 23);
+            this.BtnListAllGPUAlgos.Size = new System.Drawing.Size(284, 44);
             this.BtnListAllGPUAlgos.TabIndex = 9;
             this.BtnListAllGPUAlgos.Text = "ListAllGPUAlgos";
             this.BtnListAllGPUAlgos.UseVisualStyleBackColor = true;
@@ -151,9 +161,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnRunGPUAlgo
             // 
-            this.BtnRunGPUAlgo.Location = new System.Drawing.Point(471, 70);
+            this.BtnRunGPUAlgo.Location = new System.Drawing.Point(942, 135);
+            this.BtnRunGPUAlgo.Margin = new System.Windows.Forms.Padding(6);
             this.BtnRunGPUAlgo.Name = "BtnRunGPUAlgo";
-            this.BtnRunGPUAlgo.Size = new System.Drawing.Size(142, 23);
+            this.BtnRunGPUAlgo.Size = new System.Drawing.Size(284, 44);
             this.BtnRunGPUAlgo.TabIndex = 10;
             this.BtnRunGPUAlgo.Text = "RunGPUAlgo";
             this.BtnRunGPUAlgo.UseVisualStyleBackColor = true;
@@ -161,9 +172,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnLoadAlgorithm
             // 
-            this.BtnLoadAlgorithm.Location = new System.Drawing.Point(471, 97);
+            this.BtnLoadAlgorithm.Location = new System.Drawing.Point(942, 187);
+            this.BtnLoadAlgorithm.Margin = new System.Windows.Forms.Padding(6);
             this.BtnLoadAlgorithm.Name = "BtnLoadAlgorithm";
-            this.BtnLoadAlgorithm.Size = new System.Drawing.Size(142, 23);
+            this.BtnLoadAlgorithm.Size = new System.Drawing.Size(284, 44);
             this.BtnLoadAlgorithm.TabIndex = 11;
             this.BtnLoadAlgorithm.Text = "Load Algorithm";
             this.BtnLoadAlgorithm.UseVisualStyleBackColor = true;
@@ -171,9 +183,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnListAllComputeDevices
             // 
-            this.BtnListAllComputeDevices.Location = new System.Drawing.Point(175, 126);
+            this.BtnListAllComputeDevices.Location = new System.Drawing.Point(350, 242);
+            this.BtnListAllComputeDevices.Margin = new System.Windows.Forms.Padding(6);
             this.BtnListAllComputeDevices.Name = "BtnListAllComputeDevices";
-            this.BtnListAllComputeDevices.Size = new System.Drawing.Size(142, 23);
+            this.BtnListAllComputeDevices.Size = new System.Drawing.Size(284, 44);
             this.BtnListAllComputeDevices.TabIndex = 12;
             this.BtnListAllComputeDevices.Text = "ListAllComputeDevices";
             this.BtnListAllComputeDevices.UseVisualStyleBackColor = true;
@@ -181,9 +194,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(175, 155);
+            this.button1.Location = new System.Drawing.Point(350, 298);
+            this.button1.Margin = new System.Windows.Forms.Padding(6);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(290, 23);
+            this.button1.Size = new System.Drawing.Size(580, 44);
             this.button1.TabIndex = 13;
             this.button1.Text = "Execute Scalar, Check/Load Algo, Reserve device";
             this.button1.UseVisualStyleBackColor = true;
@@ -191,9 +205,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnRunAlgoOnImage
             // 
-            this.BtnRunAlgoOnImage.Location = new System.Drawing.Point(175, 184);
+            this.BtnRunAlgoOnImage.Location = new System.Drawing.Point(350, 354);
+            this.BtnRunAlgoOnImage.Margin = new System.Windows.Forms.Padding(6);
             this.BtnRunAlgoOnImage.Name = "BtnRunAlgoOnImage";
-            this.BtnRunAlgoOnImage.Size = new System.Drawing.Size(290, 23);
+            this.BtnRunAlgoOnImage.Size = new System.Drawing.Size(580, 44);
             this.BtnRunAlgoOnImage.TabIndex = 14;
             this.BtnRunAlgoOnImage.Text = "Run algo image on image";
             this.BtnRunAlgoOnImage.UseVisualStyleBackColor = true;
@@ -201,9 +216,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnUnloadAllCameras
             // 
-            this.BtnUnloadAllCameras.Location = new System.Drawing.Point(323, 126);
+            this.BtnUnloadAllCameras.Location = new System.Drawing.Point(646, 242);
+            this.BtnUnloadAllCameras.Margin = new System.Windows.Forms.Padding(6);
             this.BtnUnloadAllCameras.Name = "BtnUnloadAllCameras";
-            this.BtnUnloadAllCameras.Size = new System.Drawing.Size(142, 23);
+            this.BtnUnloadAllCameras.Size = new System.Drawing.Size(284, 44);
             this.BtnUnloadAllCameras.TabIndex = 15;
             this.BtnUnloadAllCameras.Text = "Unload All Cameras";
             this.BtnUnloadAllCameras.UseVisualStyleBackColor = true;
@@ -211,28 +227,95 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnUnloadAlgorithm
             // 
-            this.BtnUnloadAlgorithm.Location = new System.Drawing.Point(471, 155);
+            this.BtnUnloadAlgorithm.Location = new System.Drawing.Point(942, 298);
+            this.BtnUnloadAlgorithm.Margin = new System.Windows.Forms.Padding(6);
             this.BtnUnloadAlgorithm.Name = "BtnUnloadAlgorithm";
-            this.BtnUnloadAlgorithm.Size = new System.Drawing.Size(142, 23);
+            this.BtnUnloadAlgorithm.Size = new System.Drawing.Size(284, 44);
             this.BtnUnloadAlgorithm.TabIndex = 16;
             this.BtnUnloadAlgorithm.Text = "Unload Algorithm";
             this.BtnUnloadAlgorithm.UseVisualStyleBackColor = true;
             // 
             // BtnUnloadAllAlgorithms
             // 
-            this.BtnUnloadAllAlgorithms.Location = new System.Drawing.Point(471, 184);
+            this.BtnUnloadAllAlgorithms.Location = new System.Drawing.Point(942, 354);
+            this.BtnUnloadAllAlgorithms.Margin = new System.Windows.Forms.Padding(6);
             this.BtnUnloadAllAlgorithms.Name = "BtnUnloadAllAlgorithms";
-            this.BtnUnloadAllAlgorithms.Size = new System.Drawing.Size(142, 23);
+            this.BtnUnloadAllAlgorithms.Size = new System.Drawing.Size(284, 44);
             this.BtnUnloadAllAlgorithms.TabIndex = 17;
             this.BtnUnloadAllAlgorithms.Text = "Unload All Algorithms";
             this.BtnUnloadAllAlgorithms.UseVisualStyleBackColor = true;
             this.BtnUnloadAllAlgorithms.Click += new System.EventHandler(this.BtnUnloadAllAlgorithms_Click);
             // 
+            // BtnInitTFSSD
+            // 
+            this.BtnInitTFSSD.Location = new System.Drawing.Point(350, 431);
+            this.BtnInitTFSSD.Name = "BtnInitTFSSD";
+            this.BtnInitTFSSD.Size = new System.Drawing.Size(284, 44);
+            this.BtnInitTFSSD.TabIndex = 18;
+            this.BtnInitTFSSD.Text = "Init TFSSD";
+            this.BtnInitTFSSD.UseVisualStyleBackColor = true;
+            this.BtnInitTFSSD.Click += new System.EventHandler(this.BtnInitTFSSD_Click);
+            // 
+            // BtnRunTFSSD
+            // 
+            this.BtnRunTFSSD.Location = new System.Drawing.Point(646, 431);
+            this.BtnRunTFSSD.Name = "BtnRunTFSSD";
+            this.BtnRunTFSSD.Size = new System.Drawing.Size(284, 44);
+            this.BtnRunTFSSD.TabIndex = 19;
+            this.BtnRunTFSSD.Text = "Run TFSSD";
+            this.BtnRunTFSSD.UseVisualStyleBackColor = true;
+            this.BtnRunTFSSD.Click += new System.EventHandler(this.BtnRunTFSSD_Click);
+            // 
+            // BtnUnloadTFSSD
+            // 
+            this.BtnUnloadTFSSD.Location = new System.Drawing.Point(350, 481);
+            this.BtnUnloadTFSSD.Name = "BtnUnloadTFSSD";
+            this.BtnUnloadTFSSD.Size = new System.Drawing.Size(284, 44);
+            this.BtnUnloadTFSSD.TabIndex = 20;
+            this.BtnUnloadTFSSD.Text = "Unload TFSSD";
+            this.BtnUnloadTFSSD.UseVisualStyleBackColor = true;
+            // 
+            // BtnInitSampleImage
+            // 
+            this.BtnInitSampleImage.Location = new System.Drawing.Point(646, 481);
+            this.BtnInitSampleImage.Name = "BtnInitSampleImage";
+            this.BtnInitSampleImage.Size = new System.Drawing.Size(284, 44);
+            this.BtnInitSampleImage.TabIndex = 21;
+            this.BtnInitSampleImage.Text = "Init Sample Image";
+            this.BtnInitSampleImage.UseVisualStyleBackColor = true;
+            this.BtnInitSampleImage.Click += new System.EventHandler(this.BtnInitSampleImage_Click);
+            // 
+            // BtnReadAShotUri
+            // 
+            this.BtnReadAShotUri.Location = new System.Drawing.Point(942, 481);
+            this.BtnReadAShotUri.Name = "BtnReadAShotUri";
+            this.BtnReadAShotUri.Size = new System.Drawing.Size(284, 44);
+            this.BtnReadAShotUri.TabIndex = 22;
+            this.BtnReadAShotUri.Text = "Read a shot uri";
+            this.BtnReadAShotUri.UseVisualStyleBackColor = true;
+            this.BtnReadAShotUri.Click += new System.EventHandler(this.BtnReadAShotUri_Click);
+            // 
+            // BtnDisplayImage
+            // 
+            this.BtnDisplayImage.Location = new System.Drawing.Point(350, 547);
+            this.BtnDisplayImage.Name = "BtnDisplayImage";
+            this.BtnDisplayImage.Size = new System.Drawing.Size(284, 43);
+            this.BtnDisplayImage.TabIndex = 23;
+            this.BtnDisplayImage.Text = "Display Image";
+            this.BtnDisplayImage.UseVisualStyleBackColor = true;
+            this.BtnDisplayImage.Click += new System.EventHandler(this.BtnDisplayImage_Click);
+            // 
             // ICANSEEHost
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(653, 213);
+            this.ClientSize = new System.Drawing.Size(1306, 602);
+            this.Controls.Add(this.BtnDisplayImage);
+            this.Controls.Add(this.BtnReadAShotUri);
+            this.Controls.Add(this.BtnInitSampleImage);
+            this.Controls.Add(this.BtnUnloadTFSSD);
+            this.Controls.Add(this.BtnRunTFSSD);
+            this.Controls.Add(this.BtnInitTFSSD);
             this.Controls.Add(this.BtnUnloadAllAlgorithms);
             this.Controls.Add(this.BtnUnloadAlgorithm);
             this.Controls.Add(this.BtnUnloadAllCameras);
@@ -252,7 +335,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.Controls.Add(this.BtnExecute);
             this.Controls.Add(this.BtnShowParsedFBP);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "ICANSEEHost";
             this.Text = "ICANSEE Host";
@@ -282,5 +365,11 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private System.Windows.Forms.Button BtnUnloadAllCameras;
         private System.Windows.Forms.Button BtnUnloadAlgorithm;
         private System.Windows.Forms.Button BtnUnloadAllAlgorithms;
+        private System.Windows.Forms.Button BtnInitTFSSD;
+        private System.Windows.Forms.Button BtnRunTFSSD;
+        private System.Windows.Forms.Button BtnUnloadTFSSD;
+        private System.Windows.Forms.Button BtnInitSampleImage;
+        private System.Windows.Forms.Button BtnReadAShotUri;
+        private System.Windows.Forms.Button BtnDisplayImage;
     }
 }

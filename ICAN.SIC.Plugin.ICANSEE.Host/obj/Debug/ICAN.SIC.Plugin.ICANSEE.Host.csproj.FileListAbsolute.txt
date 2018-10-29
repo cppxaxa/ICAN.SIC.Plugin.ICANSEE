@@ -55,4 +55,4 @@ J:\Project ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\CameraConfigurationList.json
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\AlgorithmsDescriptionList.json
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\CameraConfigurationList.json
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ComputeDeviceList.json
-D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.HelloWorld.resources
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.ICANSEEHost.resources
