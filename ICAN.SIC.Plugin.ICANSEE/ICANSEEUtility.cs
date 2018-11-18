@@ -20,9 +20,13 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public Dictionary<string, List<ComputeDeviceInfo>> computeDeviceInfoListMap = new Dictionary<string, List<ComputeDeviceInfo>>();
         ImageClient imageClient;
 
-        public ICANSEEUtility(ImageClient imageClient, string algoDescriptionFileName = "AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ComputeDeviceList.json", string cameraListFileName = "CameraConfigurationList.json")
+        string brokerHubHost, brokerHubPort;
+
+        public ICANSEEUtility(ImageClient imageClient, string brokerHubHost, string brokerHubPort, string algoDescriptionFileName = "AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ComputeDeviceList.json", string cameraListFileName = "CameraConfigurationList.json")
         {
             this.imageClient = imageClient;
+            this.brokerHubHost = brokerHubHost;
+            this.brokerHubPort = brokerHubPort;
 
             if (!File.Exists(algoDescriptionFileName))
             {
@@ -100,7 +104,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     {
                         unloadCommandDeviceTypeToCommadMap[deviceTypeId] = "";
                     }
-                    unloadCommandDeviceTypeToCommadMap[deviceTypeId] += "\\n" + algoDesc.GetUnloadCommand("{{host}}");
+                    unloadCommandDeviceTypeToCommadMap[deviceTypeId] += "\\n" + algoDesc.GetUnloadCommand("{{host}}", "{{port}}");
                 }
             }
         }
@@ -152,7 +156,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             cameraConfigurationsMap[newCustomId] = cameraConfig;
         }
 
-        public string LoadTargetDeviceLocalImage(string deviceLocalImagePath, ComputeDeviceInfo computeDeviceInfo)
+        public string LoadTargetDeviceLocalImage(string deviceLocalImagePath, ComputeDeviceInfo computeDeviceInfo, int port)
         {
             try
             {
@@ -160,20 +164,20 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
                 apiCallBody = apiCallBody.Replace("{{deviceLocalImagePath}}", "\"" + deviceLocalImagePath + "\"");
 
-                string result = imageClient.MakePostCall("http://{{host}}:5000/task".Replace("{{host}}", computeDeviceInfo.IpAddress), apiCallBody);
+                string result = imageClient.MakePostCall("http://{{host}}:{{port}}/task".Replace("{{host}}", computeDeviceInfo.IpAddress).Replace("{{port}}", port.ToString()), apiCallBody);
 
                 return result;
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.LoadCamera(val=" + deviceLocalImagePath + ")" + ex.Message);
+                Console.WriteLine("[ERROR] ICANSEEUtility.LoadCamera(val=" + deviceLocalImagePath + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + ex.Message);
                 Console.ResetColor();
             }
             return null;
         }
 
-        public string LoadCamera(int cameraConfigId, ComputeDeviceInfo computeDeviceInfo)
+        public string LoadCamera(int cameraConfigId, ComputeDeviceInfo computeDeviceInfo, int port)
         {
             try
             {
@@ -206,9 +210,9 @@ namespace ICAN.SIC.Plugin.ICANSEE
                             apiCallBody = apiCallBody.Replace("{{shotUri}}", "'" + cameraConfig.Url + "'");
                             break;
                     }
-
-                    Console.WriteLine("[DEBUG] apiCallBody: " + apiCallBody);
-                    string result = imageClient.MakePostCall("http://{{host}}:5000/task".Replace("{{host}}", computeDeviceInfo.IpAddress), apiCallBody);
+                    
+                    Console.WriteLine("[DEBUG] ApiCallBody(" + computeDeviceInfo.IpAddress + port.ToString() + "): " + apiCallBody);
+                    string result = imageClient.MakePostCall("http://{{host}}:{{port}}/task".Replace("{{host}}", computeDeviceInfo.IpAddress).Replace("{{port}}", port.ToString()), apiCallBody);
 
                     return result;
                 }
@@ -216,90 +220,125 @@ namespace ICAN.SIC.Plugin.ICANSEE
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.LoadCamera(val=" + cameraConfigId + ")" + ex.Message);
+                Console.WriteLine("[ERROR] ICANSEEUtility.LoadCamera(val=" + cameraConfigId + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + ex.Message);
                 Console.ResetColor();
             }
             return null;
         }
 
-        public string DisplayImageWindow(ComputeDeviceInfo computeDeviceInfo)
+        public string RequestCurrentImage(ComputeDeviceInfo computeDeviceInfo, int port)
+        {
+            try
+            {
+                string apiCallBody = "{\n\"Fbp\":[\"Start\",\"PostImage('debug.jpg', globals()['imageSrc'], '" + brokerHubHost + "', " + brokerHubPort + ")\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+
+                Console.WriteLine("[DEBUG] ApiCallBody(" + computeDeviceInfo.IpAddress + port.ToString() + "): " + apiCallBody);
+
+                string result = imageClient.MakePostCall("http://{{host}}:{{port}}/task".Replace("{{host}}", computeDeviceInfo.IpAddress).Replace("{{port}}", port.ToString()), apiCallBody);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.DisplayImageWindow(" + computeDeviceInfo.IpAddress + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + ex.Message);
+                Console.ResetColor();
+            }
+            return null;
+        }
+
+        public string DisplayImageWindow(ComputeDeviceInfo computeDeviceInfo, int port)
         {
             try
             {
                 string apiCallBody = "{\n\"Fbp\":[\"Start\",\"ImShow('DEBUG', globals()['imageSrc'], 6000)\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
 
-                string result = imageClient.MakePostCall("http://{{host}}:5000/task".Replace("{{host}}", computeDeviceInfo.IpAddress), apiCallBody);
+                Console.WriteLine("[DEBUG] ApiCallBody(" + computeDeviceInfo.IpAddress + port.ToString() + "): " + apiCallBody);
+
+                string result = imageClient.MakePostCall("http://{{host}}:{{port}}/task".Replace("{{host}}", computeDeviceInfo.IpAddress).Replace("{{port}}", port.ToString()), apiCallBody);
 
                 return result;
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.DisplayImageWindow(" + computeDeviceInfo.IpAddress + ") " + ex.Message);
+                Console.WriteLine("[ERROR] ICANSEEUtility.DisplayImageWindow(" + computeDeviceInfo.IpAddress + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + ex.Message);
                 Console.ResetColor();
             }
             return null;
         }
 
-        public string UnloadAllCameras(ComputeDeviceInfo computeDeviceInfo)
+        public string UnloadAllCameras(ComputeDeviceInfo computeDeviceInfo, int port)
         {
             try
             {
                 string apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'] = None\\nglobals()['imageSrc'] = None\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
 
-                string result = imageClient.MakePostCall("http://{{host}}:5000/task".Replace("{{host}}", computeDeviceInfo.IpAddress), apiCallBody);
+                Console.WriteLine("[DEBUG] ApiCallBody(" + computeDeviceInfo.IpAddress + port.ToString() + "): " + apiCallBody);
+
+                string result = imageClient.MakePostCall("http://{{host}}:{{port}}/task".Replace("{{host}}", computeDeviceInfo.IpAddress).Replace("{{port}}", port.ToString()), apiCallBody);
 
                 return result;
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.UnloadCameras(" + computeDeviceInfo.IpAddress + ") " + ex.Message);
+                Console.WriteLine("[ERROR] ICANSEEUtility.UnloadCameras(" + computeDeviceInfo.IpAddress + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + ex.Message);
                 Console.ResetColor();
             }
             return null;
         }
 
-        public string LoadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo)
+        public string LoadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo, int port)
         {
             if (!algorithmsDescriptionMap.ContainsKey(algoId))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + algoId + ")\n - Algorithm Id not found");
+                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + algoId + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ")\n - Algorithm Id not found");
                 Console.ResetColor();
 
                 return null;
             }
 
-            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"" + algorithmsDescriptionMap[algoId].GetInitCommand(computeDeviceInfo.IpAddress) + "\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"" + algorithmsDescriptionMap[algoId].GetInitCommand(computeDeviceInfo.IpAddress, port.ToString()) + "\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+
+            Console.WriteLine("[DEBUG] ApiCallBody(" + computeDeviceInfo.IpAddress + port.ToString() + "): " + apiCallBody);
+
             try
             {
-                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algoId].GetUri(computeDeviceInfo.IpAddress), apiCallBody);
-                Console.WriteLine("[INFO] ICANSEEUtility.LoadAlgorithm(" + algoId + ")\n" + apiCallBody + "\n\n" + "Result: " + result);
+                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algoId].GetUri(computeDeviceInfo.IpAddress, port.ToString()), apiCallBody);
+                Console.WriteLine("[INFO] ICANSEEUtility.LoadAlgorithm(" + algoId + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ")\n" + apiCallBody + "\n\n" + "Result: " + result);
                 return algorithmsDescriptionMap[algoId].AlgorithmTypeId;
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + algoId + ")\n" + apiCallBody + "\n" + ex.Message);
+                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + algoId + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ")\n" + apiCallBody + "\n" + ex.Message);
                 Console.ResetColor();
 
                 return null;
             }
         }
 
-        public string ExecuteAlgorithm(string ipAddress, bool RunOnce, bool InfiniteLoop, int LoopLimit, bool ReturnResult, string resultProcessingStatement, string algorithmId)
+        public string ExecuteAlgorithm(string ipAddress, int port, bool RunOnce, bool InfiniteLoop, int LoopLimit, bool ReturnResult, string resultProcessingStatement, string algorithmId)
         {
             if (!algorithmsDescriptionMap.ContainsKey(algorithmId))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.LoadAlgorithm(" + algorithmId + ")\n - Algorithm Id not found");
+                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithm(" + algorithmId + ", ipAddress=" + ipAddress + ", port=" + port.ToString() + ")\n - Algorithm Id not found");
                 Console.ResetColor();
 
                 return null;
             }
 
-            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + resultProcessingStatement + "\"],\"RunOnce\": {{RunOnce}},\"InfiniteLoop\": {{InfiniteLoop}},\"LoopLimit\": {{LoopLimit}},\"ReturnResult\": {{ReturnResult}}}";
+            var algorithmDescription = algorithmsDescriptionMap[algorithmId];
+
+            string scalarExecuteCommand = algorithmDescription.GetScalarExecuteCommand(ipAddress, port.ToString());
+
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + scalarExecuteCommand + "\\n" + resultProcessingStatement + "\"],\"RunOnce\": {{RunOnce}},\"InfiniteLoop\": {{InfiniteLoop}},\"LoopLimit\": {{LoopLimit}},\"ReturnResult\": {{ReturnResult}}}";
+
+            Console.WriteLine("[DEBUG] ApiCallBody(" + ipAddress + port.ToString() + "): " + apiCallBody);
+
             try
             {
                 if (RunOnce)
@@ -321,30 +360,33 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
 
 
-                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algorithmId].GetUri(ipAddress), apiCallBody);
+                string result = imageClient.MakePostCall(algorithmDescription.GetUri(ipAddress, port.ToString()), apiCallBody);
                 return result;
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithmScalar()\n" + apiCallBody + "\n" + ex.Message);
+                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithmScalar" + ", ipAddress=" + ipAddress + ", port=" + port.ToString() + ") " + "\n" + apiCallBody + "\n" + ex.Message);
                 Console.ResetColor();
             }
             return null;
         }
 
-        public string ExecuteAlgorithmScalar(string algorithmId, ComputeDeviceInfo computeDeviceInfo)
+        public string ExecuteAlgorithmScalar(string algorithmId, ComputeDeviceInfo computeDeviceInfo, int port)
         {
-            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + algorithmsDescriptionMap[algorithmId].GetScalarExecuteCommand(computeDeviceInfo.IpAddress) + "\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + algorithmsDescriptionMap[algorithmId].GetScalarExecuteCommand(computeDeviceInfo.IpAddress, port.ToString()) + "\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+
+            Console.WriteLine("[DEBUG] ApiCallBody(" + computeDeviceInfo.IpAddress + port.ToString() + "): " + apiCallBody);
+
             try
             {
-                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algorithmId].GetUri(computeDeviceInfo.IpAddress), apiCallBody);
+                string result = imageClient.MakePostCall(algorithmsDescriptionMap[algorithmId].GetUri(computeDeviceInfo.IpAddress, port.ToString()), apiCallBody);
                 return result;
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithmScalar()\n" + apiCallBody + "\n" + ex.Message);
+                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithmScalar("+ ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + "\n" + apiCallBody + "\n" + ex.Message);
                 Console.ResetColor();
             }
             return null;
@@ -492,7 +534,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             }
         }
 
-        public void UnloadAlgorithm(string algorithmId, ComputeDeviceInfo computeDeviceInfo)
+        public string UnloadAlgorithm(string algorithmId, ComputeDeviceInfo computeDeviceInfo, int port)
         {
             if (algorithmsDescriptionMap.ContainsKey(algorithmId))
             {
@@ -509,19 +551,22 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 if (!IsDeviceSupported)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("[ERROR] UnloadAlgorithm(" + algorithmId + ", " + computeDeviceInfo.IpAddress + "): The device doesn't support the algorithm");
+                    Console.WriteLine("[ERROR] UnloadAlgorithm(" + algorithmId + ", " + computeDeviceInfo.IpAddress + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + ": The device doesn't support the algorithm");
                     Console.ResetColor();
-                    return;
+                    return null;
                 }
 
-                imageClient.MakePostCall(computeDeviceInfo.IpAddress, algorithmsDescriptionMap[algorithmId].GetUnloadCommand(computeDeviceInfo.IpAddress));
+                string result = imageClient.MakePostCall(computeDeviceInfo.IpAddress, algorithmsDescriptionMap[algorithmId].GetUnloadCommand(computeDeviceInfo.IpAddress, port.ToString()));
+                return result;
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] UnloadAlgorithm(" + algorithmId + ", " + computeDeviceInfo.IpAddress + "): We cannot find the algorithmId");
+                Console.WriteLine("[ERROR] UnloadAlgorithm(" + algorithmId + ", " + computeDeviceInfo.IpAddress + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + ": We cannot find the algorithmId");
                 Console.ResetColor();
             }
+
+            return null;
         }
     }
 }

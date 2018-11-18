@@ -21,10 +21,14 @@ namespace ICAN.SIC.Plugin.ICANSEE
         Dictionary<int, ComputeDeviceInfo> assignedDeviceForCameraMap = new Dictionary<int, ComputeDeviceInfo>();
         Dictionary<string, ComputeDeviceInfo> assignedDeviceForAlgoTypeMap = new Dictionary<string, ComputeDeviceInfo>();
 
-        public ICANSEEHelper(ICANSEEUtility utility, ImageClient imageClient)
+        string brokerHubHost, brokerHubPort;
+
+        public ICANSEEHelper(ICANSEEUtility utility, ImageClient imageClient, string brokerHubHost, string brokerHubPort)
         {
             this.utility = utility;
             this.imageClient = imageClient;
+            this.brokerHubHost = brokerHubHost;
+            this.brokerHubPort = brokerHubPort;
 
             computeDeviceList = utility.GetComputeDevicesList();
 
@@ -68,6 +72,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             return "Done";
         }
 
+        /*
         public string ExecuteScalar(int cameraId, string algoId)
         {
             string result = "";
@@ -162,7 +167,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     assignedDeviceForAlgoTypeMap[algoTypeId] = deviceInfo;
 
                     utility.LoadAlgorithm(algoId, deviceInfo);
-                    result = utility.ExecuteAlgorithmScalar(algoId, deviceInfo);
+                    result = utility.ExecuteAlgorithmScalar(algoId, deviceInfo, port);
                 }
                 computeDeviceLocked[deviceInfo] = false;
 
@@ -172,6 +177,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             return result;
         }
+        */
 
         private List<ComputeDeviceInfo> QueryFreeDevices(List<string> supportedDeviceTypeIdList)
         {
@@ -207,9 +213,9 @@ namespace ICAN.SIC.Plugin.ICANSEE
             utility.UnloadAllAlgorithms();
         }
 
-        public void UnloadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo)
+        public void UnloadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo, int port)
         {
-            utility.UnloadAlgorithm(algoId, computeDeviceInfo);
+            utility.UnloadAlgorithm(algoId, computeDeviceInfo, port);
         }
 
         public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)

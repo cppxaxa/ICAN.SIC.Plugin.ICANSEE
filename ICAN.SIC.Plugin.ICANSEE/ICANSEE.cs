@@ -21,14 +21,19 @@ namespace ICAN.SIC.Plugin.ICANSEE
         {
             imageClient = new ImageClient();
 
-            utility = new ICANSEEUtility(imageClient);
-            helper = new ICANSEEHelper(utility, imageClient);
+            string brokerHubHost = System.Configuration.ConfigurationSettings.AppSettings["ChatInterfaceHost"];
+            string brokerHubPort = System.Configuration.ConfigurationSettings.AppSettings["ChatInterfacePort"];
+
+            utility = new ICANSEEUtility(imageClient, brokerHubHost, brokerHubPort);
+            helper = new ICANSEEHelper(utility, imageClient, brokerHubHost, brokerHubPort);
         }
 
+        /*
         public string ExecuteScalar(int cameraId, string algoId)
         {
             return helper.ExecuteScalar(cameraId, algoId);
         }
+        */
 
         public void AddReplaceCameraConfiguration(int newCustomId, CameraConfiguration cameraConfig)
         {
@@ -100,9 +105,9 @@ namespace ICAN.SIC.Plugin.ICANSEE
             helper.UnloadAllAlgorithms();
         }
 
-        public void UnloadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo)
+        public void UnloadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo, int port)
         {
-            helper.UnloadAlgorithm(algoId, computeDeviceInfo);
+            helper.UnloadAlgorithm(algoId, computeDeviceInfo, port);
         }
     }
 }

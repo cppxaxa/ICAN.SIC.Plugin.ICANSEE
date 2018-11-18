@@ -17,24 +17,29 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public string Description;
         public string UnloadCommand;
 
-        public string GetScalarExecuteCommand(string ipAddress)
+        private string EncodeStringForTransmission(string input, string ipAddress, string port)
         {
-            return ScalarExecuteCommand.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("{{host}}", ipAddress);
+            return input.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("{{host}}", ipAddress).Replace("{{port}}", port);
         }
 
-        public string GetUnloadCommand(string ipAddress)
+        public string GetScalarExecuteCommand(string ipAddress, string port)
         {
-            return UnloadCommand.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("{{host}}", ipAddress);
+            return EncodeStringForTransmission(ScalarExecuteCommand, ipAddress, port);
         }
 
-        public string GetInitCommand(string ipAddress)
+        public string GetUnloadCommand(string ipAddress, string port)
         {
-            return InitCommand.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("{{host}}", ipAddress);
+            return EncodeStringForTransmission(UnloadCommand, ipAddress, port);
         }
 
-        public string GetUri(string ipAddress)
+        public string GetInitCommand(string ipAddress, string port)
         {
-            return Uri.Replace("{{host}}", ipAddress);
+            return EncodeStringForTransmission(InitCommand, ipAddress, port);
+        }
+
+        public string GetUri(string ipAddress, string port)
+        {
+            return Uri.Replace("{{host}}", ipAddress).Replace("{{port}}", port);
         }
     }
 }

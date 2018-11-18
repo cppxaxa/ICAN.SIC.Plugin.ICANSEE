@@ -24,8 +24,8 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         {
             InitializeComponent();
 
-            utility = new ICANSEEUtility(imageClient);
-            helper = new ICANSEEHelper(utility, imageClient);
+            utility = new ICANSEEUtility(imageClient, "localhost", "20000");
+            helper = new ICANSEEHelper(utility, imageClient, "localhost", "20000");
         }
 
         private void ICANSEEHost_Load(object sender, EventArgs e)
@@ -99,7 +99,9 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnLoadCameraConfig_Click(object sender, EventArgs e)
         {
             ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
-            string result = utility.LoadCamera(1, firstDevice);
+            int port = firstDevice.PortList.First();
+
+            string result = utility.LoadCamera(1, firstDevice, port);
 
             if (result != null)
                 Console.WriteLine(result);
@@ -110,7 +112,9 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnRunGPUAlgo_Click(object sender, EventArgs e)
         {
             ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
-            string result = utility.ExecuteAlgorithmScalar("Algo1", firstDevice);
+            int port = firstDevice.PortList.First();
+
+            string result = utility.ExecuteAlgorithmScalar("Algo1", firstDevice, port);
 
             Console.WriteLine("[INFO] RunAlgo: " + result);
 
@@ -123,7 +127,9 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnLoadAlgorithm_Click(object sender, EventArgs e)
         {
             ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
-            string algoType = utility.LoadAlgorithm("Algo1", firstDevice);
+            int port = firstDevice.PortList.First();
+
+            string algoType = utility.LoadAlgorithm("Algo1", firstDevice, port);
 
             if (algoType != null)
                 Console.WriteLine("Success with AlgoType-" + algoType);
@@ -144,14 +150,16 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void button1_Click(object sender, EventArgs e)
         {
+            /*
             string result = helper.ExecuteScalar(1, "Algo1");
+            */
 
-            Console.WriteLine("[INFO] RunAlgo: " + result);
+            Console.WriteLine("[INFO] Deprecated feature");
 
-            if (result != null)
-                Console.WriteLine(result);
-            else
-                Console.WriteLine("Failure");
+            //if (result != null)
+            //    Console.WriteLine(result);
+            //else
+            //    Console.WriteLine("Failure");
         }
 
         private void BtnRunAlgoOnImage_Click(object sender, EventArgs e)
@@ -162,9 +170,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnUnloadAllCameras_Click(object sender, EventArgs e)
         {
             var deviceInfo = helper.GetComputeDevicesList().First();
+            int port = deviceInfo.PortList.First();
 
             if (deviceInfo != null)
-                utility.UnloadAllCameras(deviceInfo);
+                utility.UnloadAllCameras(deviceInfo, port);
             else
                 Console.WriteLine("No device found to unload");
         }
@@ -177,7 +186,9 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnInitTFSSD_Click(object sender, EventArgs e)
         {
             ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
-            string algoType = utility.LoadAlgorithm("Algo3", firstDevice);
+            int port = firstDevice.PortList.First();
+
+            string algoType = utility.LoadAlgorithm("Algo3", firstDevice, port);
 
             if (algoType != null)
                 Console.WriteLine("Success with AlgoType-" + algoType);
@@ -187,7 +198,8 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnRunTFSSD_Click(object sender, EventArgs e)
         {
-            string result = helper.ExecuteScalar(2, "Algo3");
+            ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
+            string result = utility.ExecuteAlgorithm(firstDevice.IpAddress, firstDevice.PortList.First(), true, false, 1, true, "", "Algo3");
 
             if (result != null)
                 Console.WriteLine("[INFO] RunAlgo: " + result);
@@ -198,7 +210,9 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnInitSampleImage_Click(object sender, EventArgs e)
         {
             ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
-            string result = utility.LoadCamera(2, firstDevice);
+            int port = firstDevice.PortList.First();
+
+            string result = utility.LoadCamera(2, firstDevice, port);
 
             if (result != null)
                 Console.WriteLine(result);
@@ -209,7 +223,9 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnReadAShotUri_Click(object sender, EventArgs e)
         {
             ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
-            string result = utility.LoadCamera(4, firstDevice);
+            int port = firstDevice.PortList.First();
+
+            string result = utility.LoadCamera(4, firstDevice, port);
 
             if (result != null)
                 Console.WriteLine(result);
@@ -220,7 +236,36 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnDisplayImage_Click(object sender, EventArgs e)
         {
             ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
-            string result = utility.DisplayImageWindow(firstDevice);
+            int port = firstDevice.PortList.First();
+
+            string result = utility.DisplayImageWindow(firstDevice, port);
+
+            if (result != null)
+                Console.WriteLine(result);
+            else
+                Console.WriteLine("Failure");
+        }
+
+        private void BtnUnloadTFSSD_Click(object sender, EventArgs e)
+        {
+            ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
+            int port = firstDevice.PortList.First();
+
+            string algoType = "Algo3";
+            string result = utility.UnloadAlgorithm(algoType, firstDevice, port);
+
+            if (result != null)
+                Console.WriteLine("Success with AlgoType-" + algoType);
+            else
+                Console.WriteLine("LoadAlgorithm problem");
+        }
+
+        private void BtnRequestImageMessage_Click(object sender, EventArgs e)
+        {
+            ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
+            int port = firstDevice.PortList.First();
+
+            string result = utility.RequestCurrentImage(firstDevice, port);
 
             if (result != null)
                 Console.WriteLine(result);

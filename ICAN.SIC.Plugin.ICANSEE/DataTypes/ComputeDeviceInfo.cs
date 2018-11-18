@@ -8,7 +8,9 @@ namespace ICAN.SIC.Plugin.ICANSEE.DataTypes
 {
     public class ComputeDeviceInfo
     {
+        public string ComputeDeviceId;
         public string Label;
+        public List<int> PortList;
         public string IpAddress;
         public string DeviceTypeId;
         public string Description;

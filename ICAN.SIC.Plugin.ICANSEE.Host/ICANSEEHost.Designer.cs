@@ -42,7 +42,6 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.BtnLoadAlgorithm = new System.Windows.Forms.Button();
             this.BtnListAllComputeDevices = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.BtnRunAlgoOnImage = new System.Windows.Forms.Button();
             this.BtnUnloadAllCameras = new System.Windows.Forms.Button();
             this.BtnUnloadAlgorithm = new System.Windows.Forms.Button();
             this.BtnUnloadAllAlgorithms = new System.Windows.Forms.Button();
@@ -52,6 +51,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.BtnInitSampleImage = new System.Windows.Forms.Button();
             this.BtnReadAShotUri = new System.Windows.Forms.Button();
             this.BtnDisplayImage = new System.Windows.Forms.Button();
+            this.BtnRequestImageMessage = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnReadFBP
@@ -203,17 +203,6 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // BtnRunAlgoOnImage
-            // 
-            this.BtnRunAlgoOnImage.Location = new System.Drawing.Point(350, 354);
-            this.BtnRunAlgoOnImage.Margin = new System.Windows.Forms.Padding(6);
-            this.BtnRunAlgoOnImage.Name = "BtnRunAlgoOnImage";
-            this.BtnRunAlgoOnImage.Size = new System.Drawing.Size(580, 44);
-            this.BtnRunAlgoOnImage.TabIndex = 14;
-            this.BtnRunAlgoOnImage.Text = "Run algo image on image";
-            this.BtnRunAlgoOnImage.UseVisualStyleBackColor = true;
-            this.BtnRunAlgoOnImage.Click += new System.EventHandler(this.BtnRunAlgoOnImage_Click);
-            // 
             // BtnUnloadAllCameras
             // 
             this.BtnUnloadAllCameras.Location = new System.Drawing.Point(646, 242);
@@ -274,6 +263,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.BtnUnloadTFSSD.TabIndex = 20;
             this.BtnUnloadTFSSD.Text = "Unload TFSSD";
             this.BtnUnloadTFSSD.UseVisualStyleBackColor = true;
+            this.BtnUnloadTFSSD.Click += new System.EventHandler(this.BtnUnloadTFSSD_Click);
             // 
             // BtnInitSampleImage
             // 
@@ -305,11 +295,22 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.BtnDisplayImage.UseVisualStyleBackColor = true;
             this.BtnDisplayImage.Click += new System.EventHandler(this.BtnDisplayImage_Click);
             // 
+            // BtnRequestImageMessage
+            // 
+            this.BtnRequestImageMessage.Location = new System.Drawing.Point(646, 547);
+            this.BtnRequestImageMessage.Name = "BtnRequestImageMessage";
+            this.BtnRequestImageMessage.Size = new System.Drawing.Size(284, 43);
+            this.BtnRequestImageMessage.TabIndex = 24;
+            this.BtnRequestImageMessage.Text = "Request Image Message";
+            this.BtnRequestImageMessage.UseVisualStyleBackColor = true;
+            this.BtnRequestImageMessage.Click += new System.EventHandler(this.BtnRequestImageMessage_Click);
+            // 
             // ICANSEEHost
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1306, 602);
+            this.Controls.Add(this.BtnRequestImageMessage);
             this.Controls.Add(this.BtnDisplayImage);
             this.Controls.Add(this.BtnReadAShotUri);
             this.Controls.Add(this.BtnInitSampleImage);
@@ -320,7 +321,6 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.Controls.Add(this.BtnUnloadAlgorithm);
             this.Controls.Add(this.BtnUnloadAllCameras);
             this.Controls.Add(this.BtnReadFBP);
-            this.Controls.Add(this.BtnRunAlgoOnImage);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.BtnListAllComputeDevices);
             this.Controls.Add(this.BtnLoadAlgorithm);
@@ -361,7 +361,6 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private System.Windows.Forms.Button BtnLoadAlgorithm;
         private System.Windows.Forms.Button BtnListAllComputeDevices;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button BtnRunAlgoOnImage;
         private System.Windows.Forms.Button BtnUnloadAllCameras;
         private System.Windows.Forms.Button BtnUnloadAlgorithm;
         private System.Windows.Forms.Button BtnUnloadAllAlgorithms;
@@ -371,5 +370,6 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private System.Windows.Forms.Button BtnInitSampleImage;
         private System.Windows.Forms.Button BtnReadAShotUri;
         private System.Windows.Forms.Button BtnDisplayImage;
+        private System.Windows.Forms.Button BtnRequestImageMessage;
     }
 }
