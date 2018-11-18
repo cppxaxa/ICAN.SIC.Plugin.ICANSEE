@@ -22,7 +22,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
         string brokerHubHost, brokerHubPort;
 
-        public ICANSEEUtility(ImageClient imageClient, string brokerHubHost, string brokerHubPort, string algoDescriptionFileName = "AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ComputeDeviceList.json", string cameraListFileName = "CameraConfigurationList.json")
+        public ICANSEEUtility(ImageClient imageClient, string brokerHubHost, string brokerHubPort, string algoDescriptionFileName = "ICANSEE.AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ICANSEE.ComputeDeviceList.json", string cameraListFileName = "CameraConfigurationList.json")
         {
             this.imageClient = imageClient;
             this.brokerHubHost = brokerHubHost;
