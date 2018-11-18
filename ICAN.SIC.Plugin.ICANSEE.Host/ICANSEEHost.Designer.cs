@@ -90,7 +90,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.TxtFbpPath.Location = new System.Drawing.Point(12, 12);
             this.TxtFbpPath.Margin = new System.Windows.Forms.Padding(4);
             this.TxtFbpPath.Name = "TxtFbpPath";
-            this.TxtFbpPath.Size = new System.Drawing.Size(1284, 31);
+            this.TxtFbpPath.Size = new System.Drawing.Size(1214, 31);
             this.TxtFbpPath.TabIndex = 3;
             // 
             // BtnDfs
@@ -309,7 +309,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1306, 602);
+            this.ClientSize = new System.Drawing.Size(1239, 602);
             this.Controls.Add(this.BtnRequestImageMessage);
             this.Controls.Add(this.BtnDisplayImage);
             this.Controls.Add(this.BtnReadAShotUri);
