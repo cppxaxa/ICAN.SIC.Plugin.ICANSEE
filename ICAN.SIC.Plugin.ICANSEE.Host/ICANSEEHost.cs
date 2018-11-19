@@ -1,3 +1,4 @@
+using ICAN.SIC.Abstractions.IMessageVariants.ICANSEE;
 using ICAN.SIC.Plugin.ICANSEE.Client;
 using ICAN.SIC.Plugin.ICANSEE.DataTypes;
 using System;
@@ -26,6 +27,14 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
             utility = new ICANSEEUtility(imageClient, "localhost", "20000");
             helper = new ICANSEEHelper(utility, imageClient, "localhost", "20000");
+
+            controller.Hub.Subscribe<IInformationMessage>(PrintIInformationMessage);
+        }
+
+        private void PrintIInformationMessage(IInformationMessage message)
+        {
+            Console.WriteLine("JSON: " + message.Json);
+            Console.WriteLine("Text: " + message.Text);
         }
 
         private void ICANSEEHost_Load(object sender, EventArgs e)
@@ -36,8 +45,6 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnReadFBP_Click(object sender, EventArgs e)
         {
             controller.ReadFBPConfiguration(TxtFbpPath.Text);
-
-
         }
 
         private void BtnDfs_Click(object sender, EventArgs e)
@@ -61,7 +68,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnAddCameraConfig_Click(object sender, EventArgs e)
         {
-            helper.AddReplaceCameraConfiguration(1, new CameraConfiguration(0, null, "Default Webcam", 1, "camera"));
+            InputMessage message = new InputMessage(ControlFunction.AddCamera, new List<string> { "0", "1", null, "Default Webcam", "camera" });
+            controller.Hub.Publish<InputMessage>(message);
+
+            //helper.AddReplaceCameraConfiguration(1, new CameraConfiguration(0, null, "Default Webcam", 1, "camera"));
 
             foreach (var item in utility.cameraConfigurationsMap)
             {
@@ -150,11 +160,11 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void button1_Click(object sender, EventArgs e)
         {
-            /*
-            string result = helper.ExecuteScalar(1, "Algo1");
-            */
+            InputMessage message = new InputMessage(ControlFunction.ExecutePreset, new List<string> { "Preset1", "2" });
+            controller.Hub.Publish<InputMessage>(message);
 
-            Console.WriteLine("[INFO] Deprecated feature");
+            //string result = helper.ExecutePreset("Preset1", helper.QueryCameraDescription(2));
+
 
             //if (result != null)
             //    Console.WriteLine(result);
@@ -239,12 +249,16 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
             int port = firstDevice.PortList.First();
 
-            string result = utility.DisplayImageWindow(firstDevice, port);
+            InputMessage message = new InputMessage(ControlFunction.DisplayImageInServerGUI, new List<string> { firstDevice.ComputeDeviceId, port.ToString() });
+            controller.Hub.Publish<InputMessage>(message);
 
-            if (result != null)
-                Console.WriteLine(result);
-            else
-                Console.WriteLine("Failure");
+
+            //string result = utility.DisplayImageWindow(firstDevice, port);
+
+            //if (result != null)
+            //    Console.WriteLine(result);
+            //else
+            //    Console.WriteLine("Failure");
         }
 
         private void BtnUnloadTFSSD_Click(object sender, EventArgs e)

@@ -1,4 +1,5 @@
 ﻿using ICAN.SIC.Abstractions;
+using ICAN.SIC.Abstractions.IMessageVariants.ICANSEE;
 using ICAN.SIC.Plugin.ICANSEE.Client;
 using ICAN.SIC.Plugin.ICANSEE.DataTypes;
 using Newtonsoft.Json;
@@ -26,46 +27,65 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             utility = new ICANSEEUtility(imageClient, brokerHubHost, brokerHubPort);
             helper = new ICANSEEHelper(utility, imageClient, brokerHubHost, brokerHubPort);
+
+            hub.Subscribe<IInputMessage>(this.IInputMessageProcessor);
         }
 
-        /*
-        public string ExecuteScalar(int cameraId, string algoId)
+        private void IInputMessageProcessor(IInputMessage inputMessage)
         {
-            return helper.ExecuteScalar(cameraId, algoId);
-        }
-        */
+            Console.Write("[INFO] ICANSEE.IInputMessage received (" + inputMessage.ControlFunction.ToString() + "): " + JsonConvert.SerializeObject(inputMessage));
 
-        public void AddReplaceCameraConfiguration(int newCustomId, CameraConfiguration cameraConfig)
-        {
-            helper.AddReplaceCameraConfiguration(newCustomId, cameraConfig);
+            List<string> param = inputMessage.Parameters;
+            string result = "";
+            string errorLog = "";
+            switch (inputMessage.ControlFunction)
+            {
+                case ControlFunction.AddCamera:
+                    // "0", "1", null, "Default Webcam", "camera"
+                    //helper.AddReplaceCameraConfiguration(1, new CameraConfiguration(0, null, "Default Webcam", 1, "camera"));
+
+                    helper.AddReplaceCameraConfiguration(int.Parse(param[1]), new CameraConfiguration(int.Parse(param[0]), param[2], param[3], int.Parse(param[1]), param[4]));
+                    break;
+
+                case ControlFunction.DisplayImageInServerGUI:
+                    // firstDevice.ComputeDeviceId, port.ToString()
+                    // string result = utility.DisplayImageWindow(firstDevice, port);
+
+                    result = utility.DisplayImageWindow(utility.computeDeviceInfoMap[param[0]], int.Parse(param[1]));
+                    if (result == null) errorLog = "Error occurred @ " + ControlFunction.DisplayImageInServerGUI.ToString();
+                    break;
+
+                case ControlFunction.ExecutePreset:
+                    // "Preset1", "2"
+                    // result = helper.ExecutePreset("Preset1", helper.QueryCameraDescription(2));
+
+                    result = helper.ExecutePreset(param[0], helper.QueryCameraDescription(int.Parse(param[1])));
+                    if (result == null) errorLog = "Error occurred @ " + ControlFunction.ExecutePreset.ToString();
+                    break;
+            }
+
+            string json = result;
+            string text = result;
+
+            if (errorLog != "")
+                text = ", Error: " + errorLog;
+
+            InformationMessage outputMessage = new InformationMessage(json, text);
+            Hub.Publish<InformationMessage>(outputMessage);
         }
 
-        public bool AddCameraConfiguration(int newCustomId, CameraConfiguration cameraConfig)
-        {
-            return helper.AddCameraConfiguration(newCustomId, cameraConfig);
-        }
-
-        public List<ComputeDeviceInfo> GetComputeDevicesList()
-        {
-            return helper.GetComputeDevicesList();
-        }
-
-        public List<CameraConfiguration> GetAllCameraConfigurations()
-        {
-            return helper.GetAllCameraConfigurations();
-        }
-
-        public List<AlgorithmDescription> GetAlgorithmsList()
-        {
-            return helper.GetAlgorithmsList();
-        }
+        //public string ExecutePreset(int cameraId, string presetId)
+        //{
+        //    CameraConfiguration cameraConfiguration = helper.QueryCameraDescription(cameraId);
+        //    return helper.ExecutePreset(presetId, cameraConfiguration);
+        //}
 
         public FBPGraph ReadFBPConfiguration(string filepath)
         {
             ReplacementConfiguration config = utility.ReadConfigurationFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ICANSEEDrwReplacementConfiguration.json"));
 
             FBPGraph graph = helper.GenerateFBPGraphFromDrwFile(File.OpenRead(filepath), config);
-            
+
             // Debug Replacers
             string dumpOfConvertedValue = string.Empty;
             foreach (var pair in graph.GetBlockFromId)
@@ -98,16 +118,6 @@ namespace ICAN.SIC.Plugin.ICANSEE
             ReplacementConfiguration config = utility.ReadConfigurationFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ICANSEEDrwReplacementConfiguration.json"));
             FBPGraph graph = helper.GenerateFBPGraphFromDrwFile(File.OpenRead(filepath), config);
             return graph;
-        }
-
-        public void UnloadAllAlgorithms()
-        {
-            helper.UnloadAllAlgorithms();
-        }
-
-        public void UnloadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo, int port)
-        {
-            helper.UnloadAlgorithm(algoId, computeDeviceInfo, port);
         }
     }
 }

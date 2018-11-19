@@ -182,7 +182,10 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
         public string ExecutePreset(string presetId, CameraConfiguration cameraConfiguration)
         {
-            bool RunCompatibility = false;
+            int RunCompatibility = 0;
+            bool targetCameraOpen = false;
+            bool targetAlgorithmActive = false;
+
             PresetDescription presetConfiguration = utility.QueryPresetById(presetId);
             ComputeDeviceInfo computeDevice = utility.QueryComputeDeviceById(presetConfiguration.ComputeDeviceId);
             int port = presetConfiguration.Port;
@@ -200,20 +203,80 @@ namespace ICAN.SIC.Plugin.ICANSEE
             // Any logic for deciding on run
             // Update statusMap with conditions
             if (!(currentState.IsAnyAlgorithmsActive() || currentState.IsAnyCameraActive() || currentState.IsAnyPresetActive()))
-                RunCompatibility = true;
+                RunCompatibility = 1;
             // If same algorithm, camera is there but preset is over, then run
             else if (currentState.IsAlgorithmActive(presetConfiguration.AlgorithmId) && currentState.IsCameraActive(cameraConfiguration.Id) && !(currentState.IsPresetActive(presetId)))
-                RunCompatibility = true;
+                RunCompatibility = 2;
+            else
+            {
+                RunCompatibility = 5;
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[FIX NEEDED] ExecutePreset(presetId={0}, cameraId={1}) Backdoor activated for allowing execution", presetId, cameraConfiguration.Id);
+                Console.ResetColor();
+            }
+
+            if (currentState.IsCameraActive(cameraConfiguration.Id))
+                targetCameraOpen = true;
+            if (currentState.IsAlgorithmActive(presetConfiguration.AlgorithmId))
+                targetAlgorithmActive = true;
 
 
             // If run compatibility satisfies, run the algorithm in specific compute device
-            if (RunCompatibility)
+            if (RunCompatibility > 0)
             {
-                // If preset is one time run, then don't update the statusMap
-                if (presetConfiguration.ReturnResult && !presetConfiguration.InfiniteLoop && (presetConfiguration.RunOnce || presetConfiguration.LoopLimit == 1))
-                    computeDeviceStateMap[computeDevice][port].SetPresetActive(presetConfiguration, utility.GetAlgorithmsList());
+                string result = "";
 
-                string result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress);
+                // If camera already not loaded, call LoadCamera
+                if (!targetCameraOpen)
+                {
+                    result = utility.LoadCamera(cameraConfiguration.Id, computeDevice, port);
+                    if (result == null)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("[ERROR] ExecutePreset(presetId={0}, cameraId={1}) LoadCamera() Failed", presetId, cameraConfiguration.Id);
+                        Console.ResetColor();
+                        return null;
+                    }
+                    else
+                    {
+                        computeDeviceStateMap[computeDevice][port].SetCameraActive(cameraConfiguration);
+                    }
+                }
+
+
+                // If preset request to run ScalarExecuteCommand attribute, call the InitCommandFirst
+                if (!targetAlgorithmActive)
+                {
+                    result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress, "InitCommand");
+                    if (result == null)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("[ERROR] ExecutePreset(presetId={0}, cameraId={1}) InitAlgo Failed", presetId, cameraConfiguration.Id);
+                        Console.ResetColor();
+                        return null;
+                    }
+                }
+
+                computeDeviceStateMap[computeDevice][port].SetPresetActive(presetConfiguration, utility.GetAlgorithmsList());
+
+                // If preset is one time run, then clear preset from the statusMap
+                if (presetConfiguration.ReturnResult && !presetConfiguration.InfiniteLoop && (presetConfiguration.RunOnce || presetConfiguration.LoopLimit == 1))
+                    computeDeviceStateMap[computeDevice][port].ClearPreset(presetConfiguration.Id);
+
+                result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress);
+
+                if (result == null)
+                {
+                    computeDeviceStateMap[computeDevice][port].ClearPreset(presetConfiguration.Id);
+
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("[ERROR] ExecutePreset(presetId={0}, cameraId={1}) Preset Execution Failed", presetId, cameraConfiguration.Id);
+                    Console.ResetColor();
+
+                    return null;
+                }
+
                 return result;
             }
 
@@ -403,6 +466,11 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)
         {
             return utility.GenerateFBPGraphFromDrwFile(drwFileStream, configuration);
+        }
+
+        public CameraConfiguration QueryCameraDescription(int cameraId)
+        {
+            return utility.QueryCameraDescription(cameraId);
         }
     }
 }

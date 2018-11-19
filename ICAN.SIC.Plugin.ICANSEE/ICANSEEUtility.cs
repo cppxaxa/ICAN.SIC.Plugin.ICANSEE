@@ -365,7 +365,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             }
         }
 
-        public string ExecuteAlgorithm(PresetDescription presetDescription, string ipAddress)
+        public string ExecuteAlgorithm(PresetDescription presetDescription, string ipAddress, string commandAttribute = "ScalarExecuteCommand")
         {
             string computeDeviceInfoId = presetDescription.ComputeDeviceId;
             string algorithmId = presetDescription.AlgorithmId;
@@ -398,11 +398,17 @@ namespace ICAN.SIC.Plugin.ICANSEE
             }
             var computeDeviceInfo = computeDeviceInfoMap[computeDeviceInfoId];
 
-            string executeCommand = presetDescription.GetCompleteExecuteCommand(algorithmDescription, computeDeviceInfo, port.ToString());
+            string executeCommand = "";
+            if (commandAttribute == "ScalarExecuteCommand")
+                executeCommand = presetDescription.GetCompleteExecuteCommand(algorithmDescription, computeDeviceInfo, port.ToString());
+            else if (commandAttribute == "InitCommand")
+                executeCommand = presetDescription.GetCompleteInitCommand(algorithmDescription, computeDeviceInfo, port.ToString());
+            else if (commandAttribute == "UnloadCommand")
+                executeCommand = presetDescription.GetCompleteUnloadCommand(algorithmDescription, computeDeviceInfo, port.ToString());
+
 
             string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + executeCommand + "\\n" + resultProcessingStatement + "\"],\"RunOnce\": {{RunOnce}},\"InfiniteLoop\": {{InfiniteLoop}},\"LoopLimit\": {{LoopLimit}},\"ReturnResult\": {{ReturnResult}}}";
-
-            Console.WriteLine("[DEBUG] ApiCallBody(" + ipAddress + port.ToString() + "): " + apiCallBody);
+            
 
             try
             {
@@ -423,7 +429,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 else
                     apiCallBody = apiCallBody.Replace("{{ReturnResult}}", "false");
 
-
+                Console.WriteLine("[DEBUG] ApiCallBody(" + ipAddress + port.ToString() + "): " + apiCallBody);
 
                 string result = imageClient.MakePostCall(algorithmDescription.GetUri(ipAddress, port.ToString()), apiCallBody);
                 return result;

@@ -51,6 +51,12 @@ namespace ICAN.SIC.Plugin.ICANSEE.DataTypes
 
         public string GetCompleteExecuteCommand(AlgorithmDescription targetAlgorithmDescription, ComputeDeviceInfo targetComputeDeviceInfo, string port)
         {
+            string attributeKey = "ScalarExecuteCommand";
+            return GetCustomCompleteExecuteCommand(targetAlgorithmDescription, targetComputeDeviceInfo, port, attributeKey);
+        }
+
+        private string GetCustomCompleteExecuteCommand(AlgorithmDescription targetAlgorithmDescription, ComputeDeviceInfo targetComputeDeviceInfo, string port, string attributeKey = "ScalarExecuteCommand")
+        {
             string errorList = "";
             if (targetAlgorithmDescription.Id != AlgorithmId)
                 errorList += "[ERROR] PresetDescription::GetCompleteExecuteCommand() - Preset.AlgorithmId does not match with given 'targetAlgorithmDescription'\n";
@@ -69,7 +75,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.DataTypes
             string ipAddress = targetComputeDeviceInfo.IpAddress;
 
             string algorithmCommand = null;
-            switch (AlgorithmAttributeKey)
+            switch (attributeKey)
             {
                 case "ScalarExecuteCommand":
                     algorithmCommand = targetAlgorithmDescription.GetScalarExecuteCommand(ipAddress, port);
@@ -87,6 +93,18 @@ namespace ICAN.SIC.Plugin.ICANSEE.DataTypes
 
             algorithmCommand += "\\n" + EncodeStringForTransmission(ResultProcessingStatement, ipAddress, port);
             return algorithmCommand;
+        }
+
+        public string GetCompleteInitCommand(AlgorithmDescription targetAlgorithmDescription, ComputeDeviceInfo targetComputeDeviceInfo, string port)
+        {
+            string attributeKey = "InitCommand";
+            return GetCustomCompleteExecuteCommand(targetAlgorithmDescription, targetComputeDeviceInfo, port, attributeKey);
+        }
+
+        public string GetCompleteUnloadCommand(AlgorithmDescription targetAlgorithmDescription, ComputeDeviceInfo targetComputeDeviceInfo, string port)
+        {
+            string attributeKey = "UnloadCommand";
+            return GetCustomCompleteExecuteCommand(targetAlgorithmDescription, targetComputeDeviceInfo, port, attributeKey);
         }
     }
 }

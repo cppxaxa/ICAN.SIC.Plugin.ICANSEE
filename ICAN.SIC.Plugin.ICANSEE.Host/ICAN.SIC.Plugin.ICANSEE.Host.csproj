@@ -57,6 +57,7 @@
     <Compile Include="ICANSEEHost.Designer.cs">
       <DependentUpon>ICANSEEHost.cs</DependentUpon>
     </Compile>
+    <Compile Include="InputMessage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ICANSEEHost.resx">

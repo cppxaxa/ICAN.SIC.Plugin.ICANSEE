@@ -53,6 +53,7 @@
     <Compile Include="DataTypes\DrwBlock.cs" />
     <Compile Include="DataTypes\DrwConnection.cs" />
     <Compile Include="DataTypes\FBPGraph.cs" />
+    <Compile Include="DataTypes\InformationMessage.cs" />
     <Compile Include="DataTypes\PresetDescription.cs" />
     <Compile Include="DrwReplacementConfigurationUnit.cs" />
     <Compile Include="ICANSEE.cs" />
