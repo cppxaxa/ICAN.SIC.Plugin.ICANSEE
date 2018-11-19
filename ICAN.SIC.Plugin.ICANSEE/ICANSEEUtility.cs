@@ -171,6 +171,8 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     computeDeviceInfoByTypeIdMap[item.DeviceTypeId] = new List<ComputeDeviceInfo>();
                 }
                 computeDeviceInfoByTypeIdMap[item.DeviceTypeId].Add(item);
+
+                computeDeviceInfoMap[item.ComputeDeviceId] = item;
             }
         }
 
@@ -382,8 +384,8 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
                 return null;
             }
-
             var algorithmDescription = algorithmsDescriptionMap[algorithmId];
+
 
 
             if (!computeDeviceInfoMap.ContainsKey(computeDeviceInfoId))
@@ -394,7 +396,6 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
                 return null;
             }
-
             var computeDeviceInfo = computeDeviceInfoMap[computeDeviceInfoId];
 
             string executeCommand = presetDescription.GetCompleteExecuteCommand(algorithmDescription, computeDeviceInfo, port.ToString());
