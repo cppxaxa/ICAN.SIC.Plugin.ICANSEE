@@ -17,12 +17,14 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public Dictionary<string, AlgorithmDescription> algorithmsDescriptionMap = new Dictionary<string, AlgorithmDescription>();
         public Dictionary<string, string> unloadCommandDeviceTypeToCommadMap = new Dictionary<string, string>();
         public List<ComputeDeviceInfo> computeDeviceInfoList = new List<ComputeDeviceInfo>();
-        public Dictionary<string, List<ComputeDeviceInfo>> computeDeviceInfoListMap = new Dictionary<string, List<ComputeDeviceInfo>>();
+        public Dictionary<string, List<ComputeDeviceInfo>> computeDeviceInfoByTypeIdMap = new Dictionary<string, List<ComputeDeviceInfo>>();
+        public Dictionary<string, ComputeDeviceInfo> computeDeviceInfoMap = new Dictionary<string, ComputeDeviceInfo>();
+        public Dictionary<string, PresetDescription> presetDescriptionMap = new Dictionary<string, PresetDescription>();
         ImageClient imageClient;
 
         string brokerHubHost, brokerHubPort;
 
-        public ICANSEEUtility(ImageClient imageClient, string brokerHubHost, string brokerHubPort, string algoDescriptionFileName = "ICANSEE.AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ICANSEE.ComputeDeviceList.json", string cameraListFileName = "CameraConfigurationList.json")
+        public ICANSEEUtility(ImageClient imageClient, string brokerHubHost, string brokerHubPort, string algoDescriptionFileName = "ICANSEE.AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ICANSEE.ComputeDeviceList.json", string cameraListFileName = "CameraConfigurationList.json", string presetDescriptionListFileName = "ICANSEE.PresetDescriptionList.json")
         {
             this.imageClient = imageClient;
             this.brokerHubHost = brokerHubHost;
@@ -88,6 +90,47 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     Console.WriteLine(ex.Message);
                     Console.ResetColor();
                 }
+
+
+            if (!File.Exists(presetDescriptionListFileName))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Preset description list file not found: " + presetDescriptionListFileName);
+                Console.ResetColor();
+            }
+            else
+                try
+                {
+                    LoadPresetDescriptionsFromFile(presetDescriptionListFileName);
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Error while reading Preset description list : " + presetDescriptionListFileName);
+                    Console.WriteLine(ex.Message);
+                    Console.ResetColor();
+                }
+        }
+
+        public ComputeDeviceInfo QueryComputeDeviceById(string computeDeviceId)
+        {
+            if (computeDeviceInfoMap.ContainsKey(computeDeviceId))
+                return computeDeviceInfoMap[computeDeviceId];
+            return null;
+        }
+
+        public PresetDescription QueryPresetById(string presetId)
+        {
+            if (presetDescriptionMap.ContainsKey(presetId))
+                return presetDescriptionMap[presetId];
+            return null;
+        }
+
+        private void LoadPresetDescriptionsFromFile(string filePath)
+        {
+            string fileContent = File.ReadAllText(filePath);
+            List<PresetDescription> presetList = JsonConvert.DeserializeObject<List<PresetDescription>>(fileContent);
+            this.presetDescriptionMap = presetList.ToDictionary(e => e.Id);
         }
 
         private void LoadAlgorithmDescriptionsFromFile(string filePath)
@@ -123,11 +166,11 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             foreach (var item in computeDeviceInfoList)
             {
-                if (!computeDeviceInfoListMap.ContainsKey(item.DeviceTypeId))
+                if (!computeDeviceInfoByTypeIdMap.ContainsKey(item.DeviceTypeId))
                 {
-                    computeDeviceInfoListMap[item.DeviceTypeId] = new List<ComputeDeviceInfo>();
+                    computeDeviceInfoByTypeIdMap[item.DeviceTypeId] = new List<ComputeDeviceInfo>();
                 }
-                computeDeviceInfoListMap[item.DeviceTypeId].Add(item);
+                computeDeviceInfoByTypeIdMap[item.DeviceTypeId].Add(item);
             }
         }
 
@@ -210,7 +253,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                             apiCallBody = apiCallBody.Replace("{{shotUri}}", "'" + cameraConfig.Url + "'");
                             break;
                     }
-                    
+
                     Console.WriteLine("[DEBUG] ApiCallBody(" + computeDeviceInfo.IpAddress + port.ToString() + "): " + apiCallBody);
                     string result = imageClient.MakePostCall("http://{{host}}:{{port}}/task".Replace("{{host}}", computeDeviceInfo.IpAddress).Replace("{{port}}", port.ToString()), apiCallBody);
 
@@ -320,12 +363,21 @@ namespace ICAN.SIC.Plugin.ICANSEE
             }
         }
 
-        public string ExecuteAlgorithm(string ipAddress, int port, bool RunOnce, bool InfiniteLoop, int LoopLimit, bool ReturnResult, string resultProcessingStatement, string algorithmId)
+        public string ExecuteAlgorithm(PresetDescription presetDescription, string ipAddress)
         {
+            string computeDeviceInfoId = presetDescription.ComputeDeviceId;
+            string algorithmId = presetDescription.AlgorithmId;
+            int port = presetDescription.Port;
+            string resultProcessingStatement = presetDescription.GetResultProcessingStatement(brokerHubHost, brokerHubPort);
+            bool RunOnce = presetDescription.RunOnce;
+            bool InfiniteLoop = presetDescription.InfiniteLoop;
+            int LoopLimit = presetDescription.LoopLimit;
+            bool ReturnResult = presetDescription.ReturnResult;
+
             if (!algorithmsDescriptionMap.ContainsKey(algorithmId))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithm(" + algorithmId + ", ipAddress=" + ipAddress + ", port=" + port.ToString() + ")\n - Algorithm Id not found");
+                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithm(algoId=" + algorithmId + ", ipAddress=" + ipAddress + ", port=" + port.ToString() + ")\n - Algorithm Id not found");
                 Console.ResetColor();
 
                 return null;
@@ -333,9 +385,21 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             var algorithmDescription = algorithmsDescriptionMap[algorithmId];
 
-            string scalarExecuteCommand = algorithmDescription.GetScalarExecuteCommand(ipAddress, port.ToString());
 
-            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + scalarExecuteCommand + "\\n" + resultProcessingStatement + "\"],\"RunOnce\": {{RunOnce}},\"InfiniteLoop\": {{InfiniteLoop}},\"LoopLimit\": {{LoopLimit}},\"ReturnResult\": {{ReturnResult}}}";
+            if (!computeDeviceInfoMap.ContainsKey(computeDeviceInfoId))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithm(computeDevId=" + computeDeviceInfoId + ", ipAddress=" + ipAddress + ", port=" + port.ToString() + ")\n - ComputeDeviceInfo Id not found");
+                Console.ResetColor();
+
+                return null;
+            }
+
+            var computeDeviceInfo = computeDeviceInfoMap[computeDeviceInfoId];
+
+            string executeCommand = presetDescription.GetCompleteExecuteCommand(algorithmDescription, computeDeviceInfo, port.ToString());
+
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + executeCommand + "\\n" + resultProcessingStatement + "\"],\"RunOnce\": {{RunOnce}},\"InfiniteLoop\": {{InfiniteLoop}},\"LoopLimit\": {{LoopLimit}},\"ReturnResult\": {{ReturnResult}}}";
 
             Console.WriteLine("[DEBUG] ApiCallBody(" + ipAddress + port.ToString() + "): " + apiCallBody);
 
@@ -366,7 +430,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithmScalar" + ", ipAddress=" + ipAddress + ", port=" + port.ToString() + ") " + "\n" + apiCallBody + "\n" + ex.Message);
+                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithm(presetId=" + presetDescription.Id + ", ipAddress=" + ipAddress + ", port=" + port.ToString() + ") " + "\n" + apiCallBody + "\n" + ex.Message);
                 Console.ResetColor();
             }
             return null;
@@ -386,7 +450,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithmScalar("+ ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + "\n" + apiCallBody + "\n" + ex.Message);
+                Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithmScalar(" + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + "\n" + apiCallBody + "\n" + ex.Message);
                 Console.ResetColor();
             }
             return null;
@@ -567,6 +631,44 @@ namespace ICAN.SIC.Plugin.ICANSEE
             }
 
             return null;
+        }
+
+        public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)
+        {
+            XPathDocument xmlPathDoc = new XPathDocument(drwFileStream);
+            XPathNavigator navigator = xmlPathDoc.CreateNavigator();
+
+            XPathNodeIterator blockIterator = navigator.SelectDescendants("block", "", false);
+            XPathNodeIterator connectionIterator = navigator.SelectDescendants("connection", "", false);
+
+            int count = connectionIterator.Count;
+
+            List<DrwBlock> blocks = new List<DrwBlock>();
+            List<DrwConnection> connections = new List<DrwConnection>();
+
+            while (blockIterator.MoveNext())
+            {
+                XPathNavigator nav = blockIterator.Current.Clone();
+
+                DrwBlock block = ExtractDrwBlockFromNav(nav, configuration);
+
+                if (block != null)
+                    blocks.Add(block);
+            }
+
+            while (connectionIterator.MoveNext())
+            {
+                XPathNavigator nav = connectionIterator.Current.Clone();
+
+                DrwConnection connection = ExtractDrwConnectionFromNav(nav);
+
+                if (connection != null)
+                    connections.Add(connection);
+            }
+
+            FBPGraph graph = new FBPGraph(blocks, connections);
+
+            return graph;
         }
     }
 }

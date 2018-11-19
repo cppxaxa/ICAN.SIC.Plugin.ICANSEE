@@ -199,7 +199,8 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private void BtnRunTFSSD_Click(object sender, EventArgs e)
         {
             ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
-            string result = utility.ExecuteAlgorithm(firstDevice.IpAddress, firstDevice.PortList.First(), true, false, 1, true, "", "Algo3");
+            PresetDescription preset = new PresetDescription("1000", "Sample", "Algo3", firstDevice.ComputeDeviceId, firstDevice.PortList.First(), true, false, 1, true);
+            string result = utility.ExecuteAlgorithm(preset, firstDevice.IpAddress);
 
             if (result != null)
                 Console.WriteLine("[INFO] RunAlgo: " + result);

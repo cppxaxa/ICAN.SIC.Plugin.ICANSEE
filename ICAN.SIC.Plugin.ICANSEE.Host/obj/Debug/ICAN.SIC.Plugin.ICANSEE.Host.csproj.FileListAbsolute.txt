@@ -56,3 +56,4 @@ D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\CameraConfigurationList.json
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE.Host\obj\Debug\ICAN.SIC.Plugin.ICANSEE.Host.ICANSEEHost.resources
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICANSEE.AlgorithmsDescriptionList.json
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICANSEE.ComputeDeviceList.json
+D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICANSEE.PresetDescriptionList.json

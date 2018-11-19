@@ -53,8 +53,10 @@
     <Compile Include="DataTypes\DrwBlock.cs" />
     <Compile Include="DataTypes\DrwConnection.cs" />
     <Compile Include="DataTypes\FBPGraph.cs" />
+    <Compile Include="DataTypes\PresetDescription.cs" />
     <Compile Include="DrwReplacementConfigurationUnit.cs" />
     <Compile Include="ICANSEE.cs" />
+    <None Include="ICANSEEHelper%28DEPRECATED%29.cs" />
     <Compile Include="ICANSEEHelper.cs" />
     <Compile Include="ICANSEEUtility.cs" />
     <Compile Include="Client\ImageClient.cs" />

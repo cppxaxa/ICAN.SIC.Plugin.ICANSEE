@@ -11,15 +11,150 @@ using System.Xml.XPath;
 
 namespace ICAN.SIC.Plugin.ICANSEE
 {
+    public class ComputeDeviceState
+    {
+        public Dictionary<CameraConfiguration, bool> OpenCameraMap;
+        public Dictionary<PresetDescription, bool> AssignedPresetDescriptionMap;
+        public Dictionary<AlgorithmDescription, bool> AssignedAlgorithmDescriptionMap;
+
+        public ComputeDeviceState()
+        {
+            OpenCameraMap = new Dictionary<CameraConfiguration, bool>();
+            AssignedPresetDescriptionMap = new Dictionary<PresetDescription, bool>();
+            AssignedAlgorithmDescriptionMap = new Dictionary<AlgorithmDescription, bool>();
+        }
+
+        public bool IsAnyCameraActive()
+        {
+            foreach (var camera in OpenCameraMap)
+            {
+                if (camera.Value)
+                    return true;
+            }
+            return false;
+        }
+        public bool IsAnyPresetActive()
+        {
+            foreach (var preset in AssignedPresetDescriptionMap)
+            {
+                if (preset.Value)
+                    return true;
+            }
+            return false;
+        }
+        public bool IsAnyAlgorithmsActive()
+        {
+            foreach (var algo in AssignedAlgorithmDescriptionMap)
+            {
+                if (algo.Value)
+                    return true;
+            }
+            return false;
+        }
+
+        public void SetCameraActive(CameraConfiguration cameraConfiguration)
+        {
+            OpenCameraMap[cameraConfiguration] = true;
+        }
+        public bool SetPresetActive(PresetDescription presetDescription, List<AlgorithmDescription> algorithmDescriptionList)
+        {
+            int algoIndex = algorithmDescriptionList.FindIndex(algo => algo.Id == presetDescription.AlgorithmId);
+
+            if (algoIndex < 0 || algoIndex >= algorithmDescriptionList.Count)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] SetPresetActive(presetId={0}) Algorithm not present in provided list");
+                Console.ResetColor();
+                return false;
+            }
+
+            AssignedPresetDescriptionMap[presetDescription] = true;
+            AssignedAlgorithmDescriptionMap[algorithmDescriptionList[algoIndex]] = true;
+            return true;
+        }
+        public void SetAlgorithmActive(AlgorithmDescription algorithmDescription)
+        {
+            AssignedAlgorithmDescriptionMap[algorithmDescription] = true;
+        }
+
+        public bool IsAlgorithmActive(string algorithmId)
+        {
+            foreach (var algo in AssignedAlgorithmDescriptionMap)
+            {
+                if (algo.Key.Id == algorithmId && algo.Value)
+                    return true;
+            }
+            return false;
+        }
+
+        public bool IsCameraActive(int cameraId)
+        {
+            foreach (var camera in OpenCameraMap)
+            {
+                if (camera.Key.Id == cameraId && camera.Value)
+                    return true;
+            }
+            return false;
+        }
+
+        public bool IsPresetActive(string presetId)
+        {
+            foreach (var preset in AssignedPresetDescriptionMap)
+            {
+                if (preset.Key.Id == presetId && preset.Value)
+                    return true;
+            }
+            return false;
+        }
+
+        public void ClearCamera(int cameraId)
+        {
+            CameraConfiguration cameraConfiguration = null;
+            foreach (var camera in OpenCameraMap)
+            {
+                if (camera.Key.Id == cameraId && camera.Value)
+                    cameraConfiguration = camera.Key;
+            }
+
+            if (cameraConfiguration != null)
+                OpenCameraMap[cameraConfiguration] = false;
+        }
+
+        public void ClearAlgorithm(string algoId)
+        {
+            AlgorithmDescription algorithmDescription = null;
+            foreach (var algo in AssignedAlgorithmDescriptionMap)
+            {
+                if (algo.Key.Id == algoId && algo.Value)
+                    algorithmDescription = algo.Key;
+            }
+
+            if (algorithmDescription != null)
+                AssignedAlgorithmDescriptionMap[algorithmDescription] = false;
+        }
+
+        public void ClearPreset(string presetId)
+        {
+            PresetDescription presetDescription = null;
+            foreach (var preset in AssignedPresetDescriptionMap)
+            {
+                if (preset.Key.Id == presetId && preset.Value)
+                    presetDescription = preset.Key;
+            }
+
+            if (presetDescription != null)
+                AssignedPresetDescriptionMap[presetDescription] = false;
+        }
+    }
+
     public class ICANSEEHelper
     {
         ICANSEEUtility utility;
         ImageClient imageClient;
 
         List<ComputeDeviceInfo> computeDeviceList;
-        Dictionary<ComputeDeviceInfo, bool> computeDeviceLocked = new Dictionary<ComputeDeviceInfo, bool>();
-        Dictionary<int, ComputeDeviceInfo> assignedDeviceForCameraMap = new Dictionary<int, ComputeDeviceInfo>();
-        Dictionary<string, ComputeDeviceInfo> assignedDeviceForAlgoTypeMap = new Dictionary<string, ComputeDeviceInfo>();
+        Dictionary<ComputeDeviceInfo, Dictionary<int, ComputeDeviceState>> computeDeviceStateMap = new Dictionary<ComputeDeviceInfo, Dictionary<int, ComputeDeviceState>>();
+
 
         string brokerHubHost, brokerHubPort;
 
@@ -38,6 +173,51 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 Console.WriteLine("No compute devices available (Check ComputeDeviceConfig file for extensive list)");
                 Console.ResetColor();
             }
+            else
+                foreach (var computeDevice in computeDeviceList)
+                {
+                    computeDeviceStateMap[computeDevice] = new Dictionary<int, ComputeDeviceState>();
+                }
+        }
+
+        public string ExecutePreset(string presetId, CameraConfiguration cameraConfiguration)
+        {
+            bool RunCompatibility = false;
+            PresetDescription presetConfiguration = utility.QueryPresetById(presetId);
+            ComputeDeviceInfo computeDevice = utility.QueryComputeDeviceById(presetConfiguration.ComputeDeviceId);
+            int port = presetConfiguration.Port;
+
+            ComputeDeviceState currentState = QueryDeviceState(computeDevice, port);
+
+            if (currentState == null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ExecutePreset(presetId={0}, cameraId={1}) Failure in current state", presetId, cameraConfiguration.Id);
+                Console.ResetColor();
+                return null;
+            }
+
+            // Any logic for deciding on run
+            // Update statusMap with conditions
+            if (!(currentState.IsAnyAlgorithmsActive() || currentState.IsAnyCameraActive() || currentState.IsAnyPresetActive()))
+                RunCompatibility = true;
+            // If same algorithm, camera is there but preset is over, then run
+            else if (currentState.IsAlgorithmActive(presetConfiguration.AlgorithmId) && currentState.IsCameraActive(cameraConfiguration.Id) && !(currentState.IsPresetActive(presetId)))
+                RunCompatibility = true;
+
+
+            // If run compatibility satisfies, run the algorithm in specific compute device
+            if (RunCompatibility)
+            {
+                // If preset is one time run, then don't update the statusMap
+                if (presetConfiguration.ReturnResult && !presetConfiguration.InfiniteLoop && (presetConfiguration.RunOnce || presetConfiguration.LoopLimit == 1))
+                    computeDeviceStateMap[computeDevice][port].SetPresetActive(presetConfiguration, utility.GetAlgorithmsList());
+
+                string result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress);
+                return result;
+            }
+
+            return null;
         }
 
         public bool AddCameraConfiguration(int newCustomId, CameraConfiguration cameraConfig)
@@ -181,31 +361,33 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
         private List<ComputeDeviceInfo> QueryFreeDevices(List<string> supportedDeviceTypeIdList)
         {
-            List<ComputeDeviceInfo> result = new List<ComputeDeviceInfo>();
-
-            HashSet<string> supportedDeviceTypeIdSet = new HashSet<string>();
-            foreach (var item in supportedDeviceTypeIdList)
-            {
-                supportedDeviceTypeIdSet.Add(item);
-            }
-
-            var availableDevices = GetComputeDevicesList();
-            foreach (var deviceInfo in availableDevices)
-            {
-                if (supportedDeviceTypeIdSet.Contains(deviceInfo.DeviceTypeId))
-                {
-                    result.Add(deviceInfo);
-                }
-            }
-
-            return result;
+            throw new NotImplementedException();
         }
 
-        private bool IsDeviceFree(ComputeDeviceInfo currentDeviceInfo)
+        private ComputeDeviceState QueryDeviceState(ComputeDeviceInfo currentDeviceInfo, int port)
         {
-            if (!computeDeviceLocked.ContainsKey(currentDeviceInfo))
-                return true;
-            return !computeDeviceLocked[currentDeviceInfo];
+            bool validPort = currentDeviceInfo.PortList.Any(p => p == port);
+
+            if (!validPort)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] QueryDeviceState(devId={0}, port={1}) Port does not exists", currentDeviceInfo.ComputeDeviceId, port);
+                Console.ResetColor();
+                return null;
+            }
+
+            if (computeDeviceStateMap.ContainsKey(currentDeviceInfo))
+            {
+                if (computeDeviceStateMap[currentDeviceInfo].ContainsKey(port))
+                    return computeDeviceStateMap[currentDeviceInfo][port];
+                else
+                    return computeDeviceStateMap[currentDeviceInfo][port] = new ComputeDeviceState();
+            }
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("[ERROR] QueryDeviceState(devId={0}, port={1}) Unable to fetch data", currentDeviceInfo.ComputeDeviceId, port);
+            Console.ResetColor();
+            return null;
         }
 
         public void UnloadAllAlgorithms()
@@ -220,40 +402,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
         public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)
         {
-            XPathDocument xmlPathDoc = new XPathDocument(drwFileStream);
-            XPathNavigator navigator = xmlPathDoc.CreateNavigator();
-
-            XPathNodeIterator blockIterator = navigator.SelectDescendants("block", "", false);
-            XPathNodeIterator connectionIterator = navigator.SelectDescendants("connection", "", false);
-
-            int count = connectionIterator.Count;
-
-            List<DrwBlock> blocks = new List<DrwBlock>();
-            List<DrwConnection> connections = new List<DrwConnection>();
-
-            while (blockIterator.MoveNext())
-            {
-                XPathNavigator nav = blockIterator.Current.Clone();
-
-                DrwBlock block = utility.ExtractDrwBlockFromNav(nav, configuration);
-
-                if (block != null)
-                    blocks.Add(block);
-            }
-
-            while (connectionIterator.MoveNext())
-            {
-                XPathNavigator nav = connectionIterator.Current.Clone();
-
-                DrwConnection connection = utility.ExtractDrwConnectionFromNav(nav);
-
-                if (connection != null)
-                    connections.Add(connection);
-            }
-
-            FBPGraph graph = new FBPGraph(blocks, connections);
-
-            return graph;
+            return utility.GenerateFBPGraphFromDrwFile(drwFileStream, configuration);
         }
     }
 }

@@ -80,7 +80,9 @@
     <None Include="ICANSEE.ComputeDeviceList.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="ICANSEE.PresetDescriptionList.json" />
+    <None Include="ICANSEE.PresetDescriptionList.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
