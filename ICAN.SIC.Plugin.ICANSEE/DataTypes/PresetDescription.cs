@@ -39,6 +39,13 @@ namespace ICAN.SIC.Plugin.ICANSEE.DataTypes
             ResultProcessingStatement = resultProcessingStatement;
         }
 
+        public PresetDescription Clone()
+        {
+            return new PresetDescription(Id, Name, AlgorithmId, ComputeDeviceId, 
+                Port, RunOnce, InfiniteLoop, LoopLimit, ReturnResult, 
+                Description, AlgorithmAttributeKey, ResultProcessingStatement);
+        }
+
         private string EncodeStringForTransmission(string input, string ipAddress, string port)
         {
             return input.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("{{host}}", ipAddress).Replace("{{port}}", port);

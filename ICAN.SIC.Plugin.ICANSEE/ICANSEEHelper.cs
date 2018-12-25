@@ -186,7 +186,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             bool targetCameraOpen = false;
             bool targetAlgorithmActive = false;
 
-            PresetDescription presetConfiguration = utility.QueryPresetById(presetId);
+            PresetDescription presetConfiguration = utility.QueryPresetById(presetId, brokerHubHost, brokerHubPort);
             ComputeDeviceInfo computeDevice = utility.QueryComputeDeviceById(presetConfiguration.ComputeDeviceId);
             int port = presetConfiguration.Port;
 
@@ -315,6 +315,59 @@ namespace ICAN.SIC.Plugin.ICANSEE
             return "Done";
         }
 
+        private List<ComputeDeviceInfo> QueryFreeDevices(List<string> supportedDeviceTypeIdList)
+        {
+            throw new NotImplementedException();
+        }
+
+        private ComputeDeviceState QueryDeviceState(ComputeDeviceInfo currentDeviceInfo, int port)
+        {
+            bool validPort = currentDeviceInfo.PortList.Any(p => p == port);
+
+            if (!validPort)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] QueryDeviceState(devId={0}, port={1}) Port does not exists", currentDeviceInfo.ComputeDeviceId, port);
+                Console.ResetColor();
+                return null;
+            }
+
+            if (computeDeviceStateMap.ContainsKey(currentDeviceInfo))
+            {
+                if (computeDeviceStateMap[currentDeviceInfo].ContainsKey(port))
+                    return computeDeviceStateMap[currentDeviceInfo][port];
+                else
+                    return computeDeviceStateMap[currentDeviceInfo][port] = new ComputeDeviceState();
+            }
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("[ERROR] QueryDeviceState(devId={0}, port={1}) Unable to fetch data", currentDeviceInfo.ComputeDeviceId, port);
+            Console.ResetColor();
+            return null;
+        }
+
+        public void UnloadAllAlgorithms()
+        {
+            utility.UnloadAllAlgorithms();
+        }
+
+        public void UnloadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo, int port)
+        {
+            utility.UnloadAlgorithm(algoId, computeDeviceInfo, port);
+        }
+
+        public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)
+        {
+            return utility.GenerateFBPGraphFromDrwFile(drwFileStream, configuration);
+        }
+
+        public CameraConfiguration QueryCameraDescription(int cameraId)
+        {
+            return utility.QueryCameraDescription(cameraId);
+        }
+
+
+
         /*
         public string ExecuteScalar(int cameraId, string algoId)
         {
@@ -421,56 +474,5 @@ namespace ICAN.SIC.Plugin.ICANSEE
             return result;
         }
         */
-
-        private List<ComputeDeviceInfo> QueryFreeDevices(List<string> supportedDeviceTypeIdList)
-        {
-            throw new NotImplementedException();
-        }
-
-        private ComputeDeviceState QueryDeviceState(ComputeDeviceInfo currentDeviceInfo, int port)
-        {
-            bool validPort = currentDeviceInfo.PortList.Any(p => p == port);
-
-            if (!validPort)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] QueryDeviceState(devId={0}, port={1}) Port does not exists", currentDeviceInfo.ComputeDeviceId, port);
-                Console.ResetColor();
-                return null;
-            }
-
-            if (computeDeviceStateMap.ContainsKey(currentDeviceInfo))
-            {
-                if (computeDeviceStateMap[currentDeviceInfo].ContainsKey(port))
-                    return computeDeviceStateMap[currentDeviceInfo][port];
-                else
-                    return computeDeviceStateMap[currentDeviceInfo][port] = new ComputeDeviceState();
-            }
-
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("[ERROR] QueryDeviceState(devId={0}, port={1}) Unable to fetch data", currentDeviceInfo.ComputeDeviceId, port);
-            Console.ResetColor();
-            return null;
-        }
-
-        public void UnloadAllAlgorithms()
-        {
-            utility.UnloadAllAlgorithms();
-        }
-
-        public void UnloadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo, int port)
-        {
-            utility.UnloadAlgorithm(algoId, computeDeviceInfo, port);
-        }
-
-        public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)
-        {
-            return utility.GenerateFBPGraphFromDrwFile(drwFileStream, configuration);
-        }
-
-        public CameraConfiguration QueryCameraDescription(int cameraId)
-        {
-            return utility.QueryCameraDescription(cameraId);
-        }
     }
 }

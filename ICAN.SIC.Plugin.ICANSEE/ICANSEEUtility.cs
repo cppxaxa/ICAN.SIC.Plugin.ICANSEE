@@ -119,10 +119,14 @@ namespace ICAN.SIC.Plugin.ICANSEE
             return null;
         }
 
-        public PresetDescription QueryPresetById(string presetId)
+        public PresetDescription QueryPresetById(string presetId, string host = "{{host}}", string port = "{{port}}")
         {
             if (presetDescriptionMap.ContainsKey(presetId))
-                return presetDescriptionMap[presetId];
+            {
+                PresetDescription result = presetDescriptionMap[presetId].Clone();
+                result.ResultProcessingStatement = result.ResultProcessingStatement.Replace("{{host}}", host).Replace("{{port}}", port);
+                return result;
+            }
             return null;
         }
 
@@ -407,7 +411,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 executeCommand = presetDescription.GetCompleteUnloadCommand(algorithmDescription, computeDeviceInfo, port.ToString());
 
 
-            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + executeCommand + "\\n" + resultProcessingStatement + "\"],\"RunOnce\": {{RunOnce}},\"InfiniteLoop\": {{InfiniteLoop}},\"LoopLimit\": {{LoopLimit}},\"ReturnResult\": {{ReturnResult}}}";
+            string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + executeCommand + "\"],\"RunOnce\": {{RunOnce}},\"InfiniteLoop\": {{InfiniteLoop}},\"LoopLimit\": {{LoopLimit}},\"ReturnResult\": {{ReturnResult}}}";
             
 
             try

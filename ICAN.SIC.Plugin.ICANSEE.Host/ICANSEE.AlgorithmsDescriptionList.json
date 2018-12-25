@@ -28,7 +28,7 @@
     "Name": "tf-ssd-90class",
     "Uri": "http://{{host}}:{{port}}/task",
     "InitCommand": "globals()[\"tfssd\"] = MinimalObjectDetector()\nglobals()[\"tfssd\"].Initialize()",
-    "ScalarExecuteCommand": "result = globals()[\"tfssd\"].Process(imageSrc)\noutput = ResultToJson(str(result))",
+    "ScalarExecuteCommand": "result = globals()[\"tfssd\"].Process(imageSrc)\\noutput = ResultToJson(str(result))",
     "UnloadCommand": "globals()[\"tfssd\"] = None",
     "Description": "It features a tensorflow object detection api"
   }

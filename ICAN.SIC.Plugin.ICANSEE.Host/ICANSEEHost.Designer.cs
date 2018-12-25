@@ -309,7 +309,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1239, 602);
+            this.ClientSize = new System.Drawing.Size(1239, 608);
             this.Controls.Add(this.BtnRequestImageMessage);
             this.Controls.Add(this.BtnDisplayImage);
             this.Controls.Add(this.BtnReadAShotUri);

@@ -18,12 +18,14 @@ namespace ICAN.SIC.Plugin.ICANSEE
         ICANSEEHelper helper;
         ICANSEEUtility utility;
 
+        string brokerHubHost, brokerHubPort;
+
         public ICANSEE() : base("ICANSEEv1")
         {
             imageClient = new ImageClient();
 
-            string brokerHubHost = System.Configuration.ConfigurationSettings.AppSettings["ChatInterfaceHost"];
-            string brokerHubPort = System.Configuration.ConfigurationSettings.AppSettings["ChatInterfacePort"];
+            brokerHubHost = System.Configuration.ConfigurationSettings.AppSettings["ChatInterfaceHost"];
+            brokerHubPort = System.Configuration.ConfigurationSettings.AppSettings["ChatInterfacePort"];
 
             utility = new ICANSEEUtility(imageClient, brokerHubHost, brokerHubPort);
             helper = new ICANSEEHelper(utility, imageClient, brokerHubHost, brokerHubPort);
