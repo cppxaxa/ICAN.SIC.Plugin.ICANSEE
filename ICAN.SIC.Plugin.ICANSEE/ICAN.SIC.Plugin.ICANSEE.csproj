@@ -59,6 +59,7 @@
     <Compile Include="ICANSEE.cs" />
     <None Include="ICANSEEHelper%28DEPRECATED%29.cs" />
     <Compile Include="ICANSEEHelper.cs" />
+    <Compile Include="ICANSEELogger.cs" />
     <Compile Include="ICANSEEUtility.cs" />
     <Compile Include="Client\ImageClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

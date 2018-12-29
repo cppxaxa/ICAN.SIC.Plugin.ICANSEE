@@ -21,11 +21,13 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public Dictionary<string, ComputeDeviceInfo> computeDeviceInfoMap = new Dictionary<string, ComputeDeviceInfo>();
         public Dictionary<string, PresetDescription> presetDescriptionMap = new Dictionary<string, PresetDescription>();
         ImageClient imageClient;
+        ICANSEELogger logger;
 
         string brokerHubHost, brokerHubPort;
 
-        public ICANSEEUtility(ImageClient imageClient, string brokerHubHost, string brokerHubPort, string algoDescriptionFileName = "ICANSEE.AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ICANSEE.ComputeDeviceList.json", string cameraListFileName = "CameraConfigurationList.json", string presetDescriptionListFileName = "ICANSEE.PresetDescriptionList.json")
+        public ICANSEEUtility(ICANSEELogger logger, ImageClient imageClient, string brokerHubHost, string brokerHubPort, string algoDescriptionFileName = "ICANSEE.AlgorithmsDescriptionList.json", string computeDeviceListFileName = "ICANSEE.ComputeDeviceList.json", string cameraListFileName = "CameraConfigurationList.json", string presetDescriptionListFileName = "ICANSEE.PresetDescriptionList.json")
         {
+            this.logger = logger;
             this.imageClient = imageClient;
             this.brokerHubHost = brokerHubHost;
             this.brokerHubPort = brokerHubPort;
@@ -221,6 +223,55 @@ namespace ICAN.SIC.Plugin.ICANSEE
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ERROR] ICANSEEUtility.LoadCamera(val=" + deviceLocalImagePath + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + ex.Message);
+                Console.ResetColor();
+            }
+            return null;
+        }
+
+        public string UnloadCamera(int cameraConfigId, ComputeDeviceInfo computeDeviceInfo, int port)
+        {
+            try
+            {
+                if (cameraConfigurationsMap.ContainsKey(cameraConfigId))
+                {
+                    CameraConfiguration cameraConfig = cameraConfigurationsMap[cameraConfigId];
+
+                    string apiCallBody = "BlankValue";
+
+                    // identify the type
+                    switch (cameraConfig.Type)
+                    {
+                        case "camera":
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'].release()\\nglobals()['cap'] = None\\nret, frame = None, None\\nglobals()['imageSrc'] = None\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            //apiCallBody = apiCallBody.Replace("{{index}}", cameraConfig.Index.ToString());
+                            break;
+
+                        case "mjpgStream":
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'].release()\\nglobals()['cap'] = None\\nret, frame = None, None\\nglobals()['imageSrc'] = None\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            //apiCallBody = apiCallBody.Replace("{{url}}", "'" + cameraConfig.Url + "'");
+                            break;
+
+                        case "image":
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['imageSrc'] = None\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            //apiCallBody = apiCallBody.Replace("{{imageLocalPath}}", "'" + cameraConfig.Url + "'");
+                            break;
+
+                        case "imageShot":
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['imageSrc'] = None\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            //apiCallBody = apiCallBody.Replace("{{shotUri}}", "'" + cameraConfig.Url + "'");
+                            break;
+                    }
+
+                    Console.WriteLine("[DEBUG] ApiCallBody(" + computeDeviceInfo.IpAddress + port.ToString() + "): " + apiCallBody);
+                    string result = imageClient.MakePostCall("http://{{host}}:{{port}}/task".Replace("{{host}}", computeDeviceInfo.IpAddress).Replace("{{port}}", port.ToString()), apiCallBody);
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEEUtility.UnloadCamera(val=" + cameraConfigId + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + ex.Message);
                 Console.ResetColor();
             }
             return null;
@@ -631,8 +682,23 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     return null;
                 }
 
-                string result = imageClient.MakePostCall(computeDeviceInfo.IpAddress, algorithmsDescriptionMap[algorithmId].GetUnloadCommand(computeDeviceInfo.IpAddress, port.ToString()));
-                return result;
+
+                string unloadCommand = algorithmsDescriptionMap[algorithmId].GetUnloadCommand(computeDeviceInfo.IpAddress, port.ToString());
+                string apiCallBody = "{\n\"Fbp\":[\"Start\",\"\",\"" + unloadCommand + "\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+
+                Console.WriteLine("[DEBUG] ApiCallBody(" + computeDeviceInfo.IpAddress + port.ToString() + "): " + apiCallBody);
+
+                try
+                {
+                    string result = imageClient.MakePostCall(algorithmsDescriptionMap[algorithmId].GetUri(computeDeviceInfo.IpAddress, port.ToString()), apiCallBody);
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("[ERROR] ICANSEEUtility.ExecuteAlgorithmScalar(" + ", ipAddress=" + computeDeviceInfo.IpAddress + ", port=" + port.ToString() + ") " + "\n" + apiCallBody + "\n" + ex.Message);
+                    Console.ResetColor();
+                }
             }
             else
             {

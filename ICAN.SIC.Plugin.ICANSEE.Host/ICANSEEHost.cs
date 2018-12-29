@@ -18,16 +18,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
     {
         ICANSEE controller = new ICANSEE();
         ImageClient imageClient = new ImageClient();
-        ICANSEEUtility utility;
-        ICANSEEHelper helper;
 
         public ICANSEEHost()
         {
             InitializeComponent();
-
-            utility = new ICANSEEUtility(imageClient, "localhost", "20000");
-            helper = new ICANSEEHelper(utility, imageClient, "localhost", "20000");
-
             controller.Hub.Subscribe<IInformationMessage>(PrintIInformationMessage);
         }
 
@@ -59,11 +53,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnDummyCall_Click(object sender, EventArgs e)
         {
-            //controller.MakeDummyGetCall();
-            //controller.MakeDummyPostCall();
 
-            //Console.WriteLine(controller.ExecuteScalar(new List<string> { "Start", "", "result = tfnet.return_predict(imageSrc)\noutput = str(result)" }));
-            //controller.Execute(new List<string> { "Start", "", "result = tfnet.return_predict(imageSrc)\noutput = str(result)" });
         }
 
         private void BtnAddCameraConfig_Click(object sender, EventArgs e)
@@ -71,9 +61,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             InputMessage message = new InputMessage(ControlFunction.AddCamera, new List<string> { "0", "1", null, "Default Webcam", "camera" });
             controller.Hub.Publish<InputMessage>(message);
 
-            //helper.AddReplaceCameraConfiguration(1, new CameraConfiguration(0, null, "Default Webcam", 1, "camera"));
-
-            foreach (var item in utility.cameraConfigurationsMap)
+            foreach (var item in controller.utility.cameraConfigurationsMap)
             {
                 Console.WriteLine(item.Key);
             }
@@ -83,7 +71,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnListAllCameraConfigs_Click(object sender, EventArgs e)
         {
-            var list = helper.GetAllCameraConfigurations();
+            var list = controller.helper.GetAllCameraConfigurations();
 
             foreach (var item in list)
             {
@@ -93,7 +81,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnListAllGPUAlgos_Click(object sender, EventArgs e)
         {
-            var list = helper.GetAlgorithmsList();
+            var list = controller.helper.GetAlgorithmsList();
 
             foreach (var item in list)
             {
@@ -108,10 +96,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnLoadCameraConfig_Click(object sender, EventArgs e)
         {
-            ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
+            ComputeDeviceInfo firstDevice = controller.utility.computeDeviceInfoList.First();
             int port = firstDevice.PortList.First();
 
-            string result = utility.LoadCamera(1, firstDevice, port);
+            string result = controller.utility.LoadCamera(1, firstDevice, port);
 
             if (result != null)
                 Console.WriteLine(result);
@@ -121,10 +109,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnRunGPUAlgo_Click(object sender, EventArgs e)
         {
-            ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
+            ComputeDeviceInfo firstDevice = controller.utility.GetComputeDevicesList().First();
             int port = firstDevice.PortList.First();
 
-            string result = utility.ExecuteAlgorithmScalar("Algo1", firstDevice, port);
+            string result = controller.utility.ExecuteAlgorithmScalar("Algo1", firstDevice, port);
 
             Console.WriteLine("[INFO] RunAlgo: " + result);
 
@@ -136,10 +124,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnLoadAlgorithm_Click(object sender, EventArgs e)
         {
-            ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
+            ComputeDeviceInfo firstDevice = controller.utility.GetComputeDevicesList().First();
             int port = firstDevice.PortList.First();
 
-            string algoType = utility.LoadAlgorithm("Algo1", firstDevice, port);
+            string algoType = controller.utility.LoadAlgorithm("Algo1", firstDevice, port);
 
             if (algoType != null)
                 Console.WriteLine("Success with AlgoType-" + algoType);
@@ -149,7 +137,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnListAllComputeDevices_Click(object sender, EventArgs e)
         {
-            var result = helper.GetComputeDevicesList();
+            var result = controller.helper.GetComputeDevicesList();
 
             if (result != null)
                 foreach (var item in result)
@@ -160,16 +148,8 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void button1_Click(object sender, EventArgs e)
         {
-            InputMessage message = new InputMessage(ControlFunction.ExecutePreset, new List<string> { "Preset1", "2" });
+            InputMessage message = new InputMessage(ControlFunction.ExecutePreset, new List<string> { "Preset1", "1" });
             controller.Hub.Publish<InputMessage>(message);
-
-            //string result = helper.ExecutePreset("Preset1", helper.QueryCameraDescription(2));
-
-
-            //if (result != null)
-            //    Console.WriteLine(result);
-            //else
-            //    Console.WriteLine("Failure");
         }
 
         private void BtnRunAlgoOnImage_Click(object sender, EventArgs e)
@@ -179,26 +159,26 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnUnloadAllCameras_Click(object sender, EventArgs e)
         {
-            var deviceInfo = helper.GetComputeDevicesList().First();
+            var deviceInfo = controller.helper.GetComputeDevicesList().First();
             int port = deviceInfo.PortList.First();
 
             if (deviceInfo != null)
-                utility.UnloadAllCameras(deviceInfo, port);
+                controller.utility.UnloadAllCameras(deviceInfo, port);
             else
                 Console.WriteLine("No device found to unload");
         }
 
         private void BtnUnloadAllAlgorithms_Click(object sender, EventArgs e)
         {
-            helper.UnloadAllAlgorithms();
+            controller.helper.UnloadAllAlgorithms();
         }
 
         private void BtnInitTFSSD_Click(object sender, EventArgs e)
         {
-            ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
+            ComputeDeviceInfo firstDevice = controller.utility.GetComputeDevicesList().First();
             int port = firstDevice.PortList.First();
 
-            string algoType = utility.LoadAlgorithm("Algo3", firstDevice, port);
+            string algoType = controller.utility.LoadAlgorithm("Algo3", firstDevice, port);
 
             if (algoType != null)
                 Console.WriteLine("Success with AlgoType-" + algoType);
@@ -208,9 +188,9 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnRunTFSSD_Click(object sender, EventArgs e)
         {
-            ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
+            ComputeDeviceInfo firstDevice = controller.utility.GetComputeDevicesList().First();
             PresetDescription preset = new PresetDescription("1000", "Sample", "Algo3", firstDevice.ComputeDeviceId, firstDevice.PortList.First(), true, false, 1, true);
-            string result = utility.ExecuteAlgorithm(preset, firstDevice.IpAddress);
+            string result = controller.utility.ExecuteAlgorithm(preset, firstDevice.IpAddress);
 
             if (result != null)
                 Console.WriteLine("[INFO] RunAlgo: " + result);
@@ -220,10 +200,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnInitSampleImage_Click(object sender, EventArgs e)
         {
-            ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
+            ComputeDeviceInfo firstDevice = controller.utility.computeDeviceInfoList.First();
             int port = firstDevice.PortList.First();
 
-            string result = utility.LoadCamera(2, firstDevice, port);
+            string result = controller.utility.LoadCamera(2, firstDevice, port);
 
             if (result != null)
                 Console.WriteLine(result);
@@ -233,10 +213,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnReadAShotUri_Click(object sender, EventArgs e)
         {
-            ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
+            ComputeDeviceInfo firstDevice = controller.utility.computeDeviceInfoList.First();
             int port = firstDevice.PortList.First();
 
-            string result = utility.LoadCamera(4, firstDevice, port);
+            string result = controller.utility.LoadCamera(4, firstDevice, port);
 
             if (result != null)
                 Console.WriteLine(result);
@@ -246,28 +226,20 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnDisplayImage_Click(object sender, EventArgs e)
         {
-            ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
+            ComputeDeviceInfo firstDevice = controller.utility.computeDeviceInfoList.First();
             int port = firstDevice.PortList.First();
 
             InputMessage message = new InputMessage(ControlFunction.DisplayImageInServerGUI, new List<string> { firstDevice.ComputeDeviceId, port.ToString() });
             controller.Hub.Publish<InputMessage>(message);
-
-
-            //string result = utility.DisplayImageWindow(firstDevice, port);
-
-            //if (result != null)
-            //    Console.WriteLine(result);
-            //else
-            //    Console.WriteLine("Failure");
         }
 
         private void BtnUnloadTFSSD_Click(object sender, EventArgs e)
         {
-            ComputeDeviceInfo firstDevice = utility.GetComputeDevicesList().First();
+            ComputeDeviceInfo firstDevice = controller.utility.GetComputeDevicesList().First();
             int port = firstDevice.PortList.First();
 
             string algoType = "Algo3";
-            string result = utility.UnloadAlgorithm(algoType, firstDevice, port);
+            string result = controller.utility.UnloadAlgorithm(algoType, firstDevice, port);
 
             if (result != null)
                 Console.WriteLine("Success with AlgoType-" + algoType);
@@ -277,15 +249,67 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnRequestImageMessage_Click(object sender, EventArgs e)
         {
-            ComputeDeviceInfo firstDevice = utility.computeDeviceInfoList.First();
+            ComputeDeviceInfo firstDevice = controller.utility.computeDeviceInfoList.First();
             int port = firstDevice.PortList.First();
 
-            string result = utility.RequestCurrentImage(firstDevice, port);
+            string result = controller.utility.RequestCurrentImage(firstDevice, port);
 
             if (result != null)
                 Console.WriteLine(result);
             else
                 Console.WriteLine("Failure");
+        }
+
+        private void BtnUnloadAlgorithm_Click(object sender, EventArgs e)
+        {
+            //ComputeDeviceInfo firstDevice = controller.utility.computeDeviceInfoList.First();
+            //int port = firstDevice.PortList.First();
+
+            // Option 1
+            //InputMessage message = new InputMessage(ControlFunction.UnloadAlgorithm, new List<string> { "Algo3", firstDevice.ComputeDeviceId, port.ToString() });
+            //controller.Hub.Publish<InputMessage>(message);
+
+            // Option 2
+            InputMessage message = new InputMessage(ControlFunction.UnloadAlgorithm, new List<string> { "Preset1" });
+            controller.Hub.Publish<InputMessage>(message);
+        }
+
+        private void BtnListOpenCameraInUse_Click(object sender, EventArgs e)
+        {
+            InputMessage message = new InputMessage(ControlFunction.ListAllCameraInUse, new List<string> {});
+            controller.Hub.Publish<InputMessage>(message);
+        }
+
+        private void BtnUnloadPreset_Click(object sender, EventArgs e)
+        {
+            ComputeDeviceInfo firstDevice = controller.utility.computeDeviceInfoList.First();
+            int port = firstDevice.PortList.First();
+
+            InputMessage message = new InputMessage(ControlFunction.UnloadPreset, new List<string> { "Preset1", firstDevice.ComputeDeviceId, port.ToString() });
+            controller.Hub.Publish<InputMessage>(message);
+        }
+
+        private void BtnUnloadCamera_Click(object sender, EventArgs e)
+        {
+            string computeDeviceId = controller.utility.QueryPresetById("Preset1").ComputeDeviceId;
+            var computeDeviceInfo = controller.utility.QueryComputeDeviceById(computeDeviceId);
+
+            int? cameraId = controller.helper.ComputeDeviceStateMap[computeDeviceInfo][computeDeviceInfo.PortList.First()].OpenCameraMap.First().Key?.Id;
+
+            if (!cameraId.HasValue)
+            {
+                Console.WriteLine("Camera Id null");
+                return;
+            }
+
+            InputMessage message = new InputMessage(ControlFunction.UnloadCamera, new List<string> { cameraId.Value.ToString() });
+            controller.Hub.Publish<InputMessage>(message);
+        }
+
+        private void BtnGetDeviceStateMap_Click(object sender, EventArgs e)
+        {
+            InputMessage message = new InputMessage(ControlFunction.QueryComputeDevice, new List<string> { });
+            controller.Hub.Publish<InputMessage>(message);
         }
     }
 }

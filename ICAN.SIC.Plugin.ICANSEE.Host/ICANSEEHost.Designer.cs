@@ -52,6 +52,10 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.BtnReadAShotUri = new System.Windows.Forms.Button();
             this.BtnDisplayImage = new System.Windows.Forms.Button();
             this.BtnRequestImageMessage = new System.Windows.Forms.Button();
+            this.BtnListOpenCameraInUse = new System.Windows.Forms.Button();
+            this.BtnUnloadPreset = new System.Windows.Forms.Button();
+            this.BtnUnloadCamera = new System.Windows.Forms.Button();
+            this.BtnGetDeviceStateMap = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnReadFBP
@@ -128,68 +132,74 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnLoadCameraConfig
             // 
+            this.BtnLoadCameraConfig.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnLoadCameraConfig.Location = new System.Drawing.Point(350, 187);
             this.BtnLoadCameraConfig.Margin = new System.Windows.Forms.Padding(6);
             this.BtnLoadCameraConfig.Name = "BtnLoadCameraConfig";
             this.BtnLoadCameraConfig.Size = new System.Drawing.Size(284, 44);
             this.BtnLoadCameraConfig.TabIndex = 7;
             this.BtnLoadCameraConfig.Text = "LoadCameraConfig";
-            this.BtnLoadCameraConfig.UseVisualStyleBackColor = true;
+            this.BtnLoadCameraConfig.UseVisualStyleBackColor = false;
             this.BtnLoadCameraConfig.Click += new System.EventHandler(this.BtnLoadCameraConfig_Click);
             // 
             // BtnListAllCameraConfigs
             // 
+            this.BtnListAllCameraConfigs.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnListAllCameraConfigs.Location = new System.Drawing.Point(646, 135);
             this.BtnListAllCameraConfigs.Margin = new System.Windows.Forms.Padding(6);
             this.BtnListAllCameraConfigs.Name = "BtnListAllCameraConfigs";
             this.BtnListAllCameraConfigs.Size = new System.Drawing.Size(284, 44);
             this.BtnListAllCameraConfigs.TabIndex = 8;
             this.BtnListAllCameraConfigs.Text = "ListAllCameraConfigs";
-            this.BtnListAllCameraConfigs.UseVisualStyleBackColor = true;
+            this.BtnListAllCameraConfigs.UseVisualStyleBackColor = false;
             this.BtnListAllCameraConfigs.Click += new System.EventHandler(this.BtnListAllCameraConfigs_Click);
             // 
             // BtnListAllGPUAlgos
             // 
+            this.BtnListAllGPUAlgos.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnListAllGPUAlgos.Location = new System.Drawing.Point(646, 187);
             this.BtnListAllGPUAlgos.Margin = new System.Windows.Forms.Padding(6);
             this.BtnListAllGPUAlgos.Name = "BtnListAllGPUAlgos";
             this.BtnListAllGPUAlgos.Size = new System.Drawing.Size(284, 44);
             this.BtnListAllGPUAlgos.TabIndex = 9;
             this.BtnListAllGPUAlgos.Text = "ListAllGPUAlgos";
-            this.BtnListAllGPUAlgos.UseVisualStyleBackColor = true;
+            this.BtnListAllGPUAlgos.UseVisualStyleBackColor = false;
             this.BtnListAllGPUAlgos.Click += new System.EventHandler(this.BtnListAllGPUAlgos_Click);
             // 
             // BtnRunGPUAlgo
             // 
+            this.BtnRunGPUAlgo.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnRunGPUAlgo.Location = new System.Drawing.Point(942, 135);
             this.BtnRunGPUAlgo.Margin = new System.Windows.Forms.Padding(6);
             this.BtnRunGPUAlgo.Name = "BtnRunGPUAlgo";
             this.BtnRunGPUAlgo.Size = new System.Drawing.Size(284, 44);
             this.BtnRunGPUAlgo.TabIndex = 10;
             this.BtnRunGPUAlgo.Text = "RunGPUAlgo";
-            this.BtnRunGPUAlgo.UseVisualStyleBackColor = true;
+            this.BtnRunGPUAlgo.UseVisualStyleBackColor = false;
             this.BtnRunGPUAlgo.Click += new System.EventHandler(this.BtnRunGPUAlgo_Click);
             // 
             // BtnLoadAlgorithm
             // 
+            this.BtnLoadAlgorithm.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnLoadAlgorithm.Location = new System.Drawing.Point(942, 187);
             this.BtnLoadAlgorithm.Margin = new System.Windows.Forms.Padding(6);
             this.BtnLoadAlgorithm.Name = "BtnLoadAlgorithm";
             this.BtnLoadAlgorithm.Size = new System.Drawing.Size(284, 44);
             this.BtnLoadAlgorithm.TabIndex = 11;
             this.BtnLoadAlgorithm.Text = "Load Algorithm";
-            this.BtnLoadAlgorithm.UseVisualStyleBackColor = true;
+            this.BtnLoadAlgorithm.UseVisualStyleBackColor = false;
             this.BtnLoadAlgorithm.Click += new System.EventHandler(this.BtnLoadAlgorithm_Click);
             // 
             // BtnListAllComputeDevices
             // 
+            this.BtnListAllComputeDevices.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnListAllComputeDevices.Location = new System.Drawing.Point(350, 242);
             this.BtnListAllComputeDevices.Margin = new System.Windows.Forms.Padding(6);
             this.BtnListAllComputeDevices.Name = "BtnListAllComputeDevices";
             this.BtnListAllComputeDevices.Size = new System.Drawing.Size(284, 44);
             this.BtnListAllComputeDevices.TabIndex = 12;
             this.BtnListAllComputeDevices.Text = "ListAllComputeDevices";
-            this.BtnListAllComputeDevices.UseVisualStyleBackColor = true;
+            this.BtnListAllComputeDevices.UseVisualStyleBackColor = false;
             this.BtnListAllComputeDevices.Click += new System.EventHandler(this.BtnListAllComputeDevices_Click);
             // 
             // button1
@@ -205,13 +215,14 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnUnloadAllCameras
             // 
+            this.BtnUnloadAllCameras.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnUnloadAllCameras.Location = new System.Drawing.Point(646, 242);
             this.BtnUnloadAllCameras.Margin = new System.Windows.Forms.Padding(6);
             this.BtnUnloadAllCameras.Name = "BtnUnloadAllCameras";
             this.BtnUnloadAllCameras.Size = new System.Drawing.Size(284, 44);
             this.BtnUnloadAllCameras.TabIndex = 15;
             this.BtnUnloadAllCameras.Text = "Unload All Cameras";
-            this.BtnUnloadAllCameras.UseVisualStyleBackColor = true;
+            this.BtnUnloadAllCameras.UseVisualStyleBackColor = false;
             this.BtnUnloadAllCameras.Click += new System.EventHandler(this.BtnUnloadAllCameras_Click);
             // 
             // BtnUnloadAlgorithm
@@ -223,66 +234,73 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.BtnUnloadAlgorithm.TabIndex = 16;
             this.BtnUnloadAlgorithm.Text = "Unload Algorithm";
             this.BtnUnloadAlgorithm.UseVisualStyleBackColor = true;
+            this.BtnUnloadAlgorithm.Click += new System.EventHandler(this.BtnUnloadAlgorithm_Click);
             // 
             // BtnUnloadAllAlgorithms
             // 
-            this.BtnUnloadAllAlgorithms.Location = new System.Drawing.Point(942, 354);
+            this.BtnUnloadAllAlgorithms.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.BtnUnloadAllAlgorithms.Location = new System.Drawing.Point(940, 242);
             this.BtnUnloadAllAlgorithms.Margin = new System.Windows.Forms.Padding(6);
             this.BtnUnloadAllAlgorithms.Name = "BtnUnloadAllAlgorithms";
             this.BtnUnloadAllAlgorithms.Size = new System.Drawing.Size(284, 44);
             this.BtnUnloadAllAlgorithms.TabIndex = 17;
             this.BtnUnloadAllAlgorithms.Text = "Unload All Algorithms";
-            this.BtnUnloadAllAlgorithms.UseVisualStyleBackColor = true;
+            this.BtnUnloadAllAlgorithms.UseVisualStyleBackColor = false;
             this.BtnUnloadAllAlgorithms.Click += new System.EventHandler(this.BtnUnloadAllAlgorithms_Click);
             // 
             // BtnInitTFSSD
             // 
+            this.BtnInitTFSSD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnInitTFSSD.Location = new System.Drawing.Point(350, 431);
             this.BtnInitTFSSD.Name = "BtnInitTFSSD";
             this.BtnInitTFSSD.Size = new System.Drawing.Size(284, 44);
             this.BtnInitTFSSD.TabIndex = 18;
             this.BtnInitTFSSD.Text = "Init TFSSD";
-            this.BtnInitTFSSD.UseVisualStyleBackColor = true;
+            this.BtnInitTFSSD.UseVisualStyleBackColor = false;
             this.BtnInitTFSSD.Click += new System.EventHandler(this.BtnInitTFSSD_Click);
             // 
             // BtnRunTFSSD
             // 
+            this.BtnRunTFSSD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnRunTFSSD.Location = new System.Drawing.Point(646, 431);
             this.BtnRunTFSSD.Name = "BtnRunTFSSD";
             this.BtnRunTFSSD.Size = new System.Drawing.Size(284, 44);
             this.BtnRunTFSSD.TabIndex = 19;
             this.BtnRunTFSSD.Text = "Run TFSSD";
-            this.BtnRunTFSSD.UseVisualStyleBackColor = true;
+            this.BtnRunTFSSD.UseVisualStyleBackColor = false;
             this.BtnRunTFSSD.Click += new System.EventHandler(this.BtnRunTFSSD_Click);
             // 
             // BtnUnloadTFSSD
             // 
+            this.BtnUnloadTFSSD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnUnloadTFSSD.Location = new System.Drawing.Point(350, 481);
             this.BtnUnloadTFSSD.Name = "BtnUnloadTFSSD";
             this.BtnUnloadTFSSD.Size = new System.Drawing.Size(284, 44);
             this.BtnUnloadTFSSD.TabIndex = 20;
             this.BtnUnloadTFSSD.Text = "Unload TFSSD";
-            this.BtnUnloadTFSSD.UseVisualStyleBackColor = true;
+            this.BtnUnloadTFSSD.UseVisualStyleBackColor = false;
             this.BtnUnloadTFSSD.Click += new System.EventHandler(this.BtnUnloadTFSSD_Click);
             // 
             // BtnInitSampleImage
             // 
+            this.BtnInitSampleImage.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnInitSampleImage.Location = new System.Drawing.Point(646, 481);
             this.BtnInitSampleImage.Name = "BtnInitSampleImage";
             this.BtnInitSampleImage.Size = new System.Drawing.Size(284, 44);
             this.BtnInitSampleImage.TabIndex = 21;
             this.BtnInitSampleImage.Text = "Init Sample Image";
-            this.BtnInitSampleImage.UseVisualStyleBackColor = true;
+            this.BtnInitSampleImage.UseVisualStyleBackColor = false;
             this.BtnInitSampleImage.Click += new System.EventHandler(this.BtnInitSampleImage_Click);
             // 
             // BtnReadAShotUri
             // 
+            this.BtnReadAShotUri.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnReadAShotUri.Location = new System.Drawing.Point(942, 481);
             this.BtnReadAShotUri.Name = "BtnReadAShotUri";
             this.BtnReadAShotUri.Size = new System.Drawing.Size(284, 44);
             this.BtnReadAShotUri.TabIndex = 22;
             this.BtnReadAShotUri.Text = "Read a shot uri";
-            this.BtnReadAShotUri.UseVisualStyleBackColor = true;
+            this.BtnReadAShotUri.UseVisualStyleBackColor = false;
             this.BtnReadAShotUri.Click += new System.EventHandler(this.BtnReadAShotUri_Click);
             // 
             // BtnDisplayImage
@@ -297,19 +315,64 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnRequestImageMessage
             // 
+            this.BtnRequestImageMessage.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BtnRequestImageMessage.Location = new System.Drawing.Point(646, 547);
             this.BtnRequestImageMessage.Name = "BtnRequestImageMessage";
             this.BtnRequestImageMessage.Size = new System.Drawing.Size(284, 43);
             this.BtnRequestImageMessage.TabIndex = 24;
             this.BtnRequestImageMessage.Text = "Request Image Message";
-            this.BtnRequestImageMessage.UseVisualStyleBackColor = true;
+            this.BtnRequestImageMessage.UseVisualStyleBackColor = false;
             this.BtnRequestImageMessage.Click += new System.EventHandler(this.BtnRequestImageMessage_Click);
+            // 
+            // BtnListOpenCameraInUse
+            // 
+            this.BtnListOpenCameraInUse.Location = new System.Drawing.Point(350, 351);
+            this.BtnListOpenCameraInUse.Name = "BtnListOpenCameraInUse";
+            this.BtnListOpenCameraInUse.Size = new System.Drawing.Size(284, 44);
+            this.BtnListOpenCameraInUse.TabIndex = 25;
+            this.BtnListOpenCameraInUse.Text = "List Open Camera In Use";
+            this.BtnListOpenCameraInUse.UseVisualStyleBackColor = true;
+            this.BtnListOpenCameraInUse.Click += new System.EventHandler(this.BtnListOpenCameraInUse_Click);
+            // 
+            // BtnUnloadPreset
+            // 
+            this.BtnUnloadPreset.Location = new System.Drawing.Point(646, 351);
+            this.BtnUnloadPreset.Name = "BtnUnloadPreset";
+            this.BtnUnloadPreset.Size = new System.Drawing.Size(284, 44);
+            this.BtnUnloadPreset.TabIndex = 26;
+            this.BtnUnloadPreset.Text = "Unload Preset";
+            this.BtnUnloadPreset.UseVisualStyleBackColor = true;
+            this.BtnUnloadPreset.Click += new System.EventHandler(this.BtnUnloadPreset_Click);
+            // 
+            // BtnUnloadCamera
+            // 
+            this.BtnUnloadCamera.Location = new System.Drawing.Point(942, 351);
+            this.BtnUnloadCamera.Name = "BtnUnloadCamera";
+            this.BtnUnloadCamera.Size = new System.Drawing.Size(284, 44);
+            this.BtnUnloadCamera.TabIndex = 27;
+            this.BtnUnloadCamera.Text = "Unload Camera";
+            this.BtnUnloadCamera.UseVisualStyleBackColor = true;
+            this.BtnUnloadCamera.Click += new System.EventHandler(this.BtnUnloadCamera_Click);
+            // 
+            // BtnGetDeviceStateMap
+            // 
+            this.BtnGetDeviceStateMap.Location = new System.Drawing.Point(943, 547);
+            this.BtnGetDeviceStateMap.Name = "BtnGetDeviceStateMap";
+            this.BtnGetDeviceStateMap.Size = new System.Drawing.Size(284, 43);
+            this.BtnGetDeviceStateMap.TabIndex = 28;
+            this.BtnGetDeviceStateMap.Text = "Get Device State Map";
+            this.BtnGetDeviceStateMap.UseVisualStyleBackColor = true;
+            this.BtnGetDeviceStateMap.Click += new System.EventHandler(this.BtnGetDeviceStateMap_Click);
             // 
             // ICANSEEHost
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1239, 608);
+            this.Controls.Add(this.BtnGetDeviceStateMap);
+            this.Controls.Add(this.BtnUnloadCamera);
+            this.Controls.Add(this.BtnUnloadPreset);
+            this.Controls.Add(this.BtnListOpenCameraInUse);
             this.Controls.Add(this.BtnRequestImageMessage);
             this.Controls.Add(this.BtnDisplayImage);
             this.Controls.Add(this.BtnReadAShotUri);
@@ -371,5 +434,9 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private System.Windows.Forms.Button BtnReadAShotUri;
         private System.Windows.Forms.Button BtnDisplayImage;
         private System.Windows.Forms.Button BtnRequestImageMessage;
+        private System.Windows.Forms.Button BtnListOpenCameraInUse;
+        private System.Windows.Forms.Button BtnUnloadPreset;
+        private System.Windows.Forms.Button BtnUnloadCamera;
+        private System.Windows.Forms.Button BtnGetDeviceStateMap;
     }
 }

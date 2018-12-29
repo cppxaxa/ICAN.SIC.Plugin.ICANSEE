@@ -1,5 +1,6 @@
 ﻿using ICAN.SIC.Plugin.ICANSEE.Client;
 using ICAN.SIC.Plugin.ICANSEE.DataTypes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -107,7 +108,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             return false;
         }
 
-        public void ClearCamera(int cameraId)
+        public bool ClearCamera(int cameraId)
         {
             CameraConfiguration cameraConfiguration = null;
             foreach (var camera in OpenCameraMap)
@@ -118,9 +119,13 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             if (cameraConfiguration != null)
                 OpenCameraMap[cameraConfiguration] = false;
+            else
+                return false;
+
+            return true;
         }
 
-        public void ClearAlgorithm(string algoId)
+        public bool ClearAlgorithm(string algoId)
         {
             AlgorithmDescription algorithmDescription = null;
             foreach (var algo in AssignedAlgorithmDescriptionMap)
@@ -131,9 +136,13 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             if (algorithmDescription != null)
                 AssignedAlgorithmDescriptionMap[algorithmDescription] = false;
+            else
+                return false;
+
+            return true;
         }
 
-        public void ClearPreset(string presetId)
+        public bool ClearPreset(string presetId)
         {
             PresetDescription presetDescription = null;
             foreach (var preset in AssignedPresetDescriptionMap)
@@ -144,6 +153,10 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             if (presetDescription != null)
                 AssignedPresetDescriptionMap[presetDescription] = false;
+            else
+                return false;
+
+            return true;
         }
     }
 
@@ -151,6 +164,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
     {
         ICANSEEUtility utility;
         ImageClient imageClient;
+        ICANSEELogger logger;
 
         List<ComputeDeviceInfo> computeDeviceList;
         Dictionary<ComputeDeviceInfo, Dictionary<int, ComputeDeviceState>> computeDeviceStateMap = new Dictionary<ComputeDeviceInfo, Dictionary<int, ComputeDeviceState>>();
@@ -158,8 +172,9 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
         string brokerHubHost, brokerHubPort;
 
-        public ICANSEEHelper(ICANSEEUtility utility, ImageClient imageClient, string brokerHubHost, string brokerHubPort)
+        public ICANSEEHelper(ICANSEELogger logger, ICANSEEUtility utility, ImageClient imageClient, string brokerHubHost, string brokerHubPort)
         {
+            this.logger = logger;
             this.utility = utility;
             this.imageClient = imageClient;
             this.brokerHubHost = brokerHubHost;
@@ -180,6 +195,41 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 }
         }
 
+        public bool UnloadCamera(int cameraId)
+        {
+            foreach (var item in computeDeviceStateMap)
+            {
+                var computeDeviceInfo = item.Key;
+
+                foreach (var cell in item.Value)
+                {
+                    if (cell.Value.IsCameraActive(cameraId))
+                    {
+                        string status = utility.UnloadCamera(cameraId, computeDeviceInfo, cell.Key);
+
+                        if (status != null)
+                        {
+                            cell.Value.ClearCamera(cameraId);
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public bool UnloadPreset(string presetId, ComputeDeviceInfo computeDeviceInfo, int port)
+        {
+            return computeDeviceStateMap[computeDeviceInfo][port].ClearPreset(presetId);
+        }
+
+        public bool UnloadCamera(int cameraId, ComputeDeviceInfo computeDeviceInfo, int port)
+        {
+            utility.UnloadCamera(cameraId, computeDeviceInfo, port);
+            return computeDeviceStateMap[computeDeviceInfo][port].ClearCamera(cameraId);
+        }
+
         public string ExecutePreset(string presetId, CameraConfiguration cameraConfiguration)
         {
             int RunCompatibility = 0;
@@ -191,6 +241,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             int port = presetConfiguration.Port;
 
             ComputeDeviceState currentState = QueryDeviceState(computeDevice, port);
+            logger.LogComputeDeviceStateMap(computeDeviceStateMap, string.Format("QueryDeviceState({0}, {1}) = {2}", computeDevice.ComputeDeviceId, port.ToString(), logger._GetShortFormattedComputeDeviceState(currentState)));
 
             if (currentState == null)
             {
@@ -241,6 +292,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     else
                     {
                         computeDeviceStateMap[computeDevice][port].SetCameraActive(cameraConfiguration);
+                        logger.LogComputeDeviceStateMap(computeDeviceStateMap, string.Format("SetCameraActive={0}", cameraConfiguration.Id + "," + cameraConfiguration.Label));
                     }
                 }
 
@@ -259,16 +311,22 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 }
 
                 computeDeviceStateMap[computeDevice][port].SetPresetActive(presetConfiguration, utility.GetAlgorithmsList());
+                logger.LogComputeDeviceStateMap(computeDeviceStateMap, "SetPresetActive=" + presetConfiguration.Id + "," + presetConfiguration.Name);
 
                 // If preset is one time run, then clear preset from the statusMap
                 if (presetConfiguration.ReturnResult && !presetConfiguration.InfiniteLoop && (presetConfiguration.RunOnce || presetConfiguration.LoopLimit == 1))
+                {
                     computeDeviceStateMap[computeDevice][port].ClearPreset(presetConfiguration.Id);
+                    logger.LogComputeDeviceStateMap(computeDeviceStateMap, "One Run ClearPreset=" + presetConfiguration.Id + "," + presetConfiguration.Name);
+                }
 
                 result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress);
 
                 if (result == null)
                 {
                     computeDeviceStateMap[computeDevice][port].ClearPreset(presetConfiguration.Id);
+                    logger.LogComputeDeviceStateMap(computeDeviceStateMap, "Preset Failure ClearPreset=" + presetConfiguration.Id + "," + presetConfiguration.Name);
+
 
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("[ERROR] ExecutePreset(presetId={0}, cameraId={1}) Preset Execution Failed", presetId, cameraConfiguration.Id);
@@ -282,6 +340,8 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             return null;
         }
+
+        public Dictionary<ComputeDeviceInfo, Dictionary<int, ComputeDeviceState>> ComputeDeviceStateMap { get { return computeDeviceStateMap; } }
 
         public bool AddCameraConfiguration(int newCustomId, CameraConfiguration cameraConfig)
         {
@@ -351,9 +411,42 @@ namespace ICAN.SIC.Plugin.ICANSEE
             utility.UnloadAllAlgorithms();
         }
 
-        public void UnloadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo, int port)
+        public bool UnloadAlgorithm(string algoId, ComputeDeviceInfo computeDeviceInfo, int port)
         {
-            utility.UnloadAlgorithm(algoId, computeDeviceInfo, port);
+            string result = utility.UnloadAlgorithm(algoId, computeDeviceInfo, port);
+
+            if (result != null)
+            {
+                return computeDeviceStateMap[computeDeviceInfo][port].ClearAlgorithm(algoId);
+            }
+
+            return false;
+        }
+
+        public bool UnloadAlgorithm(string presetId)
+        {
+            var presetDesc = utility.QueryPresetById(presetId);
+
+            if (presetDesc == null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] UnloadAlgorithm(presetId={0}) Preset not found", presetId);
+                Console.ResetColor();
+                return false;
+            }
+
+            string algoId = presetDesc.AlgorithmId;
+            var computeDeviceInfo = utility.QueryComputeDeviceById(presetDesc.ComputeDeviceId);
+            int port = presetDesc.Port;
+
+            string result = utility.UnloadAlgorithm(algoId, computeDeviceInfo, port);
+
+            if (result != null)
+            {
+                return computeDeviceStateMap[computeDeviceInfo][port].ClearAlgorithm(algoId);
+            }
+
+            return false;
         }
 
         public FBPGraph GenerateFBPGraphFromDrwFile(Stream drwFileStream, ReplacementConfiguration configuration)
@@ -364,6 +457,26 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public CameraConfiguration QueryCameraDescription(int cameraId)
         {
             return utility.QueryCameraDescription(cameraId);
+        }
+
+        public List<Tuple<string, string>> GetAllCameraInUse()
+        {
+            List<Tuple<string, string>> result = new List<Tuple<string, string>>();
+
+            foreach (var item1 in computeDeviceStateMap)
+            {
+                string computeDeviceId = item1.Key.ComputeDeviceId + "/" + item1.Key.Label + "/" + item1.Key.IpAddress;
+
+                foreach (var cell in item1.Value)
+                {
+                    foreach (var camera in cell.Value.OpenCameraMap)
+                    {
+                        result.Add(new Tuple<string, string>(JsonConvert.SerializeObject(camera), computeDeviceId));
+                    }
+                }
+            }
+
+            return result;
         }
 
 

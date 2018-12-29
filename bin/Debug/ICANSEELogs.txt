@@ -1,0 +1,153 @@
+------------------------------------------------------------
+Message:	Before executing preset: Preset1,1
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	QueryDeviceState(Win10Device1, 5000) = ()
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		()
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	SetCameraActive=1,Default webcam
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Camera=1,Default webcam;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	SetPresetActive=Preset1,Sample Preset 1
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Algo=AlgoType3,tf-ssd-90class;PresetId&Name=Preset1,Sample Preset 1;Camera=1,Default webcam;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	One Run ClearPreset=Preset1,Sample Preset 1
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Algo=AlgoType3,tf-ssd-90class;Camera=1,Default webcam;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	Before UnloadCamera: 1
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Algo=AlgoType3,tf-ssd-90class;Camera=1,Default webcam;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	After UnloadCamera: 1
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Algo=AlgoType3,tf-ssd-90class;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	Before executing preset: Preset1,1
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Algo=AlgoType3,tf-ssd-90class;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	QueryDeviceState(Win10Device1, 5000) = (Algo=AlgoType3,tf-ssd-90class;)
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Algo=AlgoType3,tf-ssd-90class;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	SetCameraActive=1,Default webcam
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Algo=AlgoType3,tf-ssd-90class;Camera=1,Default webcam;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	SetPresetActive=Preset1,Sample Preset 1
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Algo=AlgoType3,tf-ssd-90class;PresetId&Name=Preset1,Sample Preset 1;Camera=1,Default webcam;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	One Run ClearPreset=Preset1,Sample Preset 1
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Algo=AlgoType3,tf-ssd-90class;Camera=1,Default webcam;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
