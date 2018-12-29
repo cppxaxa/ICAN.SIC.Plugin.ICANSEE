@@ -47,93 +47,104 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
         private void IInputMessageProcessor(IInputMessage inputMessage)
         {
-            Console.Write("[INFO] ICANSEE.IInputMessage received (" + inputMessage.ControlFunction.ToString() + "): " + JsonConvert.SerializeObject(inputMessage));
-
-            List<string> param = inputMessage.Parameters;
-            string result = "";
-            string errorLog = "";
-            bool status;
-            switch (inputMessage.ControlFunction)
+            try
             {
-                case ControlFunction.AddCamera:
-                    // "0", "1", null, "Default Webcam", "camera"
-                    //helper.AddReplaceCameraConfiguration(1, new CameraConfiguration(0, null, "Default Webcam", 1, "camera"));
+                Console.WriteLine("[INFO] ICANSEE.IInputMessage received (" + inputMessage.ControlFunction.ToString() + "): " + JsonConvert.SerializeObject(inputMessage));
 
-                    helper.AddReplaceCameraConfiguration(int.Parse(param[1]), new CameraConfiguration(int.Parse(param[0]), param[2], param[3], int.Parse(param[1]), param[4]));
-                    break;
+                List<string> param = inputMessage.Parameters;
+                string result = "";
+                string errorLog = "";
+                bool status;
+                switch (inputMessage.ControlFunction)
+                {
+                    case ControlFunction.AddCamera:
+                        // "0", "1", null, "Default Webcam", "camera"
+                        //helper.AddReplaceCameraConfiguration(1, new CameraConfiguration(0, null, "Default Webcam", 1, "camera"));
 
-                case ControlFunction.DisplayImageInServerGUI:
-                    // firstDevice.ComputeDeviceId, port.ToString()
-                    // string result = utility.DisplayImageWindow(firstDevice, port);
+                        helper.AddReplaceCameraConfiguration(int.Parse(param[1]), new CameraConfiguration(int.Parse(param[0]), param[2], param[3], int.Parse(param[1]), param[4]));
+                        break;
 
-                    result = utility.DisplayImageWindow(utility.computeDeviceInfoMap[param[0]], int.Parse(param[1]));
-                    if (result == null) errorLog = "Error occurred @ " + ControlFunction.DisplayImageInServerGUI.ToString();
-                    break;
+                    case ControlFunction.DisplayImageInServerGUI:
+                        // firstDevice.ComputeDeviceId, port.ToString()
+                        // string result = utility.DisplayImageWindow(firstDevice, port);
 
-                case ControlFunction.ExecutePreset:
-                    // "Preset1", "2"
-                    // result = helper.ExecutePreset("Preset1", helper.QueryCameraDescription(2));
+                        result = utility.DisplayImageWindow(utility.computeDeviceInfoMap[param[0]], int.Parse(param[1]));
+                        if (result == null) errorLog = "Error occurred @ " + ControlFunction.DisplayImageInServerGUI.ToString();
+                        break;
 
-                    logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before executing preset: " + param[0] + "," + param[1]);
-                    result = helper.ExecutePreset(param[0], helper.QueryCameraDescription(int.Parse(param[1])));
-                    if (result == null) errorLog = "Error occurred @ " + ControlFunction.ExecutePreset.ToString();
-                    break;
+                    case ControlFunction.ExecutePreset:
+                        // "Preset1", "2"
+                        // result = helper.ExecutePreset("Preset1", helper.QueryCameraDescription(2));
 
-                case ControlFunction.UnloadPreset:
-                    // "Preset1", firstDevice.ComputeDeviceId, 5000
-                    logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadPreset: " + param[0] + "," + param[1] + "," + param[2]);
-                    status = helper.UnloadPreset(param[0], utility.QueryComputeDeviceById(param[1]), int.Parse(param[2]));
-                    logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadPreset (status=" + status.ToString() + "): " + param[0] + "," + param[1] + "," + param[2]);
-                    result = FormatBooleanStatus(inputMessage.ControlFunction, status);
-                    break;
+                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before executing preset: " + param[0] + "," + param[1]);
+                        result = helper.ExecutePreset(param[0], helper.QueryCameraDescription(int.Parse(param[1])));
+                        if (result == null) errorLog = "Error occurred @ " + ControlFunction.ExecutePreset.ToString();
+                        break;
 
-                case ControlFunction.ListAllCameraInUse:
-
-                    List<Tuple<string, string>> cameraInUse = helper.GetAllCameraInUse();
-                    result = JsonConvert.SerializeObject(cameraInUse);
-                    break;
-
-                case ControlFunction.UnloadCamera:
-                    // CameraId: 1
-                    logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadCamera: " + param[0]);
-                    status = helper.UnloadCamera(int.Parse(param[0]));
-                    logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadCamera: " + param[0]);
-                    result = FormatBooleanStatus(inputMessage.ControlFunction, status);
-                    break;
-
-                case ControlFunction.UnloadAlgorithm:
-                    // "Algo1", firstDevice.ComputeDeviceId, 5000
-                    if (param.Count == 2)
-                    {
-                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadAlgorithm: " + param[0]);
-                        status = helper.UnloadAlgorithm(param[0], utility.QueryComputeDeviceById(param[1]), int.Parse(param[2]));
-                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadAlgorithm: " + param[0]);
+                    case ControlFunction.UnloadPreset:
+                        // "Preset1", firstDevice.ComputeDeviceId, 5000
+                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadPreset: " + param[0] + "," + param[1] + "," + param[2]);
+                        status = helper.UnloadPreset(param[0], utility.QueryComputeDeviceById(param[1]), int.Parse(param[2]));
+                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadPreset (status=" + status.ToString() + "): " + param[0] + "," + param[1] + "," + param[2]);
                         result = FormatBooleanStatus(inputMessage.ControlFunction, status);
-                    }
-                    // Or "Preset1"
-                    else if (param.Count == 1)
-                    {
-                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadAlgorithm: " + param[0]);
-                        status = helper.UnloadAlgorithm(param[0]);
-                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadAlgorithm: " + param[0]);
-                        result = FormatBooleanStatus(inputMessage.ControlFunction, status);
-                    }
-                    break;
+                        break;
 
-                case ControlFunction.QueryComputeDevice:
-                    // Gets Compute Device State Map
-                    result = "{\"CurrentState\":\"" + logger._GetShortFormattedStateMap(helper.ComputeDeviceStateMap).Replace("\n", "\\n") + "\"}";
-                    break;
+                    case ControlFunction.ListAllCameraInUse:
+
+                        List<Tuple<string, string>> cameraInUse = helper.GetAllCameraInUse();
+                        result = JsonConvert.SerializeObject(cameraInUse);
+                        break;
+
+                    case ControlFunction.UnloadCamera:
+                        // CameraId: 1
+                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadCamera: " + param[0]);
+                        status = helper.UnloadCamera(int.Parse(param[0]), param[1]);
+                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadCamera: " + param[0]);
+                        result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+                        break;
+
+                    case ControlFunction.UnloadAlgorithm:
+                        // "Algo1", firstDevice.ComputeDeviceId, 5000
+                        if (param.Count == 2)
+                        {
+                            logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadAlgorithm: " + param[0]);
+                            status = helper.UnloadAlgorithm(param[0], utility.QueryComputeDeviceById(param[1]), int.Parse(param[2]));
+                            logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadAlgorithm: " + param[0]);
+                            result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+                        }
+                        // Or "Preset1"
+                        else if (param.Count == 1)
+                        {
+                            logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadAlgorithm: " + param[0]);
+                            status = helper.UnloadAlgorithm(param[0]);
+                            logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadAlgorithm: " + param[0]);
+                            result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+                        }
+                        break;
+
+                    case ControlFunction.QueryComputeDevice:
+                        // Gets Compute Device State Map
+                        result = "{\"CurrentState\":\"" + logger._GetShortFormattedStateMap(helper.ComputeDeviceStateMap).Replace("\n", "\\n") + "\"}";
+                        break;
+                }
+
+                string json = result;
+                string text = result;
+
+                if (errorLog != "")
+                    text = ", Error: " + errorLog;
+
+                InformationMessage outputMessage = new InformationMessage(json, text);
+                Hub.Publish<InformationMessage>(outputMessage);
             }
-
-            string json = result;
-            string text = result;
-
-            if (errorLog != "")
-                text = ", Error: " + errorLog;
-
-            InformationMessage outputMessage = new InformationMessage(json, text);
-            Hub.Publish<InformationMessage>(outputMessage);
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] ICANSEE.cs: IInputMessageProcessor: " + ex.Message);
+                if (ex.InnerException != null)
+                    Console.WriteLine("        ICANSEE.cs: IInputMessageProcessor: (InnerException) " + ex.InnerException.Message);
+                Console.ResetColor();
+            }
         }
 
         //public string ExecutePreset(int cameraId, string presetId)

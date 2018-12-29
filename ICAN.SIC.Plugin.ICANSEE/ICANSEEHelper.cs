@@ -195,7 +195,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 }
         }
 
-        public bool UnloadCamera(int cameraId)
+        public bool UnloadAnyCamera(int cameraId)
         {
             foreach (var item in computeDeviceStateMap)
             {
@@ -209,8 +209,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
                         if (status != null)
                         {
-                            cell.Value.ClearCamera(cameraId);
-                            return true;
+                            return cell.Value.ClearCamera(cameraId);
                         }
                     }
                 }
@@ -222,6 +221,18 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public bool UnloadPreset(string presetId, ComputeDeviceInfo computeDeviceInfo, int port)
         {
             return computeDeviceStateMap[computeDeviceInfo][port].ClearPreset(presetId);
+        }
+
+        public bool UnloadCamera(int cameraId, string presetId)
+        {
+            var preset = utility.QueryPresetById(presetId);
+            if (preset == null)
+                return false;
+
+            var computeDeviceInfo = utility.QueryComputeDeviceById(preset.ComputeDeviceId);
+            int port = preset.Port;
+
+            return UnloadCamera(cameraId, computeDeviceInfo, port);
         }
 
         public bool UnloadCamera(int cameraId, ComputeDeviceInfo computeDeviceInfo, int port)
