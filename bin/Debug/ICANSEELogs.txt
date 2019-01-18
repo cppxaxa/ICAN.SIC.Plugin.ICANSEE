@@ -1,5 +1,5 @@
 ------------------------------------------------------------
-Message:	Before executing preset: Preset1,1
+Message:	Before executing preset: Preset2,1
 
 ------------------------------------------------------------
 ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
@@ -35,12 +35,12 @@ ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
 
 
 ------------------------------------------------------------
-Message:	Before executing preset: Preset1,1
+Message:	SetPresetActive=Preset2,Sample Preset 2
 
 ------------------------------------------------------------
 ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
 		Port(5000)
-		(Camera=1,Default webcam;)
+		(Algo=AlgoType4,Simple counter 50;PresetId&Name=Preset2,Sample Preset 2;Camera=1,Default webcam;)
 
 ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
 --------------------------END-------------------------------
@@ -48,12 +48,12 @@ ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
 
 
 ------------------------------------------------------------
-Message:	QueryDeviceState(Win10Device1, 5000) = (Camera=1,Default webcam;)
+Message:	Before UnloadAlgorithm: Preset2
 
 ------------------------------------------------------------
 ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
 		Port(5000)
-		(Camera=1,Default webcam;)
+		(Algo=AlgoType4,Simple counter 50;PresetId&Name=Preset2,Sample Preset 2;Camera=1,Default webcam;)
 
 ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
 --------------------------END-------------------------------
@@ -61,12 +61,12 @@ ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
 
 
 ------------------------------------------------------------
-Message:	Before UnloadAlgorithm: Preset1
+Message:	After UnloadAlgorithm: Preset2
 
 ------------------------------------------------------------
 ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
 		Port(5000)
-		(Camera=1,Default webcam;)
+		(PresetId&Name=Preset2,Sample Preset 2;Camera=1,Default webcam;)
 
 ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
 --------------------------END-------------------------------
@@ -74,7 +74,20 @@ ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
 
 
 ------------------------------------------------------------
-Message:	After UnloadAlgorithm: Preset1
+Message:	Before UnloadPreset (param.Count=1): Preset2,Win10Device1,5000
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(PresetId&Name=Preset2,Sample Preset 2;Camera=1,Default webcam;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	After UnloadPreset (param.Count=1) (status=True): Preset2,Win10Device1,5000
 
 ------------------------------------------------------------
 ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
@@ -101,149 +114,6 @@ ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
 
 ------------------------------------------------------------
 Message:	After UnloadCamera: 1
-
-------------------------------------------------------------
-ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
-		Port(5000)
-		()
-
-ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
---------------------------END-------------------------------
-
-
-
-------------------------------------------------------------
-Message:	Before executing preset: Preset1,1
-
-------------------------------------------------------------
-ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
-		Port(5000)
-		()
-
-ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
---------------------------END-------------------------------
-
-
-
-------------------------------------------------------------
-Message:	QueryDeviceState(Win10Device1, 5000) = ()
-
-------------------------------------------------------------
-ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
-		Port(5000)
-		()
-
-ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
---------------------------END-------------------------------
-
-
-
-------------------------------------------------------------
-Message:	SetCameraActive=1,Default webcam
-
-------------------------------------------------------------
-ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
-		Port(5000)
-		(Camera=1,Default webcam;)
-
-ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
---------------------------END-------------------------------
-
-
-
-------------------------------------------------------------
-Message:	SetPresetActive=Preset1,Sample Preset 1
-
-------------------------------------------------------------
-ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
-		Port(5000)
-		(Algo=AlgoType3,tf-ssd-90class;PresetId&Name=Preset1,Sample Preset 1;Camera=1,Default webcam;)
-
-ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
---------------------------END-------------------------------
-
-
-
-------------------------------------------------------------
-Message:	One Run ClearPreset=Preset1,Sample Preset 1
-
-------------------------------------------------------------
-ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
-		Port(5000)
-		(Algo=AlgoType3,tf-ssd-90class;Camera=1,Default webcam;)
-
-ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
---------------------------END-------------------------------
-
-
-
-------------------------------------------------------------
-Message:	Before UnloadCamera: 1
-
-------------------------------------------------------------
-ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
-		Port(5000)
-		(Algo=AlgoType3,tf-ssd-90class;Camera=1,Default webcam;)
-
-ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
---------------------------END-------------------------------
-
-
-
-------------------------------------------------------------
-Message:	After UnloadCamera: 1
-
-------------------------------------------------------------
-ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
-		Port(5000)
-		(Algo=AlgoType3,tf-ssd-90class;Camera=1,Default webcam;)
-
-ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
---------------------------END-------------------------------
-
-
-
-------------------------------------------------------------
-Message:	Before UnloadCamera: 1
-
-------------------------------------------------------------
-ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
-		Port(5000)
-		(Algo=AlgoType3,tf-ssd-90class;Camera=1,Default webcam;)
-
-ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
---------------------------END-------------------------------
-
-
-
-------------------------------------------------------------
-Message:	After UnloadCamera: 1
-
-------------------------------------------------------------
-ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
-		Port(5000)
-		(Algo=AlgoType3,tf-ssd-90class;)
-
-ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
---------------------------END-------------------------------
-
-
-
-------------------------------------------------------------
-Message:	Before UnloadAlgorithm: Preset1
-
-------------------------------------------------------------
-ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
-		Port(5000)
-		(Algo=AlgoType3,tf-ssd-90class;)
-
-ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
---------------------------END-------------------------------
-
-
-
-------------------------------------------------------------
-Message:	After UnloadAlgorithm: Preset1
 
 ------------------------------------------------------------
 ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost

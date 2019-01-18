@@ -56,6 +56,8 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.BtnUnloadPreset = new System.Windows.Forms.Button();
             this.BtnUnloadCamera = new System.Windows.Forms.Button();
             this.BtnGetDeviceStateMap = new System.Windows.Forms.Button();
+            this.BtnExecutePreset2 = new System.Windows.Forms.Button();
+            this.BtnUnloadCamera2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnReadFBP
@@ -207,7 +209,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.button1.Location = new System.Drawing.Point(350, 298);
             this.button1.Margin = new System.Windows.Forms.Padding(6);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(580, 44);
+            this.button1.Size = new System.Drawing.Size(284, 44);
             this.button1.TabIndex = 13;
             this.button1.Text = "ExecutePreset";
             this.button1.UseVisualStyleBackColor = true;
@@ -326,7 +328,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             // 
             // BtnListOpenCameraInUse
             // 
-            this.BtnListOpenCameraInUse.Location = new System.Drawing.Point(350, 351);
+            this.BtnListOpenCameraInUse.Location = new System.Drawing.Point(943, 431);
             this.BtnListOpenCameraInUse.Name = "BtnListOpenCameraInUse";
             this.BtnListOpenCameraInUse.Size = new System.Drawing.Size(284, 44);
             this.BtnListOpenCameraInUse.TabIndex = 25;
@@ -340,7 +342,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.BtnUnloadPreset.Name = "BtnUnloadPreset";
             this.BtnUnloadPreset.Size = new System.Drawing.Size(284, 44);
             this.BtnUnloadPreset.TabIndex = 26;
-            this.BtnUnloadPreset.Text = "Unload Preset";
+            this.BtnUnloadPreset.Text = "Unload Preset 2";
             this.BtnUnloadPreset.UseVisualStyleBackColor = true;
             this.BtnUnloadPreset.Click += new System.EventHandler(this.BtnUnloadPreset_Click);
             // 
@@ -364,11 +366,33 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
             this.BtnGetDeviceStateMap.UseVisualStyleBackColor = true;
             this.BtnGetDeviceStateMap.Click += new System.EventHandler(this.BtnGetDeviceStateMap_Click);
             // 
+            // BtnExecutePreset2
+            // 
+            this.BtnExecutePreset2.Location = new System.Drawing.Point(646, 298);
+            this.BtnExecutePreset2.Name = "BtnExecutePreset2";
+            this.BtnExecutePreset2.Size = new System.Drawing.Size(284, 44);
+            this.BtnExecutePreset2.TabIndex = 29;
+            this.BtnExecutePreset2.Text = "ExecutePreset 2";
+            this.BtnExecutePreset2.UseVisualStyleBackColor = true;
+            this.BtnExecutePreset2.Click += new System.EventHandler(this.BtnExecutePreset2_Click);
+            // 
+            // BtnUnloadCamera2
+            // 
+            this.BtnUnloadCamera2.Location = new System.Drawing.Point(350, 351);
+            this.BtnUnloadCamera2.Name = "BtnUnloadCamera2";
+            this.BtnUnloadCamera2.Size = new System.Drawing.Size(284, 44);
+            this.BtnUnloadCamera2.TabIndex = 30;
+            this.BtnUnloadCamera2.Text = "Unload Camera 2";
+            this.BtnUnloadCamera2.UseVisualStyleBackColor = true;
+            this.BtnUnloadCamera2.Click += new System.EventHandler(this.BtnUnloadCamera2_Click);
+            // 
             // ICANSEEHost
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1239, 608);
+            this.Controls.Add(this.BtnUnloadCamera2);
+            this.Controls.Add(this.BtnExecutePreset2);
             this.Controls.Add(this.BtnGetDeviceStateMap);
             this.Controls.Add(this.BtnUnloadCamera);
             this.Controls.Add(this.BtnUnloadPreset);
@@ -438,5 +462,7 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
         private System.Windows.Forms.Button BtnUnloadPreset;
         private System.Windows.Forms.Button BtnUnloadCamera;
         private System.Windows.Forms.Button BtnGetDeviceStateMap;
+        private System.Windows.Forms.Button BtnExecutePreset2;
+        private System.Windows.Forms.Button BtnUnloadCamera2;
     }
 }

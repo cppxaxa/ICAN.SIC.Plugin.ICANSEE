@@ -83,10 +83,40 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
                     case ControlFunction.UnloadPreset:
                         // "Preset1", firstDevice.ComputeDeviceId, 5000
-                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadPreset: " + param[0] + "," + param[1] + "," + param[2]);
-                        status = helper.UnloadPreset(param[0], utility.QueryComputeDeviceById(param[1]), int.Parse(param[2]));
-                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadPreset (status=" + status.ToString() + "): " + param[0] + "," + param[1] + "," + param[2]);
-                        result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+                        if (param.Count == 3)
+                        {
+                            logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadPreset: " + param[0] + "," + param[1] + "," + param[2]);
+                            status = helper.UnloadPreset(param[0], utility.QueryComputeDeviceById(param[1]), int.Parse(param[2]));
+                            logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadPreset (status=" + status.ToString() + "): " + param[0] + "," + param[1] + "," + param[2]);
+                            result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+                        }
+                        // "Preset1"
+                        else if (param.Count == 1)
+                        {
+                            var preset = utility.QueryPresetById(param[0]);
+                            string computeDeviceId = preset.ComputeDeviceId;
+                            int port = preset.Port;
+
+                            var computeDeviceInfo = utility.QueryComputeDeviceById(computeDeviceId);
+
+                            if (computeDeviceInfo == null)
+                            {
+                                status = false;
+                                result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+                            }
+                            else
+                            {
+                                logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadAlgorithm: " + param[0]);
+                                status = helper.UnloadAlgorithm(param[0]);
+                                logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadAlgorithm: " + param[0]);
+                                result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+
+                                logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadPreset (param.Count=1): " + param[0] + "," + computeDeviceId + "," + port.ToString());
+                                status = helper.UnloadPreset(param[0], computeDeviceInfo, port);
+                                logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "After UnloadPreset (param.Count=1) (status=" + status.ToString() + "): " + param[0] + "," + computeDeviceId + "," + port.ToString());
+                                result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+                            }
+                        }
                         break;
 
                     case ControlFunction.ListAllCameraInUse:
@@ -105,7 +135,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
                     case ControlFunction.UnloadAlgorithm:
                         // "Algo1", firstDevice.ComputeDeviceId, 5000
-                        if (param.Count == 2)
+                        if (param.Count == 3)
                         {
                             logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadAlgorithm: " + param[0]);
                             status = helper.UnloadAlgorithm(param[0], utility.QueryComputeDeviceById(param[1]), int.Parse(param[2]));

@@ -282,16 +282,21 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
 
         private void BtnUnloadPreset_Click(object sender, EventArgs e)
         {
-            ComputeDeviceInfo firstDevice = controller.utility.computeDeviceInfoList.First();
-            int port = firstDevice.PortList.First();
-
-            InputMessage message = new InputMessage(ControlFunction.UnloadPreset, new List<string> { "Preset1", firstDevice.ComputeDeviceId, port.ToString() });
+            InputMessage message = new InputMessage(ControlFunction.UnloadPreset, new List<string> { "Preset2" });
             controller.Hub.Publish<InputMessage>(message);
+
+            //ComputeDeviceInfo firstDevice = controller.utility.computeDeviceInfoList.First();
+            //int port = firstDevice.PortList.First();
+
+            //InputMessage message = new InputMessage(ControlFunction.UnloadPreset, new List<string> { "Preset1", firstDevice.ComputeDeviceId, port.ToString() });
+            //controller.Hub.Publish<InputMessage>(message);
         }
 
         private void BtnUnloadCamera_Click(object sender, EventArgs e)
         {
-            string computeDeviceId = controller.utility.QueryPresetById("Preset1").ComputeDeviceId;
+            string presetId = "Preset1";
+
+            string computeDeviceId = controller.utility.QueryPresetById(presetId).ComputeDeviceId;
             var computeDeviceInfo = controller.utility.QueryComputeDeviceById(computeDeviceId);
 
             int? cameraId = controller.helper.ComputeDeviceStateMap[computeDeviceInfo][computeDeviceInfo.PortList.First()].OpenCameraMap.First().Key?.Id;
@@ -302,13 +307,38 @@ namespace ICAN.SIC.Plugin.ICANSEE.Host
                 return;
             }
 
-            InputMessage message = new InputMessage(ControlFunction.UnloadCamera, new List<string> { cameraId.Value.ToString() });
+            InputMessage message = new InputMessage(ControlFunction.UnloadCamera, new List<string> { cameraId.Value.ToString(), presetId });
             controller.Hub.Publish<InputMessage>(message);
         }
 
         private void BtnGetDeviceStateMap_Click(object sender, EventArgs e)
         {
             InputMessage message = new InputMessage(ControlFunction.QueryComputeDevice, new List<string> { });
+            controller.Hub.Publish<InputMessage>(message);
+        }
+
+        private void BtnExecutePreset2_Click(object sender, EventArgs e)
+        {
+            InputMessage message = new InputMessage(ControlFunction.ExecutePreset, new List<string> { "Preset2", "1" });
+            controller.Hub.Publish<InputMessage>(message);
+        }
+
+        private void BtnUnloadCamera2_Click(object sender, EventArgs e)
+        {
+            string presetId = "Preset2";
+
+            string computeDeviceId = controller.utility.QueryPresetById(presetId).ComputeDeviceId;
+            var computeDeviceInfo = controller.utility.QueryComputeDeviceById(computeDeviceId);
+
+            int? cameraId = controller.helper.ComputeDeviceStateMap[computeDeviceInfo][computeDeviceInfo.PortList.First()].OpenCameraMap.First().Key?.Id;
+
+            if (!cameraId.HasValue)
+            {
+                Console.WriteLine("Camera Id null");
+                return;
+            }
+
+            InputMessage message = new InputMessage(ControlFunction.UnloadCamera, new List<string> { cameraId.Value.ToString(), presetId });
             controller.Hub.Publish<InputMessage>(message);
         }
     }

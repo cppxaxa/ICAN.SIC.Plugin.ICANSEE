@@ -32,4 +32,3 @@ D:\Prateek\ICAN.SIC.Plugin.ICANSEE\bin\Debug\ICAN.SIC.Plugin.ICANSEE.pdb
 D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.csprojResolveAssemblyReference.cache
 D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.dll
 D:\Prateek\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.pdb
-D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\Debug\ICAN.SIC.Plugin.ICANSEE.csprojResolveAssemblyReference.cache
