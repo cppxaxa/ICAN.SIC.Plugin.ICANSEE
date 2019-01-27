@@ -40,7 +40,18 @@
     "Uri": "http://{{host}}:{{port}}/task",
     "InitCommand": "globals()[\"c\"] = 0\nglobals()[\"total\"] = 50",
     "ScalarExecuteCommand": "if globals()[\"total\"] > globals()[\"c\"]:\\n\\tprint(globals()[\"c\"])\\n\\ttime.sleep(0.5)\\n\\tglobals()[\"c\"] += 1\\n\\tresult = globals()[\"c\"]\\n\\toutput = ResultToJson(str(result))",
-    "UnloadCommand": "globals()[\"c\"] = 0\\nglobals()[\"total\"] = 0\\n",
+    "UnloadCommand": "globals()[\"c\"] = 0\\nglobals()[\"total\"] = 0",
     "Description": "It features a simple counter till 50"
+  },
+  {
+    "Id": "Algo5",
+    "AlgorithmTypeId": "AlgoType5",
+    "SupportedDeviceTypeIdList": [ "WIN_TIER2" ],
+    "Name": "Image Caption Generation",
+    "Uri": "http://{{host}}:{{port}}/task",
+    "InitCommand": "globals()[\"model\"] = ModelWrapper()",
+    "ScalarExecuteCommand": "image_data = cv2.imencode('.jpg', imageSrc)[1].tostring()\\nresult = globals()[\"model\"].predict(image_data)\\noutput = result",
+    "UnloadCommand": "globals()[\"model\"] = None",
+    "Description": "Generate image caption"
   }
 ]
