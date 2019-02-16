@@ -59,10 +59,16 @@ namespace ICAN.SIC.Plugin.ICANSEE.DataTypes
         public string GetCompleteExecuteCommand(AlgorithmDescription targetAlgorithmDescription, ComputeDeviceInfo targetComputeDeviceInfo, string port)
         {
             string attributeKey = "ScalarExecuteCommand";
-            return GetCustomCompleteExecuteCommand(targetAlgorithmDescription, targetComputeDeviceInfo, port, attributeKey);
+            return GetCompleteExecuteCommandWithResultProcessingStatement(targetAlgorithmDescription, targetComputeDeviceInfo, port, attributeKey);
         }
 
-        private string GetCustomCompleteExecuteCommand(AlgorithmDescription targetAlgorithmDescription, ComputeDeviceInfo targetComputeDeviceInfo, string port, string attributeKey = "ScalarExecuteCommand")
+        public string GetExecuteCommandWithCustomResultStatement(AlgorithmDescription targetAlgorithmDescription, ComputeDeviceInfo targetComputeDeviceInfo, string port, string customResultProcessingStatement)
+        {
+            string attributeKey = "ScalarExecuteCommand";
+            return GetCompleteExecuteCommandWithResultProcessingStatement(targetAlgorithmDescription, targetComputeDeviceInfo, port, attributeKey, customResultProcessingStatement);
+        }
+
+        private string GetCompleteExecuteCommandWithResultProcessingStatement(AlgorithmDescription targetAlgorithmDescription, ComputeDeviceInfo targetComputeDeviceInfo, string port, string attributeKey = "ScalarExecuteCommand", string customResultProcessingStatement = null)
         {
             string errorList = "";
             if (targetAlgorithmDescription.Id != AlgorithmId)
@@ -95,23 +101,31 @@ namespace ICAN.SIC.Plugin.ICANSEE.DataTypes
                     break;
             }
 
-            if (ResultProcessingStatement == null || ResultProcessingStatement == "")
+            // If custom result processing statement is found, encode-append-send
+            if (customResultProcessingStatement != null)
+            {
+                algorithmCommand += "\\n" + EncodeStringForTransmission(customResultProcessingStatement, ipAddress, port);
                 return algorithmCommand;
-
-            algorithmCommand += "\\n" + EncodeStringForTransmission(ResultProcessingStatement, ipAddress, port);
-            return algorithmCommand;
+            }
+            else if (ResultProcessingStatement == null || ResultProcessingStatement == "")
+                return algorithmCommand;
+            else
+            {
+                algorithmCommand += "\\n" + EncodeStringForTransmission(ResultProcessingStatement, ipAddress, port);
+                return algorithmCommand;
+            }
         }
 
         public string GetCompleteInitCommand(AlgorithmDescription targetAlgorithmDescription, ComputeDeviceInfo targetComputeDeviceInfo, string port)
         {
             string attributeKey = "InitCommand";
-            return GetCustomCompleteExecuteCommand(targetAlgorithmDescription, targetComputeDeviceInfo, port, attributeKey);
+            return GetCompleteExecuteCommandWithResultProcessingStatement(targetAlgorithmDescription, targetComputeDeviceInfo, port, attributeKey);
         }
 
         public string GetCompleteUnloadCommand(AlgorithmDescription targetAlgorithmDescription, ComputeDeviceInfo targetComputeDeviceInfo, string port)
         {
             string attributeKey = "UnloadCommand";
-            return GetCustomCompleteExecuteCommand(targetAlgorithmDescription, targetComputeDeviceInfo, port, attributeKey);
+            return GetCompleteExecuteCommandWithResultProcessingStatement(targetAlgorithmDescription, targetComputeDeviceInfo, port, attributeKey);
         }
     }
 }

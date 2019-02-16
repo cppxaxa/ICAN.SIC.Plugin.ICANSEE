@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.XPath;
@@ -112,6 +113,11 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     Console.WriteLine(ex.Message);
                     Console.ResetColor();
                 }
+        }
+
+        public string ConvertHtmlToSymbols(string v)
+        {
+            return WebUtility.HtmlDecode(v); 
         }
 
         public ComputeDeviceInfo QueryComputeDeviceById(string computeDeviceId)
@@ -420,12 +426,12 @@ namespace ICAN.SIC.Plugin.ICANSEE
             }
         }
 
-        public string ExecuteAlgorithm(PresetDescription presetDescription, string ipAddress, string commandAttribute = "ScalarExecuteCommand")
+        public string ExecuteAlgorithm(PresetDescription presetDescription, string ipAddress, string commandAttribute = "ScalarExecuteCommand", string resultStatementToOverride = null)
         {
             string computeDeviceInfoId = presetDescription.ComputeDeviceId;
             string algorithmId = presetDescription.AlgorithmId;
             int port = presetDescription.Port;
-            string resultProcessingStatement = presetDescription.GetResultProcessingStatement(brokerHubHost, brokerHubPort);
+            //string resultProcessingStatement = presetDescription.GetResultProcessingStatement(brokerHubHost, brokerHubPort);
             bool RunOnce = presetDescription.RunOnce;
             bool InfiniteLoop = presetDescription.InfiniteLoop;
             int LoopLimit = presetDescription.LoopLimit;
@@ -439,10 +445,9 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
                 return null;
             }
+
             var algorithmDescription = algorithmsDescriptionMap[algorithmId];
-
-
-
+            
             if (!computeDeviceInfoMap.ContainsKey(computeDeviceInfoId))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -451,10 +456,13 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
                 return null;
             }
+
             var computeDeviceInfo = computeDeviceInfoMap[computeDeviceInfoId];
 
             string executeCommand = "";
-            if (commandAttribute == "ScalarExecuteCommand")
+            if (commandAttribute == "ScalarExecuteCommand" && resultStatementToOverride != null)
+                executeCommand = presetDescription.GetExecuteCommandWithCustomResultStatement(algorithmDescription, computeDeviceInfo, port.ToString(), resultStatementToOverride);
+            else if (commandAttribute == "ScalarExecuteCommand" && resultStatementToOverride == null)
                 executeCommand = presetDescription.GetCompleteExecuteCommand(algorithmDescription, computeDeviceInfo, port.ToString());
             else if (commandAttribute == "InitCommand")
                 executeCommand = presetDescription.GetCompleteInitCommand(algorithmDescription, computeDeviceInfo, port.ToString());

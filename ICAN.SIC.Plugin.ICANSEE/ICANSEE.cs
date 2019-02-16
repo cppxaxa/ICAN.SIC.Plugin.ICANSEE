@@ -72,6 +72,14 @@ namespace ICAN.SIC.Plugin.ICANSEE
                         if (result == null) errorLog = "Error occurred @ " + ControlFunction.DisplayImageInServerGUI.ToString();
                         break;
 
+                    case ControlFunction.ExecutePresetExtended:
+
+                        logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before executing preset: " + param[0] + "," + param[1]);
+                        result = helper.ExecutePresetExtended(param[0], helper.QueryCameraDescription(int.Parse(param[1])), utility.ConvertHtmlToSymbols(param[2]));
+                        if (result == null) errorLog = "Error occurred @ " + ControlFunction.ExecutePreset.ToString();
+
+                        break;
+
                     case ControlFunction.ExecutePreset:
                         // "Preset1", "2"
                         // result = helper.ExecutePreset("Preset1", helper.QueryCameraDescription(2));

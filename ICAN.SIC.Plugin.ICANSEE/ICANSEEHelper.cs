@@ -240,14 +240,31 @@ namespace ICAN.SIC.Plugin.ICANSEE
             utility.UnloadCamera(cameraId, computeDeviceInfo, port);
             return computeDeviceStateMap[computeDeviceInfo][port].ClearCamera(cameraId);
         }
+        
+        public string ExecutePresetExtended(string presetId, CameraConfiguration cameraConfiguration, string postScript)
+        {
+            return ExecutePresetHelper(presetId, cameraConfiguration, postScript);
+        }
 
         public string ExecutePreset(string presetId, CameraConfiguration cameraConfiguration)
+        {
+            return ExecutePresetHelper(presetId, cameraConfiguration, null);
+        }
+
+        // Private ExecutePresetHelper
+        private string ExecutePresetHelper(string presetId, CameraConfiguration cameraConfiguration, string postScript)
         {
             int RunCompatibility = 0;
             bool targetCameraOpen = false;
             bool targetAlgorithmActive = false;
 
             PresetDescription presetConfiguration = utility.QueryPresetById(presetId, brokerHubHost, brokerHubPort);
+
+            if (presetConfiguration == null)
+            {
+                throw new Exception("Preset not found: " + presetId);
+            }
+
             ComputeDeviceInfo computeDevice = utility.QueryComputeDeviceById(presetConfiguration.ComputeDeviceId);
             int port = presetConfiguration.Port;
 
@@ -312,6 +329,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 if (!targetAlgorithmActive)
                 {
                     result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress, "InitCommand");
+                    
                     if (result == null)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -331,7 +349,12 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     logger.LogComputeDeviceStateMap(computeDeviceStateMap, "One Run ClearPreset=" + presetConfiguration.Id + "," + presetConfiguration.Name);
                 }
 
-                result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress);
+                
+                if (postScript == null)
+                    result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress);
+                else
+                    result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress, resultStatementToOverride: postScript);
+                
 
                 if (result == null)
                 {
@@ -489,6 +512,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             return result;
         }
+
 
 
 
