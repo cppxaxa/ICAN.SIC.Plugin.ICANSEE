@@ -297,22 +297,22 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     switch (cameraConfig.Type)
                     {
                         case "camera":
-                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'] = cv2.VideoCapture({{index}})\\nret, frame = globals()['cap'].read()\\nglobals()['imageSrc'] = frame\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'] = cv2.VideoCapture({{index}})\\nglobals()['refreshCameraCode'] = 'globals()[\\\\'ret\\\\'], globals()[\\\\'imageSrc\\\\'] = globals()[\\\\'cap\\\\'].read()'\\nglobals()['ret'], globals()['frame'] = globals()['cap'].read()\\nglobals()['imageSrc'] = globals()['frame']\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
                             apiCallBody = apiCallBody.Replace("{{index}}", cameraConfig.Index.ToString());
                             break;
 
                         case "mjpgStream":
-                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'] = cv2.VideoCapture({{url}})\\nret, frame = globals()['cap'].read()\\nglobals()['imageSrc'] = frame\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['cap'] = cv2.VideoCapture({{url}})\\nglobals()['refreshCameraCode'] = 'globals()[\\\\'ret\\\\'], globals()[\\\\'imageSrc\\\\'] = globals()[\\\\'cap\\\\'].read()'\\nglobals()['ret'], globals()['frame'] = globals()['cap'].read()\\nglobals()['imageSrc'] = globals()['frame']\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
                             apiCallBody = apiCallBody.Replace("{{url}}", "'" + cameraConfig.Url + "'");
                             break;
 
                         case "image":
-                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['imageSrc'] = cv2.imread({{imageLocalPath}})\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['imageSrc'] = cv2.imread({{imageLocalPath}})\\nglobals()['refreshCameraCode'] = 'globals()[\\\\'imageSrc\\\\'] = cv2.imread({{imageLocalPath}})\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
                             apiCallBody = apiCallBody.Replace("{{imageLocalPath}}", "'" + cameraConfig.Url + "'");
                             break;
 
                         case "imageShot":
-                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['imageSrc'] = getImageFromShotUri({{shotUri}})\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['imageSrc'] = getImageFromShotUri({{shotUri}})\\nglobals()['refreshCameraCode'] = 'globals()[\\\\'imageSrc\\\\'] = getImageFromShotUri({{shotUri}})'\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
                             apiCallBody = apiCallBody.Replace("{{shotUri}}", "'" + cameraConfig.Url + "'");
                             break;
                     }

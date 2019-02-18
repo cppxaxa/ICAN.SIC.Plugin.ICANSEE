@@ -168,6 +168,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
         List<ComputeDeviceInfo> computeDeviceList;
         Dictionary<ComputeDeviceInfo, Dictionary<int, ComputeDeviceState>> computeDeviceStateMap = new Dictionary<ComputeDeviceInfo, Dictionary<int, ComputeDeviceState>>();
+        Dictionary<string, CameraConfiguration> presetCameraMap = new Dictionary<string, CameraConfiguration>();
 
 
         string brokerHubHost, brokerHubPort;
@@ -240,7 +241,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
             utility.UnloadCamera(cameraId, computeDeviceInfo, port);
             return computeDeviceStateMap[computeDeviceInfo][port].ClearCamera(cameraId);
         }
-        
+
         public string ExecutePresetExtended(string presetId, CameraConfiguration cameraConfiguration, string postScript)
         {
             return ExecutePresetHelper(presetId, cameraConfiguration, postScript);
@@ -329,7 +330,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 if (!targetAlgorithmActive)
                 {
                     result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress, "InitCommand");
-                    
+
                     if (result == null)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -340,6 +341,7 @@ namespace ICAN.SIC.Plugin.ICANSEE
                 }
 
                 computeDeviceStateMap[computeDevice][port].SetPresetActive(presetConfiguration, utility.GetAlgorithmsList());
+                presetCameraMap[presetId] = cameraConfiguration;
                 logger.LogComputeDeviceStateMap(computeDeviceStateMap, "SetPresetActive=" + presetConfiguration.Id + "," + presetConfiguration.Name);
 
                 // If preset is one time run, then clear preset from the statusMap
@@ -349,12 +351,12 @@ namespace ICAN.SIC.Plugin.ICANSEE
                     logger.LogComputeDeviceStateMap(computeDeviceStateMap, "One Run ClearPreset=" + presetConfiguration.Id + "," + presetConfiguration.Name);
                 }
 
-                
+
                 if (postScript == null)
                     result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress);
                 else
                     result = utility.ExecuteAlgorithm(presetConfiguration, computeDevice.IpAddress, resultStatementToOverride: postScript);
-                
+
 
                 if (result == null)
                 {
@@ -376,6 +378,8 @@ namespace ICAN.SIC.Plugin.ICANSEE
         }
 
         public Dictionary<ComputeDeviceInfo, Dictionary<int, ComputeDeviceState>> ComputeDeviceStateMap { get { return computeDeviceStateMap; } }
+
+        public Dictionary<string, CameraConfiguration> PresetCameraMap { get { return presetCameraMap; } }
 
         public bool AddCameraConfiguration(int newCustomId, CameraConfiguration cameraConfig)
         {
@@ -512,7 +516,6 @@ namespace ICAN.SIC.Plugin.ICANSEE
 
             return result;
         }
-
 
 
 

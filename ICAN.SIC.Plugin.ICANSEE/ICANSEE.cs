@@ -73,10 +73,63 @@ namespace ICAN.SIC.Plugin.ICANSEE
                         break;
 
                     case ControlFunction.ExecutePresetExtended:
+                        // presetId, cameraId, postResultProcessingStatement
 
                         logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before executing preset: " + param[0] + "," + param[1]);
-                        result = helper.ExecutePresetExtended(param[0], helper.QueryCameraDescription(int.Parse(param[1])), utility.ConvertHtmlToSymbols(param[2]));
+                        result = helper.ExecutePresetExtended(param[0], helper.QueryCameraDescription(int.Parse(param[1])), utility.ConvertHtmlToSymbols(param[2]).Replace("{{host}}", brokerHubHost).Replace("{{port}}", brokerHubPort));
                         if (result == null) errorLog = "Error occurred @ " + ControlFunction.ExecutePreset.ToString();
+
+                        break;
+
+                    case ControlFunction.UnloadPresetAndCamera:
+                        // presetId
+                        {
+                            logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "Before UnloadPresetAndCamera preset: " + param[0]);
+                            var preset = utility.QueryPresetById(param[0]);
+                            string computeDeviceId = preset.ComputeDeviceId;
+                            int port = preset.Port;
+
+                            var computeDeviceInfo = utility.QueryComputeDeviceById(computeDeviceId);
+
+                            if (computeDeviceInfo == null)
+                            {
+                                status = false;
+                                result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+                            }
+                            else
+                            {
+                                var cameraDesc = helper.PresetCameraMap[param[0]];
+                                if (cameraDesc == null)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("[WARNING] ICANSEE.cs: IInputMessageProcessor: " + "case ControlFunction.UnloadPresetAndCamera: " + "camera not associated with preset");
+                                    Console.ResetColor();
+                                }
+                                else
+                                {
+                                    logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "1 Before UnloadCamera for preset (camera=" + cameraDesc.Id + ", preset=" + param[0] + ")");
+                                    status = helper.UnloadCamera(cameraDesc.Id, param[0]);
+                                    logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "1 After UnloadCamera for preset (camera=" + cameraDesc.Id + ", preset=" + param[0] + ")");
+                                    result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+                                }
+
+                                logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "2 Before UnloadAlgorithm for preset: " + param[0]);
+                                status = helper.UnloadAlgorithm(param[0]);
+                                logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "2 After UnloadAlgorithm for preset: " + param[0]);
+                                result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+
+                                logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "3 Before UnloadAlgorithm for preset: " + param[0]);
+                                status = helper.UnloadAlgorithm(param[0]);
+                                logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "3 After UnloadAlgorithm for preset: " + param[0]);
+                                result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+
+                                logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "4 Before UnloadPreset: " + param[0] + "," + computeDeviceId + "," + port.ToString());
+                                status = helper.UnloadPreset(param[0], computeDeviceInfo, port);
+                                logger.LogComputeDeviceStateMap(helper.ComputeDeviceStateMap, "4 After UnloadPreset (status=" + status.ToString() + "): " + param[0] + "," + computeDeviceId + "," + port.ToString());
+                                result = FormatBooleanStatus(inputMessage.ControlFunction, status);
+                            }
+                            if (result == null) errorLog = "Error occurred @ " + ControlFunction.UnloadPresetAndCamera.ToString();
+                        }
 
                         break;
 
