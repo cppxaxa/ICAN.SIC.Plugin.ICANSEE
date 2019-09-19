@@ -29,6 +29,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ICAN_Debug|AnyCPU'">
+    <OutputPath>bin\ICAN_Debug\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICAN.SIC.Abstractions">
       <HintPath>..\..\ICAN.SIC\bin\Debug\ICAN.SIC.Abstractions.dll</HintPath>

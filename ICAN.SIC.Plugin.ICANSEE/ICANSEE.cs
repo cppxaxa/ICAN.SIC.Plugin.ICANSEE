@@ -217,6 +217,11 @@ namespace ICAN.SIC.Plugin.ICANSEE
                         // Gets Compute Device State Map
                         result = "{\"CurrentState\":\"" + logger._GetShortFormattedStateMap(helper.ComputeDeviceStateMap).Replace("\n", "\\n") + "\"}";
                         break;
+
+                    case ControlFunction.RunningTasks:
+                        // Gets status of running presets and commands to unload
+                        result = "<p style=\"font-family: Consolas;\">" + logger._GetShortFormattedStateMap(helper.ComputeDeviceStateMap).Replace("\n", "\\n") + "</p>";
+                        break;
                 }
 
                 string json = result;
@@ -282,6 +287,17 @@ namespace ICAN.SIC.Plugin.ICANSEE
             ReplacementConfiguration config = utility.ReadConfigurationFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ICANSEEDrwReplacementConfiguration.json"));
             FBPGraph graph = helper.GenerateFBPGraphFromDrwFile(File.OpenRead(filepath), config);
             return graph;
+        }
+
+        public override void Dispose()
+        {
+            imageClient = null;
+            logger = null;
+
+            utility = null;
+            helper = null;
+
+            hub.Unsubscribe<IInputMessage>(this.IInputMessageProcessor);
         }
     }
 }

@@ -1,0 +1,49 @@
+------------------------------------------------------------
+Message:	Before executing preset: Preset2,1
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	QueryDeviceState(Win10Device1, 5000) = ()
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		()
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	SetCameraActive=1,Default webcam
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Camera=1,Default webcam;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+
+------------------------------------------------------------
+Message:	SetPresetActive=Preset2,Sample Preset 2
+
+------------------------------------------------------------
+ComputeDev: Win10Device1/ Dell Precision M3800-YTD Win10/ localhost
+		Port(5000)
+		(Algo=AlgoType4,Simple counter 50;PresetId&Name=Preset2,Sample Preset 2;Camera=1,Default webcam;)
+
+ComputeDev: Ubuntu1604Device1/ Acer Nitro 5-YTD Linux/ localhost
+--------------------------END-------------------------------
+
+
+

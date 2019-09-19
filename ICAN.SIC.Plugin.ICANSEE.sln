@@ -10,15 +10,20 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		ICAN_Debug|Any CPU = ICAN_Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A39EB2DA-F9F3-4A5D-ABC8-BB9F55F092FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A39EB2DA-F9F3-4A5D-ABC8-BB9F55F092FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A39EB2DA-F9F3-4A5D-ABC8-BB9F55F092FE}.ICAN_Debug|Any CPU.ActiveCfg = ICAN_Debug|Any CPU
+		{A39EB2DA-F9F3-4A5D-ABC8-BB9F55F092FE}.ICAN_Debug|Any CPU.Build.0 = ICAN_Debug|Any CPU
 		{A39EB2DA-F9F3-4A5D-ABC8-BB9F55F092FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A39EB2DA-F9F3-4A5D-ABC8-BB9F55F092FE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4637D51-C5CB-448B-8A2D-AC26E1E56525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4637D51-C5CB-448B-8A2D-AC26E1E56525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4637D51-C5CB-448B-8A2D-AC26E1E56525}.ICAN_Debug|Any CPU.ActiveCfg = ICAN_Debug|Any CPU
+		{A4637D51-C5CB-448B-8A2D-AC26E1E56525}.ICAN_Debug|Any CPU.Build.0 = ICAN_Debug|Any CPU
 		{A4637D51-C5CB-448B-8A2D-AC26E1E56525}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4637D51-C5CB-448B-8A2D-AC26E1E56525}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

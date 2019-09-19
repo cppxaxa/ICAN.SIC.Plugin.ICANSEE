@@ -307,8 +307,8 @@ namespace ICAN.SIC.Plugin.ICANSEE
                             break;
 
                         case "image":
-                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['imageSrc'] = cv2.imread({{imageLocalPath}})\\nglobals()['refreshCameraCode'] = 'globals()[\\\\'imageSrc\\\\'] = cv2.imread({{imageLocalPath}})\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
-                            apiCallBody = apiCallBody.Replace("{{imageLocalPath}}", "'" + cameraConfig.Url + "'");
+                            apiCallBody = "{\n\"Fbp\":[\"Start\",\"globals()['imageSrc'] = cv2.imread('{{imageLocalPath}}')\\nglobals()['refreshCameraCode'] = 'globals()[\\\\'imageSrc\\\\'] = cv2.imread(\\\\'{{imageLocalPath}}\\\\')'\",\"\"],\"RunOnce\": true,\"InfiniteLoop\": false,\"LoopLimit\": 1,\"ReturnResult\": true}";
+                            apiCallBody = apiCallBody.Replace("{{imageLocalPath}}", cameraConfig.Url);
                             break;
 
                         case "imageShot":

@@ -33,6 +33,9 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ICAN_Debug|AnyCPU'">
+    <OutputPath>bin\ICAN_Debug\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICAN.SIC.Abstractions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

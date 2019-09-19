@@ -1,0 +1,21 @@
+Start
+
+
+LoadCamera(0)
+
+
+tiny-yolo-voc(0)
+
+
+Loop
+
+
+personCount = 0
+for i in range(5):
+	if result[i].name == "person":
+		personCount += 1
+if personCount >= 5:
+	RaiseMessage("Population > 5")
+
+
+
