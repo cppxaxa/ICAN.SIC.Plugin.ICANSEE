@@ -292,6 +292,8 @@ namespace ICAN.SIC.Plugin.ICANSEE
         public override void Dispose()
         {
             imageClient = null;
+
+            logger.Dispose();
             logger = null;
 
             utility = null;

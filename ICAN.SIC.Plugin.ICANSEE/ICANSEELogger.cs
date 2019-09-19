@@ -31,6 +31,12 @@ namespace ICAN.SIC.Plugin.ICANSEE
             writer.Flush();
         }
 
+        public void Dispose()
+        {
+            this.writer.Flush();
+            this.writer.Close();
+        }
+
         public string _GetShortFormattedStateMap(Dictionary<ComputeDeviceInfo, Dictionary<int, ComputeDeviceState>> computeDeviceStateMap)
         {
             string formattedString = "";

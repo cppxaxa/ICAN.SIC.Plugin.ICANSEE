@@ -17,7 +17,6 @@ D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\bin\ICAN_Debug\
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\bin\ICAN_Debug\Syn.Bot.xml
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\bin\ICAN_Debug\Syn.EmotionML.xml
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\bin\ICAN_Debug\Syn.VA.xml
-D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\ICAN_Debug\ICAN.SIC.Plugin.ICANSEE.csprojAssemblyReference.cache
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\ICAN_Debug\ICAN.SIC.Plugin.ICANSEE.csproj.CoreCompileInputs.cache
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\ICAN_Debug\ICAN.SIC.Plugin.ICANSEE.csproj.CopyComplete
 D:\Projects\ICAN\ICAN.SIC.Plugin.ICANSEE\ICAN.SIC.Plugin.ICANSEE\obj\ICAN_Debug\ICAN.SIC.Plugin.ICANSEE.dll
